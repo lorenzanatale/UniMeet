@@ -2,19 +2,14 @@
 <html lang="it">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Registrazione - UniMeet</title>
+    <title>Registrazione Studente - UniMeet</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
 
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #ffffff;
-        }
-        form .form-control {
-            border: 2px solid #000;
-            border-radius: 8px;
         }
         .headerLine {
             border-bottom: 2px solid #000000;
@@ -89,18 +84,52 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="registration-card">
-                <h2 class="text-center mb-4">Registrati</h2>
-                <div class="custom-btn-container">
-                    <a href="RegistrazioneStudente.jsp" class="btn btn-primary">Studente</a>
-                    <a href="RegistrazioneProfessore.jsp" class="btn btn-primary">Professore</a>
-                </div>
+                <h2 class="text-center mb-4">Registrazione Studente</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="email">E-Mail</label>
+                        <input type="email" class="form-control" id="email" placeholder="Inserisci l'E-MAIL" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Inserisci la Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Nome</label>
+                        <input type="text" class="form-control" id="name" placeholder="Inserisci il tuo nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="surname">Cognome</label>
+                        <input type="text" class="form-control" id="surname" placeholder="Inserisci il tuo cognome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codice">Matricola</label>
+                        <input type="text" class="form-control" id="codice" placeholder="Inserisci la matricola" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="security-question">Domanda di sicurezza</label>
+                        <select class="form-control" id="security-question" required>
+                            <option selected disabled>Scegli domanda di sicurezza</option>
+                            <option>Qual è il nome del tuo primo animale domestico?</option>
+                            <option>Qual è la tua città natale?</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="answer">Risposta</label>
+                        <input type="text" class="form-control" id="answer" placeholder="Risposta" required>
+                    </div>
+                    <div class="custom-btn-container">
+                        <button type="submit" class="btn btn-primary">Registrati!</button>
+                        <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alle opzioni</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <footer class="text-center mt-5">
-    <p>UniMeet<a href="#" class="footer-link">Info / Contatti</a></p>
+    <p>UniMeet&reg; <br> <a href="#" class="footer-link">Info / Contatti</a></p>
 </footer>
 
 </body>
