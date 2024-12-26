@@ -27,6 +27,9 @@
             padding: 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .footer{
+        	margin-top:50px;
+        }
         .btn-primary {
             background-color: rgba(91, 255, 244, 0.9);
             border: none;
@@ -103,9 +106,8 @@
     </div>
 </div>
 
-<footer class="text-center mt-5">
-    <p>UniMeet<a href="#" class="footer-link">Info / Contatti</a></p>
-</footer>
+<jsp:include page="Footer.jsp" />
+
 
 </body>
 </html>

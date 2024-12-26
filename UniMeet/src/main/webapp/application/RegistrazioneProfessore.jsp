@@ -128,9 +128,7 @@
     </div>
 </div>
 
-<footer class="text-center mt-5">
-    <p>UniMeet&reg; <br> <a href="#" class="footer-link">Info / Contatti</a></p>
-</footer>
+<jsp:include page="Footer.jsp" />
 
 </body>
 </html>
