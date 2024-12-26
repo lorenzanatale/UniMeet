@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import model.Professore;
 import model.ProfessoreService;
 
+//ATTENZIONE FORSE E' IL CASO DI UTILIZZARE DUE SERVLET DIVERSE PER STUDENTE E PROFESSORE!
+
 @WebServlet("/RegistrazioneServlet")
 public class RegistrazioneServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

@@ -10,7 +10,7 @@ public class ProfessoreService {
         int result = 0;
 
         try (Connection con = DriverManagerConnectionPool.getConnessione();
-             PreparedStatement ps = con.prepareStatement("INSERT INTO publisher (codiceProfessore, email, passwrd, nome, cognome) VALUES (?, ?, ?, ?, ?)")) {
+             PreparedStatement ps = con.prepareStatement("INSERT INTO professore (codiceProfessore, email, passwrd, nome, cognome) VALUES (?, ?, ?, ?, ?)")) {
 
             ps.setString(1, p.getCodiceProfessore());
             ps.setString(2, p.getEmail());
