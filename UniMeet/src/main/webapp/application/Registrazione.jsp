@@ -94,6 +94,10 @@
                     <a href="RegistrazioneStudente.jsp" class="btn btn-primary">Studente</a>
                     <a href="RegistrazioneProfessore.jsp" class="btn btn-primary">Professore</a>
                 </div>
+                <div class="custom-btn-container">
+                        
+                        <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alla landing page!</a>
+                    </div>
             </div>
         </div>
     </div>
