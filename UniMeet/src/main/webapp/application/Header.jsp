@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
 	<!-- Collegamento al CSS Custom -->
     <link rel="stylesheet" type="text/css" href="../css/stile.css">
-    <link rel="icon" href="../images/favicon.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
