@@ -120,6 +120,10 @@
                             <option selected disabled>Scegli domanda di sicurezza</option>
                             <option>Qual è il nome del tuo primo animale domestico?</option>
                             <option>Qual è la tua città natale?</option>
+                            <option>Qual è il cognome di tua madre da nubile?</option>
+                            <option>Qual è il nome del tuo migliore amico?</option>
+                            <option>Qual è il nome del tuo cantante preferito?</option>
+                            <option>Qual era il tuo soprannome da piccolo?</option>
                         </select>
                     </div>
                     <div class="form-group">
