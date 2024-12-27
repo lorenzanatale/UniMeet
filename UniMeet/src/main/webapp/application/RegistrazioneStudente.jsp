@@ -1,3 +1,6 @@
+<%@ page import="java.sql.*" %>
+<%@ page import="model.DriverManagerConnectionPool" %>
+
 <!doctype html>
 <html lang="it">
 <head>
@@ -85,7 +88,7 @@
         <div class="col-md-6">
             <div class="registration-card">
                 <h2 class="text-center mb-4">Registrazione Studente</h2>
-                <form>
+                <form action="<%= request.getContextPath() %>/RegistrazioneServlet" method="post">
                     <div class="form-group">
                         <label for="email">E-Mail</label>
                         <input type="email" class="form-control" id="email" placeholder="Inserisci l'E-MAIL" required>
