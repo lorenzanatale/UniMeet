@@ -6,18 +6,22 @@ public class Studente {
 	private String email;
 	private String password;
 	private String matricola;
+	private String domanda;
+	private String risposta;
 	
 	public Studente() {
 		
 	}
 
-	public Studente(String nome, String cognome, String email, String password, String matricola) {
+	public Studente(String nome, String cognome, String email, String password, String matricola, String domanda, String risposta) {
 		super();
 		this.nome = nome;
 		this.cognome = cognome;
 		this.email = email;
 		this.password = password;
 		this.matricola = matricola;
+		this.domanda = domanda;
+		this.risposta = risposta;
 	}
 
 	public String getNome() {
@@ -59,4 +63,20 @@ public class Studente {
 	public void setMatricola(String matricola) {
 		this.matricola = matricola;
 	}	
+	
+	public String getDomanda() {
+		return domanda;
+	}
+	
+	public void setDomanda(String domanda) {
+		this.domanda = domanda;
+	}
+	
+	public String getRisposta() {
+		return risposta;
+	}
+	
+	public void setRisposta(String risposta) {
+		this.risposta = risposta;
+	}
 }

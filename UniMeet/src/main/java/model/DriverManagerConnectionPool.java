@@ -10,14 +10,16 @@ public class DriverManagerConnectionPool  {
 	private static ArrayList<Connection> rilasciaConnessioni;
 	
 	static {
-		rilasciaConnessioni = new ArrayList<Connection>();
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			System.out.println("Driver per il DB non trovati:" + e.getMessage());
-		} 
+	    rilasciaConnessioni = new ArrayList<Connection>();
+	    try {
+	        Class.forName("com.mysql.jdbc.Driver");
+	        System.out.println("Driver caricato con successo!");
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("Driver non trovato: " + e.getMessage());
+	    }
+
 	}
+
 	
 	private static synchronized Connection creaConnessioneDB() throws SQLException {
 		Connection newConnection = null;

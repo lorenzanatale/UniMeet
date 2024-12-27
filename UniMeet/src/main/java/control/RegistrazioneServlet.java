@@ -34,12 +34,15 @@ public class RegistrazioneServlet extends HttpServlet {
         String cognome = request.getParameter("cognome");
         String email = request.getParameter("email");
         String pass = request.getParameter("password");
+        String ufficio = request.getParameter("ufficio");
+        String domanda = request.getParameter("domanda");
+        String risposta = request.getParameter("risposta");
 
         HttpSession session = request.getSession();
 
-        // Controllo dei parametri di input
-        if (codiceProfessore == null || nome == null || cognome == null || email == null || pass == null ||
-                codiceProfessore.isEmpty() || nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+        // Controllo dei parametri di input da RegistrazioneProfessore.jsp
+        if (codiceProfessore == null || nome == null || cognome == null || email == null || pass == null || ufficio == null || domanda == null || risposta == null ||
+                codiceProfessore.isEmpty() || nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || pass.isEmpty() || ufficio.isEmpty() || domanda.isEmpty() || risposta.isEmpty()) {
             session.setAttribute("status", "Tutti i campi devono essere compilati.");
             response.sendRedirect(request.getContextPath() + "/application/Registrazione.jsp");
             return;
@@ -53,6 +56,9 @@ public class RegistrazioneServlet extends HttpServlet {
             professore.setEmail(email);
             professore.setNome(nome);
             professore.setCodiceProfessore(codiceProfessore);
+            professore.setUfficio(ufficio);
+            professore.setDomanda(domanda);
+            professore.setRisposta(risposta);
 
             // Salvataggio del professore nel database
             int row = ProfessoreService.aggiungiProfessore(professore);
@@ -60,7 +66,7 @@ public class RegistrazioneServlet extends HttpServlet {
             if (row > 0) {
                 // Registrazione avvenuta con successo
                 session.setAttribute("status", "Complimenti, ti sei registrato con successo! Effettua il login.");
-                response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
+                response.sendRedirect(request.getContextPath() + "/application/Registrazione.jsp");
             } else {
                 // Fallimento nella registrazione
                 session.setAttribute("status", "Qualcosa è andato storto, riprova!");
