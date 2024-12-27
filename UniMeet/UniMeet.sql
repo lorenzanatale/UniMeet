@@ -8,7 +8,7 @@ nome VARCHAR(30) NOT NULL,
 cognome VARCHAR(30) NOT NULL,
 email VARCHAR(30) NOT NULL,
 passwordHash VARCHAR(255) NOT NULL,
-domandaSicurezza VARCHAR(30) NOT NULL,
+domandaSicurezza VARCHAR(200) NOT NULL,
 risposta VARCHAR(30) NOT NULL
 );
 CREATE TABLE  professore(
@@ -18,7 +18,7 @@ cognome VARCHAR(30) NOT NULL,
 ufficio VARCHAR(30) NOT NULL,
 email VARCHAR(30) NOT NULL,
 passwordHash VARCHAR(255) NOT NULL,
-domandaSicurezza VARCHAR(30) NOT NULL,
+domandaSicurezza VARCHAR(200) NOT NULL,
 risposta VARCHAR(30) NOT NULL
 );
 CREATE TABLE insegnamento(
