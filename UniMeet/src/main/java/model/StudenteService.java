@@ -9,7 +9,7 @@ public class StudenteService {
         int result = 0;
 
         try (Connection con = DriverManagerConnectionPool.getConnessione();
-        	PreparedStatement ps = con.prepareStatement("INSERT INTO studente (matricola, nome, cognome, email, passwrdHash, domandaSicurezza, risposta) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+        	PreparedStatement ps = con.prepareStatement("INSERT INTO studente (matricola, nome, cognome, email, passwordHash, domandaSicurezza, risposta) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
 
             ps.setString(1, s.getMatricola());
             ps.setString(2, s.getNome());

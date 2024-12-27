@@ -88,30 +88,30 @@
         <div class="col-md-6">
             <div class="registration-card">
                 <h2 class="text-center mb-4">Registrazione Studente</h2>
-                <form action="<%= request.getContextPath() %>/RegistrazioneServlet" method="post">
+                <form action="<%= request.getContextPath() %>/RegistrazioneStudenteServlet" method="post">
                     <div class="form-group">
                         <label for="email">E-Mail</label>
-                        <input type="email" class="form-control" id="email" placeholder="Inserisci l'E-MAIL" required>
+                        <input type="email" class="form-control" name="email" placeholder="Inserisci l'E-MAIL" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Inserisci la Password" required>
+                        <input type="password" class="form-control" name="password" placeholder="Inserisci la Password" required>
                     </div>
                     <div class="form-group">
                         <label for="name">Nome</label>
-                        <input type="text" class="form-control" id="name" placeholder="Inserisci il tuo nome" required>
+                        <input type="text" class="form-control" name="nome" placeholder="Inserisci il tuo nome" required>
                     </div>
                     <div class="form-group">
                         <label for="surname">Cognome</label>
-                        <input type="text" class="form-control" id="surname" placeholder="Inserisci il tuo cognome" required>
+                        <input type="text" class="form-control" name="cognome" placeholder="Inserisci il tuo cognome" required>
                     </div>
                     <div class="form-group">
-                        <label for="codice">Matricola</label>
-                        <input type="text" class="form-control" id="codice" placeholder="Inserisci la matricola" required>
+                        <label for="matricola">Matricola</label>
+                        <input type="text" class="form-control" name="matricola" placeholder="Inserisci la matricola" required>
                     </div>
                     <div class="form-group">
                         <label for="security-question">Domanda di sicurezza</label>
-                        <select class="form-control" id="security-question" required>
+                        <select class="form-control" name="domanda" required>
                             <option selected disabled>Scegli domanda di sicurezza</option>
                             <option>Qual è il nome del tuo primo animale domestico?</option>
                             <option>Qual è la tua città natale?</option>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="form-group">
                         <label for="answer">Risposta</label>
-                        <input type="text" class="form-control" id="answer" placeholder="Risposta" required>
+                        <input type="text" class="form-control" name="risposta" placeholder="Risposta" required>
                     </div>
                     <div class="custom-btn-container">
                         <button type="submit" class="btn btn-primary">Registrati!</button>

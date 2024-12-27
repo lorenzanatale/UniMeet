@@ -72,6 +72,14 @@
         }
     </style>
 </head>
+
+<% if(session.getAttribute("status") != null) { %>
+    <div class="alert alert-warning">
+        <%= session.getAttribute("status") %>
+    </div>
+    <% session.removeAttribute("status"); %>
+<% } %>
+
 <body>
 <header class="py-4">
     <nav class="navbar navbar-custom">
