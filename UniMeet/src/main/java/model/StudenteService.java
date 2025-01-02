@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StudenteService {
@@ -31,4 +32,29 @@ public class StudenteService {
         }
         return result;
     }
-}
+	
+	  public static Studente loginStudente(String email, String password) throws Exception {
+	        Studente studente = null;
+	        String sql = "SELECT * FROM studenti WHERE email = ? AND password = ?";
+	        
+	        try (Connection conn = DriverManagerConnectionPool.getConnessione();
+	             PreparedStatement stmt = conn.prepareStatement(sql)) {
+	            stmt.setString(1, email);
+	            stmt.setString(2, password);
+	            ResultSet rs = stmt.executeQuery();
+	            
+	            if (rs.next()) {
+	                studente = new Studente();
+	                studente.setEmail(rs.getString("email"));
+	                studente.setPassword(rs.getString("password"));
+	                studente.setNome(rs.getString("nome"));
+	                studente.setCognome(rs.getString("cognome"));
+	                studente.setMatricola(rs.getString("matricola"));
+	            }
+	        }
+	        return studente;
+	    }
+	}
+	
+	 
+      
