@@ -1,3 +1,5 @@
+package control;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/cambio-password-professore")
+import model.DriverManagerConnectionPool;
+import model.Professore;
+import model.ProfessoreService;
+
+
+@WebServlet("/CambioPasswordProfessoreServlet")
 public class CambioPasswordProfessoreServlet extends HttpServlet {
 
     @Override
@@ -21,10 +28,12 @@ public class CambioPasswordProfessoreServlet extends HttpServlet {
         String domandaUtente = request.getParameter("domanda");
         String newPassword = request.getParameter("newPassword");
 
-        Professore p = null;
+        Professore p = new Professore();
+        
+        
 
         try (Connection con = DriverManagerConnectionPool.getConnessione();
-             PreparedStatement ps = con.prepareStatement("SELECT * FROM professore p WHERE s.email=?")) {
+             PreparedStatement ps = con.prepareStatement("SELECT * FROM professore p WHERE p.email=?")) {
             ps.setString(1, userEmail);
             ResultSet rs = ps.executeQuery();
 
@@ -37,8 +46,8 @@ public class CambioPasswordProfessoreServlet extends HttpServlet {
         }
 
         if (p != null) {
-            String domandaSicurezza = s.getDomandaSicurezza(userEmail);
-            String rispostaRegistrata = s.getRisposta(userEmail);
+            String domandaSicurezza = p.getDomanda();
+            String rispostaRegistrata = p.getRisposta();
 
             if (rispostaUtente.trim().equalsIgnoreCase(rispostaRegistrata.trim()) && domandaUtente.trim().equalsIgnoreCase(domandaSicurezza.trim())) {
                 String hashedPassword = PasswordUtils.hashPassword(newPassword);

@@ -1,3 +1,5 @@
+package control;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/cambio-password-studente")
-public class CambioPasswordServlet extends HttpServlet {
+import model.DriverManagerConnectionPool;
+import model.Studente;
+import model.StudenteService;
+
+@WebServlet("/CambioPasswordStudenteServlet")
+public class CambioPasswordStudenteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,8 +43,8 @@ public class CambioPasswordServlet extends HttpServlet {
         }
 
         if (s != null) {
-            String domandaSicurezza = s.getDomandaSicurezza(userEmail);
-            String rispostaRegistrata = s.getRisposta(userEmail);
+            String domandaSicurezza = s.getDomanda();
+            String rispostaRegistrata = s.getRisposta();
 
             if (rispostaUtente.trim().equalsIgnoreCase(rispostaRegistrata.trim()) && domandaUtente.trim().equalsIgnoreCase(domandaSicurezza.trim())) {
                 String hashedPassword = PasswordUtils.hashPassword(newPassword);
