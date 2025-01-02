@@ -13,7 +13,7 @@
     <%@ include file="Header.jsp" %>
     
     <div class="login-container">
-        <form class="login-form" action="<%= request.getContextPath() %>/Login" method="post">
+        <form class="login-form" action="<%= request.getContextPath() %>/LoginServlet" method="post">
             <h2>Accedi</h2>
             <% 
                 // Mostra il messaggio di errore se presente

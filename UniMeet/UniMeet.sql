@@ -42,7 +42,7 @@ CREATE TABLE prenotazioneRicevimento(
     giorno VARCHAR(30) NOT NULL,
     ora VARCHAR(30) NOT NULL,
     note VARCHAR(200) NOT NULL default'non ci sono note',
-    stato BOOLEAN default 'falese',
+    stato VARCHAR(30) default 'In sospeso',
     codiceProfessore VARCHAR(50) NOT NULL,
     matricolaStudente VARCHAR(50) NOT NULL,
     FOREIGN KEY (codiceProfessore) REFERENCES professore(codice),
