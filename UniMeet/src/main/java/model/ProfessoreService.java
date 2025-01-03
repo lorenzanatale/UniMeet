@@ -39,7 +39,7 @@ public class ProfessoreService {
     //per login docente
         public static Professore loginProfessore(String email, String password) throws Exception {
             Professore professore = null;
-            String sql = "SELECT * FROM professori WHERE email = ? AND password = ?";
+            String sql = "SELECT * FROM professore WHERE email = ? AND password = ?";
             
             try (Connection conn = DriverManagerConnectionPool.getConnessione();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -50,14 +50,85 @@ public class ProfessoreService {
                 if (rs.next()) {
                     professore = new Professore();
                     professore.setEmail(rs.getString("email"));
-                    professore.setPassword(rs.getString("password"));
+                    professore.setPassword(rs.getString("passwordHash"));
                     professore.setNome(rs.getString("nome"));
                     professore.setCognome(rs.getString("cognome"));
-                    professore.setCodiceProfessore(rs.getString("codiceProfessore"));
+                    professore.setCodiceProfessore(rs.getString("codice"));
                     professore.setUfficio(rs.getString("ufficio"));
                 }
             }
             return professore;
         }
+        
+        //ricerca professore tramite mail
+        public static Professore cercaProfessoreEmail (String email) throws Exception {
+        	
+        	Professore professore = null;
+        	String sql = "SELECT * FROM professore WHERE email = ?";
+        	
+        	 try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                  PreparedStatement stmt = conn.prepareStatement(sql)){
+        		 
+        		 stmt.setString(1, email);
+        		 ResultSet rs =stmt.executeQuery();
+        		 
+        		 if(rs.next()) {
+        			 professore = new Professore();
+                     professore.setEmail(rs.getString("email"));
+                     professore.setPassword(rs.getString("passwordHash"));
+                     professore.setNome(rs.getString("nome"));
+                     professore.setCognome(rs.getString("cognome"));
+                     professore.setCodiceProfessore(rs.getString("codice"));
+                     professore.setUfficio(rs.getString("ufficio"));
+                     professore.setDomanda(rs.getString("domandaSicurezza"));
+                     professore.setRisposta(rs.getString("risposta"));
+        			 
+        		 }
+        		 
+        	 }
+        	return professore;
+        }
+        //rimuove professore
+        public static Boolean rimuoviProfessore (Professore p) throws SQLException{
+        	
+        	String sql = "DELETE FROM professore WHERE email = ?";
+        	try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                    PreparedStatement stmt = conn.prepareStatement(sql)){
+        		
+        		stmt.setString(1, p.getEmail());
+        		int row=stmt.executeUpdate();
+
+        		return row>0;
+
+        	}
+        }
+        
+        //modifica di un professore 
+        public static Boolean modificaProfessore (Professore p) throws SQLException {
+        	
+        	String sql = "UPDATE professore SET nome = ?, cognome = ?, ufficio = ?, email = ?, passwordHash = ?, domandaSicurezza= ?, risposta = ? WHERE codice= ?";
+        	 try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                     PreparedStatement stmt = conn.prepareStatement(sql)){
+        		 
+        		 	conn.setAutoCommit(false);
+        		 
+        	        stmt.setString(1, p.getNome());
+        	        stmt.setString(2, p.getCognome());
+        	        stmt.setString(3, p.getUfficio());
+        	        stmt.setString(4, p.getEmail());
+        	        stmt.setString(5, p.getPassword());
+        	        stmt.setString(6, p.getDomanda());
+        	        stmt.setString(7, p.getRisposta());
+        	        stmt.setString(8, p.getCodiceProfessore());
+        	        int rows = stmt.executeUpdate();
+        	        
+        	        conn.commit();
+        	        
+        	        return rows > 0;
+        	    } catch (SQLException e) {
+        	        System.err.println("Errore nell'aggiornamento del professore: " + e.getMessage());
+        	        return false;
+        	    }
     }
+}
 

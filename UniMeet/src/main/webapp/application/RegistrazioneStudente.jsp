@@ -1,6 +1,4 @@
 <%@ page import="java.sql.*" %>
-<%@ page import="model.DriverManagerConnectionPool" %>
-
 <!doctype html>
 <html lang="it">
 

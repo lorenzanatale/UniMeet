@@ -19,10 +19,10 @@
     <div class="hero-text">
         <h1>Benvenuti</h1>
         <p>UniMeet è una piattaforma che facilita la modalità di interazione tra gli studenti ed i docenti fornendo un metodo semplice ed efficace per la prenotazione del ricevimento studenti.</p>
-        <button onclick="location.href='prenotazione.jsp'">Prenota un ricevimento</button>
+        <button onclick="location.href='Prenotazione.jsp'">Prenota un ricevimento</button>
     </div>
     <div class="hero-container">
-        <img src="<%= request.getContextPath() %>/images/LOGO1.PNG" alt="UniMeet Logo">
+        <img src="<%= request.getContextPath() %>/images/LOGO1.png" alt="UniMeet Logo">
     </div>
 </section>
 
