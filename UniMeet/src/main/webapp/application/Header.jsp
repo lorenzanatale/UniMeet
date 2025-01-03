@@ -27,7 +27,7 @@
             <div class="navbar-content">
                 <!-- Logo con link alla home -->
                 <div class="logo">
-                 <a href="<%= request.getContextPath() %>/application/home.jsp" style="text-decoration: none; color: var(--primary-color); font-size: 1.5rem; font-weight: bold;">UniMeet</a>
+                 <a href="<%= request.getContextPath() %>/application/Home.jsp" style="text-decoration: none; color: var(--primary-color); font-size: 1.5rem; font-weight: bold;">UniMeet</a>
               
                    
                 </div>
