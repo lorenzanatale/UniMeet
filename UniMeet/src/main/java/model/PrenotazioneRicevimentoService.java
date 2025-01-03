@@ -16,7 +16,7 @@ public class PrenotazioneRicevimentoService {
 	        ps.setDate(1, pr.getGiorno());
 	        ps.setString(2, pr.getOra());
 	        ps.setString(3, pr.getNota());
-	        ps.setBoolean(4,pr.getStato());
+	        ps.setString(4,pr.getStato());
 	        ps.setString(5, pr.getCodiceProfessore());
 	        ps.setString(6, pr.getMatricolaStudente());
 

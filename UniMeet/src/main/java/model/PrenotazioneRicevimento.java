@@ -5,14 +5,14 @@ import java.sql.Date;
 public class PrenotazioneRicevimento {
 	
 	private int codice;
-	private boolean stato;
+	private String stato;
 	private Date giorno;
 	private String ora;
 	private String codiceProfessore;
 	private String matricolaStudente;
 	private String nota;
 	
-	public PrenotazioneRicevimento(boolean stato,Date giorno,String ora,String nota, String codiceProfessore,String matricolaStudente) {
+	public PrenotazioneRicevimento(String stato,Date giorno,String ora,String nota, String codiceProfessore,String matricolaStudente) {
 		this.stato=stato;
 		this.giorno=giorno;
 		this.ora=ora;
@@ -24,7 +24,7 @@ public class PrenotazioneRicevimento {
 	public int getCodice() {
 		return codice;
 	}
-	public boolean getStato() {
+	public String getStato() {
 		return stato;
 	}
 	public Date getGiorno() {
@@ -43,7 +43,7 @@ public class PrenotazioneRicevimento {
 		return matricolaStudente;
 	}
 	
-	public void setStato(boolean stato) {
+	public void setStato(String stato) {
 		this.stato=stato;
 	}
 	public void setGiorno(Date giorno) {
