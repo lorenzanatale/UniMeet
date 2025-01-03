@@ -1,31 +1,41 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%--
+  Created by IntelliJ IDEA.
+  User: cirodanzilli
+  Date: 03/01/25
+  Time: 11:47
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
+
+<!doctype html>
 <html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniMeet - Home</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/navbar.css">
-     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/home.css">
-    
-    
-</head>
+<title>Home - UniMeet</title>
+
 <body>
-<%@ include file="Header.jsp" %>
+<!-- Collegamento all'Header -->
+<jsp:include page="/application/Header.jsp" />
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-text">
-        <h1>Benvenuti</h1>
-        <p>UniMeet è una piattaforma che facilita la modalità di interazione tra gli studenti ed i docenti fornendo un metodo semplice ed efficace per la prenotazione del ricevimento studenti.</p>
-        <button onclick="location.href='Prenotazione.jsp'">Prenota un ricevimento</button>
+<div class="d-flex justify-content-center align-items-center w-100">
+    <div class="logo-container">
+        <img src="../images/LOGO1.png" alt="UniMeet Logo Grande" width="300">
     </div>
-    <div class="hero-container">
-        <img src="<%= request.getContextPath() %>/images/LOGO1.png" alt="UniMeet Logo">
+    <div class="text-container text-center mt-3">
+        <p class="lead">
+            Benvenuti! UniMeet è una piattaforma che facilita<br>
+            la modalità di interazione tra gli studenti ed i docenti,<br>
+            fornendo un metodo semplice ed efficace per la<br>
+            prenotazione del ricevimento studenti.
+        </p><br>
+        <p><b>Sei uno studente e vuoi utilizzare UniMeet per prenotare un ricevimento?<br>
+        <a href="RegistrazioneStudente.jsp" class="btn btn-success">Prenota subito il tuo ricevimento!</a><br>
+        Sei un professore e vuoi utilizzare UniMeet per rendere disponibili date di ricevimento?<br>
+            <a href="RegistrazioneProfessore.jsp" class="btn btn-success">Crea la tua pagina Professore!</a></b></p>
     </div>
-</section>
+    </div>
 
-<%@ include file="Footer.jsp" %>
+
+<jsp:include page="Footer.jsp" />
+
 </body>
 </html>

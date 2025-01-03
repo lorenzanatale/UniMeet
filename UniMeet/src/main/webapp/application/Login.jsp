@@ -1,43 +1,86 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/login.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/navbar.css">
-</head>
+<%--
+  Created by IntelliJ IDEA.
+  User: cirodanzilli
+  Date: 03/01/25
+  Time: 10:57
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
+
+<%
+    String status = (String) session.getAttribute("status");
+    if (status != null) {
+        session.removeAttribute("status");
+    }
+%>
+
+<!doctype html>
+<html lang="it" class="h-100">
+
+<% if(session.getAttribute("status") != null) { %>
+<div class="alert alert-warning">
+    <%= session.getAttribute("status") %>
+</div>
+<% session.removeAttribute("status"); %>
+<% } %>
+
 <body>
-    <%@ include file="Header.jsp" %>
-    
-    <div class="login-container">
-        <form class="login-form" action="<%= request.getContextPath() %>/LoginServlet" method="post">
-            <h2>Accedi</h2>
-            <% 
-                // Mostra il messaggio di errore se presente
-                String errorMessage = (String) request.getAttribute("errorMessage");
-                if (errorMessage != null) { 
-            %>
-                <div class="error-message">
-                    <%= errorMessage %>
-                </div>
-            <% } %>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="input" required placeholder="Inserisci la tua email">
+<!-- QUI STO IMPOSTANDO IL RIFERIMENTO ALL'HEADER -->
+<jsp:include page="/application/Header.jsp" />
+
+<!-- IN QUESTO PUNTO STO INIZIANDO A FORMARE IL CONTENUTO DELLA PAGINA (SOLO BODY, HEADER E FOOTER SONO NEI LORO FILES -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="registration-card">
+                <h1 class="h3 mb-3 font-weight-normal text-center">Accedi</h1>
+                <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+                    <div class="form-group">
+                        <label for="inputEmail">Indirizzo email</label>
+                        <input type="email" id="inputEmail" name="emailid" class="form-control" placeholder="Indirizzo email" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePasswordVisibility()">
+                        <label class="form-check-label" for="showPassword">Mostra Password</label>
+                    </div>
+                    <div class="custom-btn-container">
+                        <a class="btn btn-primary" type="submit">Entra!</a>
+                        <a href="Registrazione.jsp" class="btn btn-danger text-white" type="submit">Sei nuovo? Registrati!</a><br>
+                        oppure<br>
+                        <a href="Home.jsp" class="btn btn-danger text-white" type="submit">Torna alla landing page!</a>
+                    </div>
+                    <% if (status != null) { %>
+                    <div class="alert alert-danger mt-3" role="alert">
+                        <%= status %>
+                    </div>
+                    <% } %>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="input" required placeholder="Inserisci la tua password">
+            <div class="text-center mt-3 fw-bold">
+                Password dimenticata? Clicca <a href="" class="text-danger text-decoration-none">qui</a>
             </div>
-            <button type="submit" class="button">Accedi</button>
-            <br>
-            <p class="signup-link">Non hai un account? <a href="Registrazione.jsp">Registrati</a></p>
-        </form>
+        </div>
     </div>
-    
-    <%@ include file="Footer.jsp" %>
+</div>
+<!-- QUESTO E' UN PICCOLO SCRIPT PER MOSTRARE LA PASSWORD -->
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById('inputPassword');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text'; // CON QUESTA AZIONE LA MOSTRO
+        } else {
+            passwordField.type = 'password'; // CON QUESTA AZIONE LA NASCONDO
+        }
+    }
+</script>
+<!-- QUI FINISCE IL CONTENUTO DELLA PAGINA (BODY) -->
 </body>
+
+<!-- QUI HO INSERITO IL RIFERIMENTO AL FOOTER -->
+<jsp:include page="Footer.jsp" />
 </html>

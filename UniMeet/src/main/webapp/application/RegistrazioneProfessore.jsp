@@ -1,4 +1,5 @@
-<%@ page import="java.sql.*" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 
 <!doctype html>
 <html lang="it">
@@ -17,43 +18,43 @@
                 <form action="<%= request.getContextPath() %>/RegistrazioneServlet" method="post">
                     <div class="form-group">
                         <label for="email">E-Mail</label>
-                        <input type="email" class="form-control" name="email" placeholder="Inserisci l'E-MAIL" required>
+                        <input type="text" class="form-control" name="email" id="email" placeholder="Inserisci l'E-MAIL" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" placeholder="Inserisci la Password" required>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Inserisci la Password" required>
                     </div>
                     <div class="form-group">
-                        <label for="name">Nome</label>
-                        <input type="text" class="form-control" name="nome" placeholder="Inserisci il tuo nome" required>
+                        <label for="nome">Nome</label>
+                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Inserisci il tuo nome" required>
                     </div>
                     <div class="form-group">
-                        <label for="surname">Cognome</label>
-                        <input type="text" class="form-control" name="cognome" placeholder="Inserisci il tuo cognome" required>
+                        <label for="cognome">Cognome</label>
+                        <input type="text" class="form-control" name="cognome" id="cognome" placeholder="Inserisci il tuo cognome" required>
                     </div>
                     <div class="form-group">
                         <label for="codice">Codice Professore</label>
-                        <input type="text" class="form-control" name="codiceProfessore" placeholder="Inserisci il codice professore" required>
+                        <input type="text" class="form-control" name="codiceProfessore" id="codice" placeholder="Inserisci il codice professore" required>
                     </div>
                     <div class="form-group">
                         <label for="ufficio">Ufficio</label>
-                        <input type="text" class="form-control" name="ufficio" placeholder="Inserisci l'ufficio" required>
+                        <input type="text" class="form-control" name="ufficio" id="ufficio" placeholder="Inserisci l'ufficio" required>
                     </div>
                     <div class="form-group">
-                        <label for="security-question">Domanda di sicurezza</label>
-                        <select class="form-control" name="domanda" required>
+                        <label for="domandaSicurezza">Domanda di sicurezza</label>
+                        <select class="form-control" name="domanda" id="domandaSicurezza" required>
                             <option selected disabled>Scegli domanda di sicurezza</option>
-                            <option>Qual Ë il nome del tuo primo animale domestico?</option>
-                            <option>Qual Ë la tua citt‡ natale?</option>
-                            <option>Qual Ë il cognome di tua madre da nubile?</option>
-                            <option>Qual Ë il nome del tuo migliore amico?</option>
-                            <option>Qual Ë il nome del tuo cantante preferito?</option>
+                            <option>Qual √® il nome del tuo primo animale domestico?</option>
+                            <option>Qual √® la tua citt√† natale?</option>
+                            <option>Qual √® il cognome di tua madre da nubile?</option>
+                            <option>Qual √® il nome del tuo migliore amico?</option>
+                            <option>Qual √® il nome del tuo cantante preferito?</option>
                             <option>Qual era il tuo soprannome da piccolo?</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="answer">Risposta</label>
-                        <input type="text" class="form-control" name="risposta" placeholder="Risposta" required>
+                        <label for="risposta">Risposta</label>
+                        <input type="text" class="form-control" name="risposta" id="risposta" placeholder="Risposta" required>
                     </div>
                     <div class="custom-btn-container">
                         <button type="submit" class="btn btn-primary">Registrati!</button>
@@ -64,6 +65,31 @@
         </div>
     </div>
 </div>
+
+<script>
+    let emailField = document.getElementById('email');
+    let defaultDomain = '@professori.unisa.it';
+
+    // Funzione per aggiungere il dominio se necessario
+    function ensureDomain(value) {
+        return value.includes('@') ? value.split('@')[0] + defaultDomain : value + defaultDomain;
+    }
+
+    // Aggiungi il dominio quando l'utente scrive
+    emailField.addEventListener('input', function() {
+        emailField.value = ensureDomain(emailField.value);
+        emailField.setSelectionRange(emailField.value.indexOf('@'), emailField.value.indexOf('@'));
+    });
+
+    // Gestisci i tasti speciali (invio, spazio, @)
+    emailField.addEventListener('keydown', function(event) {
+        if (['Enter', ' ', '@'].includes(event.key)) {
+            emailField.value = ensureDomain(emailField.value);
+            emailField.setSelectionRange(emailField.value.indexOf('@'), emailField.value.indexOf('@'));
+            event.preventDefault();  // Previeni l'azione predefinita
+        }
+    });
+</script>
 
 <jsp:include page="Footer.jsp" />
 
