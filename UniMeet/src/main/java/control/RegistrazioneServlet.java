@@ -67,17 +67,17 @@ public class RegistrazioneServlet extends HttpServlet {
             if (row > 0) {
                 // Registrazione avvenuta con successo
                 session.setAttribute("status", "Complimenti, ti sei registrato con successo! Effettua il login.");
-                response.sendRedirect(request.getContextPath() + "/application/Registrazione.jsp");
+                response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
             } else {
                 // Fallimento nella registrazione
                 session.setAttribute("status", "Qualcosa è andato storto, riprova!");
-                response.sendRedirect(request.getContextPath() + "/application/Registrazione.jsp");
+                response.sendRedirect(request.getContextPath() + "/application/RegistrazioneProfessore.jsp");
             }
         } catch (Exception e) {
             // Errore durante la registrazione
             logger.log(Level.SEVERE, "Errore durante la registrazione: ", e);
             session.setAttribute("status", "Si è verificato un errore durante la registrazione.");
-            response.sendRedirect(request.getContextPath() + "/application/Registrazione.jsp");
+            response.sendRedirect(request.getContextPath() + "/application/RegistrazioneProfessore.jsp");
         }
     }
 }
