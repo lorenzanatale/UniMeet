@@ -45,22 +45,32 @@ public class InsegnamentoService {
 	}
 	
 	public Insegnamento ricercaInsegnamento(String nome) {
-		Insegnamento insegnamento = null;
-		try(Connection con= DriverManagerConnectionPool.getConnessione()){
-			PreparedStatement ps = con.prepareStatement("DELETE FROM insegnamento WHERE nome = ? AND codiceProfessore = ?;");
-			ps.setString(1, nome);
-			ps.executeQuery();
-			ResultSet rs = ps.getResultSet();
-			
-			insegnamento = (Insegnamento)rs.getObject(0);
-			return insegnamento;
-		
-			
-	}catch(SQLException e){
-		e.printStackTrace();
-		System.out.println("errore nella cancellazione dell'insegnamento"+e.getMessage());
-		return insegnamento;
+	    Insegnamento insegnamento = null;
+
+	    String query = "SELECT * FROM insegnamento WHERE nome = ?;";
+	    try (Connection con = DriverManagerConnectionPool.getConnessione();
+	         PreparedStatement ps = con.prepareStatement(query)) {
+
+	        ps.setString(1, nome); 
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) { 
+	                
+	                insegnamento = new Insegnamento(
+	                    rs.getString("nome"),
+	                    rs.getString("codiceProfessore")
+	                );
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella ricerca dell'insegnamento: " + e.getMessage());
+	    }
+
+	    return insegnamento; 
 	}
-	}
+
+	
+	
+
 
 }

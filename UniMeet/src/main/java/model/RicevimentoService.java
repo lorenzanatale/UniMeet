@@ -62,6 +62,9 @@ public class RicevimentoService {
 			return false;
 		}
 	}
+	
+	
+	//importante da testare  
 	public Date getGiornoRicevimento(Ricevimento r) {
 		Date giorno = null;
 		
@@ -72,8 +75,10 @@ public class RicevimentoService {
 			ps.setDate(1, r.getGiorno());
 			ResultSet rs = ps.executeQuery();
 
-			
-			 giorno= (Date) rs.getDate(0);	
+			if(rs.next()) {
+				java.sql.Date sqlDate = rs.getDate("giorno");
+				giorno = new Date(sqlDate.getTime());
+			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -86,14 +91,15 @@ public class RicevimentoService {
 	public String getOraRicevimento(Ricevimento r) {
 		String ora = null;
 		try(Connection con = DriverManagerConnectionPool.getConnessione()){
-			PreparedStatement ps = con.prepareStatement("SELECT ora FROM ricevimento r WHERE r.getCodiceProfessore()=?;");
+			PreparedStatement ps = con.prepareStatement("SELECT ora FROM ricevimento r WHERE r.codiceProfessore=?;");
 			
 	
 			ps.setString(1, r.getCodiceProfessore());
 			
 			ResultSet rs = ps.executeQuery();
 			
-			ora = rs.getString(0);
+			if(rs.next())
+			ora = rs.getString("ora");
 			
 			
 		}catch(SQLException e) {
@@ -106,7 +112,7 @@ public class RicevimentoService {
 	
 public boolean setOraRicevimento(Ricevimento r) {
 	try(Connection con = DriverManagerConnectionPool.getConnessione()){
-		PreparedStatement ps = con.prepareStatement("UPDATE Ricevimento SET ora= ? WHERE r.getCodiceProfessore()=?;");
+		PreparedStatement ps = con.prepareStatement("UPDATE Ricevimento SET ora= ? WHERE r.codiceProfessore=?;");
 		
 		ps.setString(1, r.getOra());
 		ps.setString(2, r.getCodiceProfessore());
@@ -127,7 +133,7 @@ public boolean setOraRicevimento(Ricevimento r) {
 }
 public boolean setGiornoRicevimento(Ricevimento r) {
 	try(Connection con = DriverManagerConnectionPool.getConnessione()){
-		PreparedStatement ps = con.prepareStatement("UPDATE Ricevimento SET giorno= ? WHERE r.getCodiceProfessore()=?;");
+		PreparedStatement ps = con.prepareStatement("UPDATE Ricevimento SET giorno= ? WHERE r.codiceProfessore=?;");
 		
 		ps.setDate(1, r.getGiorno());
 		ps.setString(2, r.getCodiceProfessore());
@@ -147,7 +153,37 @@ public boolean setGiornoRicevimento(Ricevimento r) {
 	
 		}
 	}
-
+//aggiunto il metodo per la restituzione di tutto l'oggetto ricevimento importante da testare
+public Ricevimento getRicevimento(String ora,Date giorno,String codiceProfessore) {
+	String query="SELECT * FROM ricevimento r WHERE r.ora= ? AND r.giorno = ? AND r.codiceProfessore = ?";
+	try (Connection con = DriverManagerConnectionPool.getConnessione();
+	         PreparedStatement st = con.prepareStatement(query)) {
+				st.setString(1, ora);
+				st.setDate(2, giorno);
+				st.setString(3, codiceProfessore);
+				
+				try(ResultSet rs = st.executeQuery()){
+				
+					java.sql.Date sqlDate = rs.getDate("giorno");
+	                Date day = new Date(sqlDate.getTime());
+	                
+					Ricevimento ricevimento = new Ricevimento(
+							day,
+							rs.getString("ora"),
+							rs.getString("note"),
+							rs.getString("codiceProfessore"));
+					return ricevimento;
+				
+				}
+		
+		
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println("errore nel prelevare il ricevimento"+e.getMessage());
+		return null;
+	}
+}
 
 
 }

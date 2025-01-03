@@ -130,5 +130,46 @@ public class ProfessoreService {
         	        return false;
         	    }
     }
+        //dovrebbe funzionare con il nome del professore
+        public Insegnamento cercaInsegnamentoProfessore(String codiceProfessore) {
+    	    Insegnamento insegnamento = null;
+
+    	    String query = "SELECT * FROM insegnamento WHERE codiceProfessore = ?;";
+    	    try (Connection con = DriverManagerConnectionPool.getConnessione();
+    	         PreparedStatement ps = con.prepareStatement(query)) {
+
+    	        ps.setString(1, codiceProfessore); 
+    	        try (ResultSet rs = ps.executeQuery()) {
+    	            if (rs.next()) { 
+    	                insegnamento = new Insegnamento(rs.getString("nome"),rs.getString("codiceProfessore"));
+    	   
+    	            }
+    	        }
+    	    } catch (SQLException e) {
+    	        e.printStackTrace();
+    	        System.out.println("Errore nella ricerca dell'insegnamento: " + e.getMessage());
+    	    }
+
+    	    return insegnamento;
+    	}
+        
+        public String getUfficioProfessore(String nome,String cognome) {
+        	String ufficio = null;
+        	String query = "SELECT ufficio FROM professore WHERE nome = ? AND cognome = ?;";
+    	    try (Connection con = DriverManagerConnectionPool.getConnessione();
+    	         PreparedStatement ps = con.prepareStatement(query)) {
+    	    		ps.setString(1,nome);
+    	    		ps.setString(2, cognome);
+    	    		ResultSet rs = ps.executeQuery();
+    	    		if(rs.next())
+    	    		 ufficio = rs.getString("ufficio");
+    	    }catch(SQLException e) {
+    	    	e.printStackTrace();
+    	    	System.out.println("errore nella ricerca dell'ufficio del professore"+e.getMessage());
+    	    	
+    	    }
+        	return ufficio;
+        }
+        
 }
 

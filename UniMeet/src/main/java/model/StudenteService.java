@@ -105,8 +105,35 @@ public class StudenteService {
       	        return false;
       	    }
 	  }
+//non viene utilizzato perchè il professore non cerca lo studente per matricola
+	  public Studente trovaPerMatricola(String matricola) throws SQLException {
+		    String str = "SELECT * FROM studente s WHERE s.matricola = ?";
+		    try (Connection con = DriverManagerConnectionPool.getConnessione();
+		         PreparedStatement st = con.prepareStatement(str)) {
+		        
+		        st.setString(1, matricola);  
+		        
+		        try (ResultSet rs = st.executeQuery()) {
+		            if (rs.next()) { 
+		                
+		                Studente studente = new Studente();
+		                studente.setMatricola(rs.getString("matricola"));
+		                studente.setNome(rs.getString("nome"));
+		                studente.setCognome(rs.getString("cognome"));
+		                studente.setDomanda(rs.getString("domdandaSicurezza"));
+		                studente.setRisposta(rs.getString("risposta"));
+		                studente.setEmail(rs.getString("email"));
+		                studente.setPassword(rs.getString("passwordHash"));
+		                return studente;
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("Errore nella ricerca dello studente per matricola: " + e.getMessage());
+		    }
+		    return null;  
+		}
 
-	  
 	
 	  
 	  

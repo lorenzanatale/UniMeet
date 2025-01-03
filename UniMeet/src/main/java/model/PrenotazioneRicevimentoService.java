@@ -51,42 +51,58 @@ public class PrenotazioneRicevimentoService {
 	
 	
 	public PrenotazioneRicevimento ricercaPrenotazione(int codicePrenotazione) {
-		PrenotazioneRicevimento prenotazione = null;
-		try(Connection con= DriverManagerConnectionPool.getConnessione()){
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM prenotazioneRicevimento WHERE pr.codice = ?;");
-			ps.setInt(1, codicePrenotazione);
-			ps.executeQuery();
-			ResultSet rs = ps.getResultSet();
-			
-			prenotazione = (PrenotazioneRicevimento)rs.getObject(0);
-			return prenotazione;
-		
-			
-	}catch(SQLException e){
-		e.printStackTrace();
-		System.out.println("errore nella ricerca per codice della prenotazione"+e.getMessage());
-		return prenotazione;
+	    PrenotazioneRicevimento prenotazione = null;
+
+	    String query = "SELECT * FROM prenotazioneRicevimento WHERE codice = ?;";
+	    try (Connection con = DriverManagerConnectionPool.getConnessione();
+	         PreparedStatement ps = con.prepareStatement(query)) {
+
+	        ps.setInt(1, codicePrenotazione); 
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) { 
+	                
+	                prenotazione = new PrenotazioneRicevimento(
+	                		rs.getString("stato"),
+	                		rs.getDate("data"),
+	                		rs.getString("ora"),
+	                		rs.getString("nota"),
+	                		rs.getString("codiceProfessore"),
+	                		rs.getString("matricolaStudente"));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella ricerca per codice della prenotazione: " + e.getMessage());
+	    }
+
+	    return prenotazione; 
 	}
-		
-		
-	}
+
 	public PrenotazioneRicevimento ricercaPrenotazionePerProfessore(Professore p) {
 		PrenotazioneRicevimento prenotazione = null;
 		try(Connection con= DriverManagerConnectionPool.getConnessione()){
 			PreparedStatement ps = con.prepareStatement("SELECT * FROM prenotazioneRicevimento pr WHERE pr.codiceProfessore = ?;");
 			ps.setString(1, p.getCodiceProfessore());
-			ps.executeQuery();
-			ResultSet rs = ps.getResultSet();
-			
-			prenotazione = (PrenotazioneRicevimento)rs.getObject(0);
-			return prenotazione;
-		
+			  try (ResultSet rs = ps.executeQuery()) {
+		            if (rs.next()) { 
+		                
+		                prenotazione = new PrenotazioneRicevimento(
+		                		rs.getString("stato"),
+		                		rs.getDate("data"),
+		                		rs.getString("ora"),
+		                		rs.getString("nota"),
+		                		rs.getString("codiceProfessore"),
+		                		rs.getString("matricolaStudente"));
+		            }
+		        }
 			
 	}catch(SQLException e){
 		e.printStackTrace();
 		System.out.println("errore nella ricerca per codice della prenotazione"+e.getMessage());
-		return prenotazione;
+		
 	}
+		return prenotazione;
 	}
 	
 	
