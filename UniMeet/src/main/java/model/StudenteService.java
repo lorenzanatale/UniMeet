@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StudenteService {
@@ -31,4 +32,81 @@ public class StudenteService {
         }
         return result;
     }
-}
+	
+	public static Studente loginStudente(String email, String password) throws Exception {
+		Studente studente = null;
+		String sql = "SELECT * FROM studente WHERE email = ? AND passwordHash = ?";
+		
+		try (Connection conn = DriverManagerConnectionPool.getConnessione();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, email);
+			stmt.setString(2, password);
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				studente = new Studente();
+				studente.setEmail(rs.getString("email"));
+				studente.setPassword(rs.getString("passwordHash"));
+				studente.setNome(rs.getString("nome"));
+				studente.setCognome(rs.getString("cognome"));
+				studente.setMatricola(rs.getString("matricola"));
+			}
+		}
+		return studente;
+	}
+    //ricerca professore tramite mail
+	  public static Studente cercaStudenteEmail(String email) throws Exception {
+		  
+	        Studente studente = null;
+	        String sql = "SELECT * FROM studente WHERE email = ?";
+	        
+	        try (Connection conn = DriverManagerConnectionPool.getConnessione();
+	             PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        	
+	            stmt.setString(1, email);
+	            ResultSet rs = stmt.executeQuery();
+	            
+	            if (rs.next()) {
+	                studente = new Studente();
+	                studente.setEmail(rs.getString("email"));
+	                studente.setPassword(rs.getString("passwordHash"));
+	                studente.setNome(rs.getString("nome"));
+	                studente.setCognome(rs.getString("cognome"));
+	                studente.setMatricola(rs.getString("matricola"));
+	                studente.setDomanda(rs.getString("domandaSicurezza"));
+	                studente.setRisposta(rs.getString("risposta"));
+	            }
+	        }
+	        return studente;
+	    }
+	  
+	  public static Boolean modificaStudente (Studente s) throws SQLException {
+      	
+      	String sql = "UPDATE studente SET nome = ?, cognome = ?, email = ?, passwordHash = ?, domandaSicurezza= ?, risposta = ? WHERE matricola = ?";
+      	 try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                   PreparedStatement stmt = conn.prepareStatement(sql)){
+      		 
+      		 	conn.setAutoCommit(false);
+      		 
+      	        stmt.setString(1, s.getNome());
+      	        stmt.setString(2, s.getCognome());
+      	        stmt.setString(3, s.getEmail());
+      	        stmt.setString(4, s.getPassword());
+      	        stmt.setString(5, s.getDomanda());
+      	        stmt.setString(6, s.getRisposta());
+      	        stmt.setString(7, s.getMatricola());
+      	        int rows = stmt.executeUpdate();
+      	        
+      	        conn.commit();
+      	        
+      	        return rows > 0;
+      	    } catch (SQLException e) {
+      	        System.err.println("Errore nell'aggiornamento dello studente: " + e.getMessage());
+      	        return false;
+      	    }
+	  }
+	  
+	}
+	
+	 
+      

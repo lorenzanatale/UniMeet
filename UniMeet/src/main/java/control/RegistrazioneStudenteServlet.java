@@ -1,5 +1,6 @@
 package control;
 
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Utils.PasswordHasher;
 import model.Studente;
 import model.StudenteService;
 
@@ -49,7 +51,7 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
         try {
             // Creazione dell'oggetto studente
             Studente studente = new Studente();
-            studente.setPassword(pass);
+            studente.setPassword(PasswordHasher.hashPassword(pass));
             studente.setCognome(cognome);
             studente.setEmail(email);
             studente.setNome(nome);

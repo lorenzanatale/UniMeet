@@ -36,144 +36,99 @@ public class ProfessoreService {
     }
     
     
-    public static boolean rimuoviProfessore(Professore p) {
-
-        try (Connection con = DriverManagerConnectionPool.getConnessione();
-        	PreparedStatement ps = con.prepareStatement("DELETE FROM professore WHERE codiceProfessore=?")){
-        	ps.setString(1, p.getCodiceProfessore());
-        	
-        	if(ps.execute())
-        		return true;
-        	else
-        		return false;
-        }  catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("connessione al database non effettuata per la cancellazione del  professore " + e.getMessage());
-            return false;
+    //per login docente
+        public static Professore loginProfessore(String email, String password) throws Exception {
+            Professore professore = null;
+            String sql = "SELECT * FROM professore WHERE email = ? AND password = ?";
+            
+            try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, email);
+                stmt.setString(2, password);
+                ResultSet rs = stmt.executeQuery();
+                
+                if (rs.next()) {
+                    professore = new Professore();
+                    professore.setEmail(rs.getString("email"));
+                    professore.setPassword(rs.getString("passwordHash"));
+                    professore.setNome(rs.getString("nome"));
+                    professore.setCognome(rs.getString("cognome"));
+                    professore.setCodiceProfessore(rs.getString("codice"));
+                    professore.setUfficio(rs.getString("ufficio"));
+                }
+            }
+            return professore;
         }
+        
+        //ricerca professore tramite mail
+        public static Professore cercaProfessoreEmail (String email) throws Exception {
+        	
+        	Professore professore = null;
+        	String sql = "SELECT * FROM professore WHERE email = ?";
+        	
+        	 try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                  PreparedStatement stmt = conn.prepareStatement(sql)){
+        		 
+        		 stmt.setString(1, email);
+        		 ResultSet rs =stmt.executeQuery();
+        		 
+        		 if(rs.next()) {
+        			 professore = new Professore();
+                     professore.setEmail(rs.getString("email"));
+                     professore.setPassword(rs.getString("passwordHash"));
+                     professore.setNome(rs.getString("nome"));
+                     professore.setCognome(rs.getString("cognome"));
+                     professore.setCodiceProfessore(rs.getString("codice"));
+                     professore.setUfficio(rs.getString("ufficio"));
+                     professore.setDomanda(rs.getString("domandaSicurezza"));
+                     professore.setRisposta(rs.getString("risposta"));
+        			 
+        		 }
+        		 
+        	 }
+        	return professore;
+        }
+        //rimuove professore
+        public static Boolean rimuoviProfessore (Professore p) throws SQLException{
+        	
+        	String sql = "DELETE FROM professore WHERE email = ?";
+        	try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                    PreparedStatement stmt = conn.prepareStatement(sql)){
+        		
+        		stmt.setString(1, p.getEmail());
+        		int row=stmt.executeUpdate();
 
+        		return row>0;
+
+        	}
+        }
+        
+        //modifica di un professore 
+        public static Boolean modificaProfessore (Professore p) throws SQLException {
+        	
+        	String sql = "UPDATE professore SET nome = ?, cognome = ?, ufficio = ?, email = ?, passwordHash = ?, domandaSicurezza= ?, risposta = ? WHERE codice= ?";
+        	 try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                     PreparedStatement stmt = conn.prepareStatement(sql)){
+        		 
+        		 	conn.setAutoCommit(false);
+        		 
+        	        stmt.setString(1, p.getNome());
+        	        stmt.setString(2, p.getCognome());
+        	        stmt.setString(3, p.getUfficio());
+        	        stmt.setString(4, p.getEmail());
+        	        stmt.setString(5, p.getPassword());
+        	        stmt.setString(6, p.getDomanda());
+        	        stmt.setString(7, p.getRisposta());
+        	        stmt.setString(8, p.getCodiceProfessore());
+        	        int rows = stmt.executeUpdate();
+        	        
+        	        conn.commit();
+        	        
+        	        return rows > 0;
+        	    } catch (SQLException e) {
+        	        System.err.println("Errore nell'aggiornamento del professore: " + e.getMessage());
+        	        return false;
+        	    }
     }
-    
-    public static boolean modificaProfessore(Professore p) {
-    	String oldCodiceProfessore = p.getCodiceProfessore();
-    	 try (Connection con = DriverManagerConnectionPool.getConnessione();
-    	        	PreparedStatement ps = con.prepareStatement("UPDATE professore values codice = ?, nome = ?, cognome = ?, ufficio = ?, email = ?, passwordHash = ?, domandaDiSicurezza= ?, risposta = ? WHERE codiceProfessore=?")){
-    	        	ps.setString(1, p.getCodiceProfessore());
-    	        	ps.setString(2, p.getNome());
-    	        	ps.setString(3, p.getCognome());
-    	            ps.setString(4, p.getUfficio());
-    	            ps.setString(5, p.getEmail());
-    	            ps.setString(6, p.getPassword());
-    	            ps.setString(7, p.getDomanda());
-    	            ps.setString(8, p.getRisposta());
-    	            ps.setString(9, oldCodiceProfessore);
-    	        	
-    	        	if(ps.execute())
-    	        		return true;
-    	        	else
-    	        		return false;
-    	        }  catch (SQLException e) {
-    	            e.printStackTrace();
-    	            System.out.println("connessione al database non effettuata per la modifica del professore " + e.getMessage());
-    	            return false;
-    	        }
-    }
-//creaSessione
-// public void terminaSessione(professore p)
-    
- public Professore cercaProfessoreEmail(String email,Professore p) {
-	 Professore pOut=null; //professore temporaneo che sarà restituito in output
-	 try (Connection con = DriverManagerConnectionPool.getConnessione();
-	        	PreparedStatement ps = con.prepareStatement("SELECT * FROM professore p WHERE p.email=?")){
-	        	ps.setString(1, p.getEmail());
-	        	ResultSet rs = ps.getResultSet();
-	        	
-	        pOut=(Professore)rs.getObject(0);	
-	        return pOut;
-	        	
-	 }catch(SQLException e) {
-		 e.printStackTrace();
-		 System.out.println("connessione al database non effettuata per la ricerca del professore"+e.getMessage());
-		 return pOut;
-	 }
- }
- 
- 
- public String getEmailProfessore(Professore p) {
-	 String email = null;
-	 try (Connection con = DriverManagerConnectionPool.getConnessione();
-	        	PreparedStatement ps = con.prepareStatement("SELECT email  FROM professore p WHERE p.email=?")){
-	        	ps.setString(1, p.getEmail());
-	        	ResultSet rs = ps.getResultSet();
-	        	
-	        email =rs.getString(0);
-	        return email;
-	        	
-	 }catch(SQLException e) {
-		 e.printStackTrace();
-		 System.out.println("connessione al database non effettuata per la ricerca dell'email"+e.getMessage());
-		 return email;
-	 }
-	 
-	 
- }
- public String getCodiceProfessore(Professore p) {
-	 String codice = null;
-	 try (Connection con = DriverManagerConnectionPool.getConnessione();
-	        	PreparedStatement ps = con.prepareStatement("SELECT codice  FROM professore p WHERE p.email=?")){
-	        	ps.setString(1, p.getEmail());
-	        	ResultSet rs = ps.getResultSet();
-	        	
-	        codice =rs.getString(0);
-	        return codice;
-	        	
-	 }catch(SQLException e) {
-		 e.printStackTrace();
-		 System.out.println("connessione al database non effettuata per la ricerca del codice "+e.getMessage());
-		 return codice;
-	 }
- }
-	 public String getUfficioProfessore(Professore p) {
-		 String ufficio = null;
-		 try (Connection con = DriverManagerConnectionPool.getConnessione();
-		        	PreparedStatement ps = con.prepareStatement("SELECT ufficio FROM professore p WHERE p.email=?")){
-		        	ps.setString(1, p.getEmail());
-		        	ResultSet rs = ps.getResultSet();
-		        	
-		        ufficio =rs.getString(0);
-		        return ufficio;
-		        	
-		 }catch(SQLException e) {
-			 e.printStackTrace();
-			 System.out.println("connessione al database non effettuata per la ricerca dell'ufficio "+e.getMessage());
-			 return ufficio;
-		 }
-	 
-	 
- }
-	 
-	 public Insegnamento getInsegnamentoProfessore(Professore p) {
-		 Insegnamento ins = null;
-		 try (Connection con = DriverManagerConnectionPool.getConnessione();
-		        	PreparedStatement ps = con.prepareStatement("SELECT nome FROM insegnamento i WHERE i.getCodiceProfessore()=?")){
-		        	ps.setString(1, p.getCodiceProfessore());
-		        	
-		        	ResultSet rs = ps.getResultSet();
-		        	
-		        ins = (Insegnamento)rs.getObject(0);
-		        return ins;
-		        	
-		 }catch(SQLException e) {
-			 e.printStackTrace();
-			 System.out.println("connessione al database non effettuata per la ricerca dell'insegnamento "+e.getMessage());
-			 return ins;
-		 }
-	 
-	 
- }
-	 
-	 
-    
-    	
 }
 

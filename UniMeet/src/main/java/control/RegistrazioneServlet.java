@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Utils.PasswordHasher;
 import model.Professore;
 import model.ProfessoreService;
 
@@ -51,7 +52,7 @@ public class RegistrazioneServlet extends HttpServlet {
         try {
             // Creazione dell'oggetto professore
             Professore professore = new Professore();
-            professore.setPassword(pass);
+            professore.setPassword(PasswordHasher.hashPassword(pass));
             professore.setCognome(cognome);
             professore.setEmail(email);
             professore.setNome(nome);
