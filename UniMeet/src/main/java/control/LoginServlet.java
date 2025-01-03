@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
                 // Login come studente avvenuto con successo
                 session.setAttribute("utente", studente);
                 session.setAttribute("role", "studente");
-                response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
+                response.sendRedirect(request.getContextPath() + "../Home.jsp");
                 return;
             }
 
