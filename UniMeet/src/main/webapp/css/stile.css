@@ -177,4 +177,13 @@
         .navbar-custom .btn:first-child {
             margin-left: 0;
         }
+
+/* CSS PAGINA Home.jsp */
+        .logo-container {
+             margin-right: 200px;
+        }
+
+        .text-container {
+            margin-left: 200px;
+        }
  

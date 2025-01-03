@@ -1,46 +1,35 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
+
+<!doctype html>
 <html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrazione - UniMeet</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/registrazione.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/navbar.css">
-</head>
+
+<title>Registrazione - UniMeet</title>
+
 <body>
-    <!-- Messaggi di stato -->
-    <% if(session.getAttribute("status") != null) { %>
-        <div class="alert alert-warning">
-            <%= session.getAttribute("status") %>
-        </div>
-        <% session.removeAttribute("status"); %>
-    <% } %>
+<!-- Collegamento all'Header -->
+<jsp:include page="/application/Header.jsp" />
 
-    <!-- Header -->
-    <%@ include file="Header.jsp" %>
-
-    <!-- Container principale -->
-    <div class="registration-container">
-        <div class="registration-card">
-            <h2 class="text-center mb-4">Registrati</h2>
-            <!-- Scelta del tipo di registrazione -->
-            <form class="registration-form">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="registration-card">
+                <h2 class="text-center mb-4">Registrati</h2>
                 <div class="custom-btn-container">
-                    <a href="RegistrazioneStudente.jsp" class="btn btn-primary">Registrati come Studente</a>
+                    <a href="RegistrazioneStudente.jsp" class="btn btn-primary">Studente</a>
+                    <a href="RegistrazioneProfessore.jsp" class="btn btn-primary">Professore</a>
                 </div>
                 <div class="custom-btn-container">
-                    <a href="RegistrazioneProfessore.jsp" class="btn btn-primary">Registrati come Professore</a>
+                        oppure<br>
+                        <a href="Home.jsp" class="btn btn-danger" role="button">Torna alla landing page!</a>
                 </div>
-            </form>
-            <!-- Pulsante per tornare alla Home -->
-            <div class="custom-btn-container mt-4">
-                <a href="Home.jsp" class="btn btn-danger" role="button">Torna alla Home</a>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Footer -->
-    <jsp:include page="Footer.jsp" />
+<jsp:include page="Footer.jsp" />
+
+
 </body>
 </html>
