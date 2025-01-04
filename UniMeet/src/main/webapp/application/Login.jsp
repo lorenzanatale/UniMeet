@@ -14,16 +14,15 @@
         session.removeAttribute("status");
     }
 %>
-
 <!doctype html>
 <html lang="it" class="h-100">
 
-<% if(session.getAttribute("status") != null) { %>
+<% if (status != null) { %>
 <div class="alert alert-warning">
-    <%= session.getAttribute("status") %>
+    <%= status %>
 </div>
-<% session.removeAttribute("status"); %>
 <% } %>
+
 
 <body>
 <!-- QUI STO IMPOSTANDO IL RIFERIMENTO ALL'HEADER -->
@@ -49,7 +48,7 @@
                         <label class="form-check-label" for="showPassword">Mostra Password</label>
                     </div>
                     <div class="custom-btn-container">
-                        <a class="btn btn-primary" type="submit">Entra!</a>
+                        <button class="btn btn-primary" type="submit">Entra!</button>
                         <a href="Registrazione.jsp" class="btn btn-danger text-white" type="submit">Sei nuovo? Registrati!</a><br>
                         oppure<br>
                         <a href="Home.jsp" class="btn btn-danger text-white" type="submit">Torna alla landing page!</a>
@@ -67,17 +66,10 @@
         </div>
     </div>
 </div>
+
 <!-- QUESTO E' UN PICCOLO SCRIPT PER MOSTRARE LA PASSWORD -->
-<script>
-    function togglePasswordVisibility() {
-        var passwordField = document.getElementById('inputPassword');
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text'; // CON QUESTA AZIONE LA MOSTRO
-        } else {
-            passwordField.type = 'password'; // CON QUESTA AZIONE LA NASCONDO
-        }
-    }
-</script>
+<script src="<%= request.getContextPath() %>/scripts/Login.js"></script>
+
 <!-- QUI FINISCE IL CONTENUTO DELLA PAGINA (BODY) -->
 </body>
 

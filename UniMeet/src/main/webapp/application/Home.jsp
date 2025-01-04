@@ -11,7 +11,6 @@
 <!doctype html>
 <html lang="it">
 <title>Home - UniMeet</title>
-
 <body>
 <!-- Collegamento all'Header -->
 <jsp:include page="/application/Header.jsp" />
