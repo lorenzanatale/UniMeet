@@ -14,22 +14,20 @@
         session.removeAttribute("status");
     }
 %>
-
 <!-- QUI STO IMPOSTANDO IL RIFERIMENTO ALL'HEADER -->
 <jsp:include page="/application/Header.jsp" />
 
 <!doctype html>
 <html lang="it" class="h-100">
 
-<% if (status != null) { %>
+<% if(session.getAttribute("status") != null) { %>
 <div class="alert alert-warning">
-    <%= status %>
+    <%= session.getAttribute("status") %>
 </div>
+<% session.removeAttribute("status"); %>
 <% } %>
 
-
 <body>
-
 
 <!-- IN QUESTO PUNTO STO INIZIANDO A FORMARE IL CONTENUTO DELLA PAGINA (SOLO BODY, HEADER E FOOTER SONO NEI LORO FILES -->
 <div class="container mt-5">
