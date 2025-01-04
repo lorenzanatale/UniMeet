@@ -13,6 +13,12 @@
 
 <!doctype html>
 <html lang="it">
+<% if(session.getAttribute("status") != null) { %>
+<div class="alert alert-warning">
+    <%= session.getAttribute("status") %>
+</div>
+<% session.removeAttribute("status"); %>
+<% } %>
 <title>Home - UniMeet</title>
 <body>
 

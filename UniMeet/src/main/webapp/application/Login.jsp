@@ -37,16 +37,16 @@
                 <h1 class="h3 mb-3 font-weight-normal text-center">Accedi</h1>
                 <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
                     <div class="form-group">
-                        <label for="inputEmail">Indirizzo email</label>
-                        <input type="email" id="inputEmail" name="emailid" class="form-control" placeholder="Indirizzo email" required autofocus>
+                        <label for="emailmail">Indirizzo email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Indirizzo email" required autofocus>
                     </div>
                     <div class="form-group">
-                        <label for="inputPassword">Password</label>
-                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
                     </div>
                     <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePasswordVisibility()">
-                        <label class="form-check-label" for="showPassword">Mostra Password</label>
+                        <input type="checkbox" class="form-check-input" id="mostraPassword" onclick="togglePasswordVisibility()">
+                        <label class="form-check-label" for="mostraPassword">Mostra Password</label>
                     </div>
                     <div class="custom-btn-container">
                         <button class="btn btn-primary" type="submit">Entra!</button>
