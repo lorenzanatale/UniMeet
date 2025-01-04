@@ -27,7 +27,7 @@ public class ModificaPasswordServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         
-        String userEmail = request.getParameter("userEmail");
+        String userEmail = request.getParameter("email");
         String rispostaUtente = request.getParameter("risposta");
         String domandaUtente = request.getParameter("domanda");
         String newPassword = request.getParameter("newPassword");
