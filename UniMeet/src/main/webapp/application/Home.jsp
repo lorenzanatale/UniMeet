@@ -13,14 +13,20 @@
 
 <!doctype html>
 <html lang="it">
-<% if(session.getAttribute("status") != null) { %>
-<div class="alert alert-warning">
-    <%= session.getAttribute("status") %>
-</div>
-<% session.removeAttribute("status"); %>
-<% } %>
 <title>Home - UniMeet</title>
 <body>
+
+<%
+    String status = (String) session.getAttribute("status");
+    if (status != null) {
+%>
+<div class="alert alert-info text-center mt-3" role="alert">
+    <%= status %>
+</div>
+<%
+        session.removeAttribute("status");  // Rimuove il messaggio dopo averlo mostrato
+    }
+%>
 
 
 <div class="d-flex justify-content-center align-items-center w-100">
