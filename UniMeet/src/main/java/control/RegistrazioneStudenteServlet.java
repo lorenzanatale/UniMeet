@@ -30,6 +30,11 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	//IMPORTANTE, SENZA QUESTE DUE RIGHE NON VENGONO STORATI CORRETTAMENTE I CARATTERI SPECIALI
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        
         String matricola = request.getParameter("matricola");
         String nome = request.getParameter("nome");
         String cognome = request.getParameter("cognome");

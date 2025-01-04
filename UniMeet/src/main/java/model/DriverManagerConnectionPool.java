@@ -12,7 +12,7 @@ public class DriverManagerConnectionPool  {
 	static {
 	    rilasciaConnessioni = new ArrayList<Connection>();
 	    try {
-	        Class.forName("com.mysql.jdbc.Driver");
+	        Class.forName("com.mysql.cj.jdbc.Driver");
 	        System.out.println("Driver caricato con successo!");
 	    } catch (ClassNotFoundException e) {
 	        System.out.println("Driver non trovato: " + e.getMessage());
