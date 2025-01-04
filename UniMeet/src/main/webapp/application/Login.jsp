@@ -14,6 +14,10 @@
         session.removeAttribute("status");
     }
 %>
+
+<!-- QUI STO IMPOSTANDO IL RIFERIMENTO ALL'HEADER -->
+<jsp:include page="/application/Header.jsp" />
+
 <!doctype html>
 <html lang="it" class="h-100">
 
@@ -25,8 +29,7 @@
 
 
 <body>
-<!-- QUI STO IMPOSTANDO IL RIFERIMENTO ALL'HEADER -->
-<jsp:include page="/application/Header.jsp" />
+
 
 <!-- IN QUESTO PUNTO STO INIZIANDO A FORMARE IL CONTENUTO DELLA PAGINA (SOLO BODY, HEADER E FOOTER SONO NEI LORO FILES -->
 <div class="container mt-5">

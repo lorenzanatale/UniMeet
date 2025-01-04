@@ -1,14 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 
+<!-- Collegamento all'Header -->
+<jsp:include page="/application/Header.jsp" />
+
 <!doctype html>
 <html lang="it">
 
 <title>Registrazione Professore - UniMeet</title>
 
 <body>
-<!-- Collegamento all'Header -->
-<jsp:include page="/application/Header.jsp" />
+
 
 <div class="container mt-5">
     <div class="row justify-content-center">
