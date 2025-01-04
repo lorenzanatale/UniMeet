@@ -19,7 +19,7 @@
             <p>
                 <a class="footer-link" href="Contatti.jsp">Contatti</a>
                 <span class="slash"> / </span>
-                <a class="footer-link" href="About.jsp">About</a>
+                <a class="footer-link" href="RiguardoUnimeet.jsp">Riguardo UniMeet</a>
             </p>
         </div>
     </footer>
