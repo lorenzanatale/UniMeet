@@ -61,7 +61,7 @@
                 </form>
             </div>
             <div class="text-center mt-3 fw-bold">
-                Password dimenticata? Clicca <a href="" class="text-danger text-decoration-none">qui</a>
+                Password dimenticata? Clicca <a href="CambioPassword.jsp" class="text-danger text-decoration-none">qui</a>
             </div>
         </div>
     </div>
