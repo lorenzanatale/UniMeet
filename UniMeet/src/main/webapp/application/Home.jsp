@@ -24,7 +24,7 @@
     <%= status %>
 </div>
 <%
-        session.removeAttribute("status");  // Rimuove il messaggio dopo averlo mostrato
+        session.removeAttribute("status");
     }
 %>
 

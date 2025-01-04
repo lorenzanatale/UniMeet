@@ -6,6 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import Utils.PasswordHasher;
 import model.Professore;
 import model.ProfessoreService;
@@ -29,6 +31,8 @@ public class ModificaPasswordServlet extends HttpServlet {
         String rispostaUtente = request.getParameter("risposta");
         String domandaUtente = request.getParameter("domanda");
         String newPassword = request.getParameter("newPassword");
+        
+        HttpSession session = request.getSession();
 
         	Professore p=null;
         	Studente s = null;
@@ -52,18 +56,18 @@ public class ModificaPasswordServlet extends HttpServlet {
                         
                         
                         if (isUpdated) {
-                            response.getWriter().write("Password aggiornata con successo!");
-                            response.sendRedirect(request.getContextPath()+"/application/CambioPassword.jsp?error=passwordCambiata");
+                        	session.setAttribute("status", "Password aggiornata con successo! Effettua l'accesso!");
+                            response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
                             }
                          else {
-                             response.getWriter().write("Errore durante l'aggiornamento della password.");
-                             response.sendRedirect(request.getContextPath()+"/application/CambioPassword.jsp?error=formErrore");
+                             session.setAttribute("status", "Errore durante l'aggiornamento della password.");
+                             response.sendRedirect(request.getContextPath() + "/application/CambioPassword.jsp");
                           }
                         
                         
                     } else {
-                        response.getWriter().write("Risposta di sicurezza errata.");
-                        response.sendRedirect(request.getContextPath()+"/application/CambioPassword.jsp?error=formErrore");
+                        session.setAttribute("status", "Risposta di sicurezza errata.");
+                        response.sendRedirect(request.getContextPath() + "/application/CambioPassword.jsp");
                     }
                     
                 }
@@ -91,17 +95,18 @@ public class ModificaPasswordServlet extends HttpServlet {
                         
                         
                         if (isUpdated) {
-                            response.getWriter().write("Password aggiornata con successo!");
-                            response.sendRedirect(request.getContextPath()+"/application/CambioPassword.jsp?error=passwordCambiata");
+                            
+                            session.setAttribute("status", "Password aggiornata con successo! Effettua l'accesso");
+                            response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
                             }
                          else {
-                            response.getWriter().write("Errore durante l'aggiornamento della password.");
-                            response.sendRedirect(request.getContextPath()+"/application/CambioPassword.jsp?error=formErrore");
+                        	 session.setAttribute("status", "Errore durante l'aggiornamento della password.");
+                             response.sendRedirect(request.getContextPath() + "/application/CambioPassword.jsp");
                          }
                         
                     } else {
-                        response.getWriter().write("Risposta di sicurezza errata.");
-                        response.sendRedirect(request.getContextPath()+"/application/CambioPassword.jsp?error=formErrore");
+                    	session.setAttribute("status", "Risposta di sicurezza errata.");
+                        response.sendRedirect(request.getContextPath() + "/application/CambioPassword.jsp");
                     }
                 }
             
