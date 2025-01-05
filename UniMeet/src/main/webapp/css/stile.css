@@ -186,4 +186,25 @@
         .text-container {
             margin-left: 200px;
         }
+        
+        /* Arrotondare i bordi del menu */
+        .dropdown-menu {
+            border-radius: 8px;
+        }
+
+        /* Aggiungere la linea separatrice tra le voci */
+        .dropdown-item {
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Rimuovere la linea separatrice dell'ultimo elemento */
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Arrotondare i bordi del bottone */
+        .dropdown-toggle {
+            border-radius: 8px;
+        }
+        
  
