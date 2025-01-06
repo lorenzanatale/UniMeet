@@ -43,7 +43,6 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            // Cerca lo studente nel database
             Studente studente = StudenteService.cercaStudenteEmail(email);
 
             if (studente != null && PasswordHasher.verifyPassword(password, studente.getPassword())) {
@@ -53,8 +52,6 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
                 return;
             }
-
-            // Cerca il professore nel database
             Professore professore = ProfessoreService.cercaProfessoreEmail(email);
 
             if (professore != null && PasswordHasher.verifyPassword(password, professore.getPassword())) {
@@ -65,7 +62,6 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // Se nessun utente corrisponde
             session.setAttribute("status", "Credenziali non valide.");
             response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
 
@@ -75,5 +71,4 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
         }
     }
-
 }
