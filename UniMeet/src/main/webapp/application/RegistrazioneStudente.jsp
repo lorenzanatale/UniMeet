@@ -10,21 +10,29 @@
 <title>Registrazione Studente - UniMeet</title>
 
 <body>
-
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="registration-card">
                 <h2 class="text-center mb-4">Registrazione Studente</h2>
-                <form action="<%= request.getContextPath() %>/RegistrazioneStudenteServlet" method="post">
+                <form action="<%= request.getContextPath() %>/RegistrazioneStudenteServlet" method="post" onsubmit="return validateForm()">
                     <div class="form-group">
                         <label for="email">E-Mail</label>
                         <input type="text" class="form-control" name="email" id="email" placeholder="Inserisci l'E-MAIL" required>
                     </div>
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Inserisci la Password" required>
+                            <label for="inputPassword">Password</label>
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                        </div>
+                        
+                        <div class="form-group">
+    						<label for="inputConfirmPassword">Conferma Password</label>
+    						<input type="password" name="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Conferma Password" required>
+    						<small id="passwordError" class="text-danger" style="display:none;">Le password non corrispondono!</small>
+						</div>
+       					<div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePasswordVisibility()">
+                        <label class="form-check-label" for="showPassword">Mostra Password</label>
                     </div>
                     <div class="form-group">
                         <label for="nome">Nome</label>
@@ -64,9 +72,9 @@
     </div>
 </div>
 
+<script src="<%= request.getContextPath() %>/scripts/ValidazionePass.js"></script>
 <script src="<%= request.getContextPath() %>/scripts/RegistrazioneStudente.js"></script>
 
-<jsp:include page="Footer.jsp" />
-
 </body>
+<jsp:include page="Footer.jsp" />
 </html>
