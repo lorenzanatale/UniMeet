@@ -12,9 +12,15 @@
                 studenti all'interno dell'ambiente universitario. Il progetto mira a risolvere le problematiche logistiche 
                 legate all'organizzazione di appuntamenti, semplificando il processo per entrambe le parti coinvolte, permettendo una 
                 facile organizzazione.</h3>
+                
             </div>
+            
         </div>
+        
     </div>
+</div>
+<div class="custom-btn-container">
+	<a href="Home.jsp" class="btn btn-danger text-white" type="submit" style=" width: 300px;">Torna alla landing page!</a>
 </div>
 <!-- FINE DEL CONTENUTO CONTENUTO DELLA PAGINA -->
 

@@ -16,6 +16,9 @@
         </div>
     </div>
 </div>
+<div class="custom-btn-container">
+	<a href="Home.jsp" class="btn btn-danger text-white" type="submit" style=" width: 300px;">Torna alla landing page!</a>
+</div>
 <!-- FINE DEL CONTENUTO CONTENUTO DELLA PAGINA -->
 
 <!-- RIFERIMENTO AL FOOTER -->

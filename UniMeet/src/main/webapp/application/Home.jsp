@@ -1,6 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 
+<!-- Collegamento all'Header -->
+<jsp:include page="/application/Header.jsp" />
+
 <!doctype html>
 <html lang="it">
 <title>Home - UniMeet</title>
@@ -17,8 +20,6 @@
         session.removeAttribute("status");
     }
 %>
-<!-- Collegamento all'Header -->
-<jsp:include page="/application/Header.jsp" />
 
 <div class="d-flex justify-content-center align-items-center w-100">
     <div class="logo-container">
