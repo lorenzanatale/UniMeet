@@ -18,6 +18,7 @@
     }
 %>
 <!-- Collegamento all'Header -->
+
 <jsp:include page="/application/Header.jsp" />
 
 <div class="d-flex justify-content-center align-items-center w-100">

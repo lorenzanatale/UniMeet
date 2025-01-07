@@ -170,6 +170,42 @@ public class ProfessoreService {
     	    }
         	return ufficio;
         }
+        public String getNomeProfessoreByCodice(String codiceDocente) throws SQLException {
+            String nomeDocente = null;
+            String query = "SELECT nome FROM professore WHERE codice = ?";
+
+            try (Connection con = DriverManagerConnectionPool.getConnessione();
+                 PreparedStatement ps = con.prepareStatement(query)) {
+                
+                ps.setString(1, codiceDocente);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        nomeDocente = rs.getString("nome");
+                    }
+                }
+            }
+
+            return nomeDocente;
+        }
+        public String getcognomeProfessoreByCodice(String codiceDocente) throws SQLException {
+            String nomeDocente = null;
+            String query = "SELECT cognome FROM professore WHERE codice = ?";
+
+            try (Connection con = DriverManagerConnectionPool.getConnessione();
+                 PreparedStatement ps = con.prepareStatement(query)) {
+                
+                ps.setString(1, codiceDocente);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        nomeDocente = rs.getString("cognome");
+                    }
+                }
+            }
+
+            return nomeDocente;
+        }
         
 }
 

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrenotazioneRicevimentoService {
 	
@@ -13,7 +15,7 @@ public class PrenotazioneRicevimentoService {
 	        String query = "INSERT INTO insegnamento(giorno, ora, note, stato, codiceProfessore,matricolaStudente) VALUES (?, ?,?,?,?,?);";
 	        PreparedStatement ps = con.prepareStatement(query);
 
-	        ps.setDate(1, pr.getGiorno());
+	        ps.setString(1, pr.getGiorno());
 	        ps.setString(2, pr.getOra());
 	        ps.setString(3, pr.getNota());
 	        ps.setString(4,pr.getStato());
@@ -63,12 +65,13 @@ public class PrenotazioneRicevimentoService {
 	            if (rs.next()) { 
 	                
 	                prenotazione = new PrenotazioneRicevimento(
-	                		rs.getString("stato"),
-	                		rs.getDate("data"),
-	                		rs.getString("ora"),
-	                		rs.getString("nota"),
-	                		rs.getString("codiceProfessore"),
-	                		rs.getString("matricolaStudente"));
+	                		rs.getInt("codice"),
+	                        rs.getString("stato"),
+	                        rs.getString("giorno"), 
+	                        rs.getString("ora"),
+	                        rs.getString("note"),
+	                        rs.getString("codiceProfessore"),
+	                        rs.getString("matricolaStudente"));
 	            }
 	        }
 	    } catch (SQLException e) {
@@ -78,6 +81,41 @@ public class PrenotazioneRicevimentoService {
 
 	    return prenotazione; 
 	}
+	
+	public List<PrenotazioneRicevimento> stampaPrenotazioni(String matricolaStudente) {
+	    List<PrenotazioneRicevimento> prenotazioni = new ArrayList<>();
+
+	    String query = "SELECT * FROM prenotazioneRicevimento WHERE matricolaStudente = ?;";
+	    try (Connection con = DriverManagerConnectionPool.getConnessione();
+	         PreparedStatement ps = con.prepareStatement(query)) {
+
+	        ps.setString(1, matricolaStudente); 
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	        
+	            while (rs.next()) {
+	                PrenotazioneRicevimento prenotazione = new PrenotazioneRicevimento(
+	                		rs.getInt("codice"),
+	                        rs.getString("stato"),
+	                        rs.getString("giorno"), 
+	                        rs.getString("ora"),
+	                        rs.getString("note"),
+	                        rs.getString("codiceProfessore"),
+	                        rs.getString("matricolaStudente")
+	                );
+	                
+	                prenotazioni.add(prenotazione); 
+	             
+	            }
+	           
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella ricerca delle prenotazioni: " + e.getMessage());
+	    }
+	 return prenotazioni; 
+	}
+
 
 	public PrenotazioneRicevimento ricercaPrenotazionePerProfessore(Professore p) {
 		PrenotazioneRicevimento prenotazione = null;
@@ -88,12 +126,13 @@ public class PrenotazioneRicevimentoService {
 		            if (rs.next()) { 
 		                
 		                prenotazione = new PrenotazioneRicevimento(
-		                		rs.getString("stato"),
-		                		rs.getDate("data"),
-		                		rs.getString("ora"),
-		                		rs.getString("nota"),
-		                		rs.getString("codiceProfessore"),
-		                		rs.getString("matricolaStudente"));
+		                		rs.getInt("codice"),
+		                        rs.getString("stato"),
+		                        rs.getString("giorno"), 
+		                        rs.getString("ora"),
+		                        rs.getString("note"),
+		                        rs.getString("codiceProfessore"),
+		                        rs.getString("matricolaStudente"));
 		            }
 		        }
 			

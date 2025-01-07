@@ -6,13 +6,16 @@ public class PrenotazioneRicevimento {
 	
 	private int codice;
 	private String stato;
-	private Date giorno;
+	private String giorno;
 	private String ora;
 	private String codiceProfessore;
+	private String nomeProfessore;
+	private String cognomeProfessore;
 	private String matricolaStudente;
 	private String nota;
 	
-	public PrenotazioneRicevimento(String stato,Date giorno,String ora,String nota, String codiceProfessore,String matricolaStudente) {
+	public PrenotazioneRicevimento(int codice,String stato,String giorno,String ora,String nota, String codiceProfessore,String matricolaStudente) {
+		this.codice=codice;
 		this.stato=stato;
 		this.giorno=giorno;
 		this.ora=ora;
@@ -27,7 +30,7 @@ public class PrenotazioneRicevimento {
 	public String getStato() {
 		return stato;
 	}
-	public Date getGiorno() {
+	public String getGiorno() {
 		return giorno;
 	}
 	public String getNota() {
@@ -46,7 +49,7 @@ public class PrenotazioneRicevimento {
 	public void setStato(String stato) {
 		this.stato=stato;
 	}
-	public void setGiorno(Date giorno) {
+	public void setGiorno(String giorno) {
 		this.giorno=giorno;
 	}
 	public void setOra(String ora) {
@@ -61,4 +64,18 @@ public class PrenotazioneRicevimento {
 	public void setNota(String nota) {
 		this.nota=nota;
 	}
+	public void setNomeProfessore(String nome) {
+		this.nomeProfessore=nome;
+	}
+	public String getNomeProfessore() {
+		return nomeProfessore;
+	}
+	public void setCognomeProfessore(String cognome) {
+		this.cognomeProfessore=cognome;
+	}
+	public String getCognomeProfessore() {
+		return cognomeProfessore;
+	}
+	
+	
 }

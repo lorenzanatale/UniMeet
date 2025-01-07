@@ -53,7 +53,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="studentMenu">
                     <a class="dropdown-item" href="">Prenota un ricevimento</a>
-                    <a class="dropdown-item" href="">Riepilogo ricevimenti</a>
+                    <a class="dropdown-item" href="RiepilogoRicevimenti.jsp">Riepilogo ricevimenti</a>
                     <form action="../LogoutServlet" method="POST" style="display:inline;">
     					<button type="submit" class="dropdown-item">Logout</button>
 					</form>

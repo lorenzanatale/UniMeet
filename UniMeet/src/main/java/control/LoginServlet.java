@@ -48,6 +48,7 @@ public class LoginServlet extends HttpServlet {
             if (studente != null && PasswordHasher.verifyPassword(password, studente.getPassword())) {
                 session.setAttribute("utente", studente);
                 session.setAttribute("role", "studente");
+                session.setAttribute("matricolaStudente", studente.getMatricola());
                 session.setAttribute("status", "Complimenti " + studente.getNome() + ", ti sei loggato con successo!");
                 response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
                 return;
@@ -57,7 +58,8 @@ public class LoginServlet extends HttpServlet {
             if (professore != null && PasswordHasher.verifyPassword(password, professore.getPassword())) {
                 session.setAttribute("utente", professore);
                 session.setAttribute("role", "professore");
-                session.setAttribute("status", "Complimenti " + professore.getNome() + ", ti sei loggato con successo!");
+                session.setAttribute("codiceProfessore", professore.getCodiceProfessore());
+                session.setAttribute("status", "Complimenti " + professore.getNome()+", ti sei loggato con successo!");
                 response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
                 return;
             }
