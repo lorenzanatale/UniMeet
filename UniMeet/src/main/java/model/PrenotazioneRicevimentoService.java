@@ -58,7 +58,7 @@ public class PrenotazioneRicevimentoService {
 
 	        // Esegui la query e ottieni il numero di righe influenzate
 	        int rowsAffected = ps.executeUpdate();
-	        System.out.println("Righe influenzate: " + rowsAffected);
+	        con.commit();
 	        return rowsAffected > 0;  // Se sono state cancellate delle righe, ritorna true
 	    } catch (SQLException e) {
 	        e.printStackTrace();
