@@ -50,6 +50,23 @@ public class PrenotazioneRicevimentoService {
 		return false;
 	}
 	}
+	public boolean rimuoviPrenotazionePerCodice(int codice) {
+	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+	        String query = "DELETE FROM prenotazioneRicevimento WHERE codice = ?";
+	        PreparedStatement ps = con.prepareStatement(query);
+	        ps.setInt(1, codice);
+
+	        // Esegui la query e ottieni il numero di righe influenzate
+	        int rowsAffected = ps.executeUpdate();
+	        System.out.println("Righe influenzate: " + rowsAffected);
+	        return rowsAffected > 0;  // Se sono state cancellate delle righe, ritorna true
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella cancellazione della prenotazione del ricevimento: " + e.getMessage());
+	        return false;
+	    }
+	}
+
 	
 	
 	public PrenotazioneRicevimento ricercaPrenotazione(int codicePrenotazione) {
@@ -143,6 +160,23 @@ public class PrenotazioneRicevimentoService {
 	}
 		return prenotazione;
 	}
-	
+	 public String getCodiceProfessoreDiPrenotazione(int codicePrenotazione)throws SQLException {
+  	   String codiceProfessore = null;
+  	   String query = "SELECT codiceProfessore FROM prenotazioneRicevimento  WHERE codice= ? ";
+  	   try (Connection con = DriverManagerConnectionPool.getConnessione();
+                 PreparedStatement ps = con.prepareStatement(query)) {
+                
+                ps.setInt(1, codicePrenotazione);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        codiceProfessore = rs.getString("codiceProfessore");
+                    }
+                }
+            }
+
+            return codiceProfessore;
+  	   
+     }
 	
 }

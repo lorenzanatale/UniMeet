@@ -19,16 +19,19 @@
 
 <%	
 	String matricolaStudente = session.getAttribute("matricolaStudente").toString();
-	String codiceProfessore = session.getAttribute("codiceProfessore").toString();
+	
 	
 	PrenotazioneRicevimentoService prenotazioneRicevimento = new PrenotazioneRicevimentoService();
 	ProfessoreService professore = new ProfessoreService();
+	
 	
 	List<PrenotazioneRicevimento> listaPrenotazioni = prenotazioneRicevimento.stampaPrenotazioni(matricolaStudente);
 	
 	try {
         for (PrenotazioneRicevimento prenotazione : listaPrenotazioni) {
-        	
+        	//prendiamo il codice del professore tramite la prenotazione ricevimento usando il codice della prenotazione
+        	//in modo da poter prendere il nome e il cognome del professore collegati al codice dato che il codice è chiave primaria
+        	String codiceProfessore = prenotazioneRicevimento.getCodiceProfessoreDiPrenotazione(prenotazione.getCodice());
             String nomeProfessore = professore.getNomeProfessoreByCodice(codiceProfessore);
             String cognomeProfessore = professore.getcognomeProfessoreByCodice(codiceProfessore);
 		
@@ -60,6 +63,7 @@
             <th>cognome Professore</th>
             <th>nota</th>
             <th>stato</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -74,7 +78,14 @@
         	<td><%= prenotazione.getCognomeProfessore()%></td>
         	<td><%= prenotazione.getNota()%></td>
         	<td><%= prenotazione.getStato()%></td>
-        	
+        	<td>
+        		<form action="${pageContext.request.contextPath}/EliminaRicevimentoRiepilogoServlet" method="POST">
+        		
+        		<input type="hidden" name="codicePrenotazione" value="<%= prenotazione.getCodice() %>">
+        		
+        			<button type="submit" name ="deleteButton">elimina</button>
+        		</form>
+        	</td>
          </tr>
          <%}%>
         </tbody>
@@ -84,6 +95,15 @@
 <%}else{ %>
 <p> nessun ricevimento trovato per questo studente</p>
 <%}%>
+
+<%-- Mostra il messaggio di esito, se presente --%>
+<% String esito = (String) request.getAttribute("esito"); %>
+<% if (esito != null) { %>
+    <div class="alert alert-info">
+        <%= esito %>
+    </div>
+<% } %>
+
 <jsp:include page="Footer.jsp" />
 </body>
 </html>
