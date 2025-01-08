@@ -18,8 +18,8 @@
 <h1> Riepilogo Ricevimenti </h1>
 
 <%	
-	String matricolaStudente = session.getAttribute("matricolaStudente").toString();
-	String codiceProfessore = session.getAttribute("codiceProfessore").toString();
+	String matricolaStudente = (String)session.getAttribute("matricolaStudente");
+	String codiceProfessore = (String)session.getAttribute("codiceProfessore");
 	
 	PrenotazioneRicevimentoService prenotazioneRicevimento = new PrenotazioneRicevimentoService();
 	ProfessoreService professore = new ProfessoreService();

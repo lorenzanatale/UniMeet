@@ -79,9 +79,10 @@
         <% } %>
 
         <form action="Risultati.jsp" method="post" class="form-inline ml-auto">
-            <input class="form-control mr-sm-2" type="search" placeholder="Cerca" aria-label="Search">
-            <button class="btn btn-outline-dark" type="submit">Cerca</button>
-        </form>
+    		<input class="form-control mr-sm-2" type="search" name="ajax-search" placeholder="Cerca" aria-label="Search">
+    		<button class="btn btn-outline-dark" type="submit">Cerca</button>
+		</form>
+
     </nav>
     <div class="headerLine"></div>
 </header>
