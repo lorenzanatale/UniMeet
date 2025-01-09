@@ -17,6 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/controlloPass.css">
     <title>UniMeet - Cambio Password</title>
 </head>
 
@@ -50,16 +51,26 @@
                             <input type="text" class="form-control" name="risposta" id="risposta" placeholder="Risposta" required>
                         </div>
                         
+                        
                         <div class="form-group">
-                            <label for="newPassword">Nuova Password</label>
-                            <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Inserisci la Password" required>
-                        </div>
+                                <label for="inputPassword">Nuova Password</label>
+                                <input type="password" name="newPassword" id="inputPassword" class="form-control" placeholder="Password" required>
+                                <small id="passwordHelp" class="form-text text-muted">
+                                    La password deve essere lunga almeno 8 caratteri, includere almeno una lettera maiuscola e un carattere speciale.
+                                </small>
+                                <ul id="passwordCriteria" style="list-style: none; padding: 0; margin-top: 10px;">
+                                    <li id="length" class="invalid">Minimo 8 caratteri</li>
+                                    <li id="uppercase" class="invalid">Almeno una lettera maiuscola</li>
+                                    <li id="specialChar" class="invalid">Almeno un carattere speciale</li>
+                                </ul>
+                            </div>
+                        
                         
                         <div class="custom-btn-container">
-                            <button class="btn btn-primary" type="submit">Cambia password!</button><br>
-                            oppure<br>
+                                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Cambia password</button><br>
+                                oppure<br>
                             <a href="Login.jsp" class="btn btn-danger text-white" type="submit">Torna al login!</a>
-                        </div>
+                            </div>
                         
                         <% if (status != null) { %>
                             <div class="alert alert-danger mt-3" role="alert">
@@ -71,7 +82,7 @@
             </div>
         </div>
     </div>
-
+<script src="<%= request.getContextPath() %>/scripts/ControlloPass.js"></script>
     <% 
     String error = request.getParameter("error"); 
     if ("userNotFound".equals(error)) { %>
