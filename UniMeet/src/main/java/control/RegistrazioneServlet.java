@@ -65,7 +65,7 @@ public class RegistrazioneServlet extends HttpServlet {
             professore.setCodiceProfessore(codiceProfessore);
             professore.setUfficio(ufficio);
             professore.setDomanda(domanda);
-            professore.setRisposta(risposta);
+            professore.setRisposta(PasswordHasher.hashPassword(risposta));
             
             int row = ProfessoreService.aggiungiProfessore(professore);
 

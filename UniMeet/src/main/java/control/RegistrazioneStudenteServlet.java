@@ -62,7 +62,7 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
             studente.setNome(nome);
             studente.setMatricola(matricola);
             studente.setDomanda(domanda);
-            studente.setRisposta(risposta);
+            studente.setRisposta(PasswordHasher.hashPassword(risposta));
 
             // Salvataggio del professore nel database
             int row = StudenteService.aggiungiStudente(studente);

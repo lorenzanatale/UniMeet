@@ -45,8 +45,8 @@ public class ModificaPasswordServlet extends HttpServlet {
                 if (s != null) {
                     String domandaSicurezza = s.getDomanda();
                     String rispostaRegistrata = s.getRisposta();
-
-                    if (rispostaUtente.trim().equalsIgnoreCase(rispostaRegistrata.trim()) && 
+                    
+                    if (PasswordHasher.verifyPassword(rispostaUtente, rispostaRegistrata) && 
                         domandaUtente.trim().equalsIgnoreCase(domandaSicurezza.trim())) {
                         
                         String hashedPassword = PasswordHasher.hashPassword(newPassword);
@@ -73,7 +73,8 @@ public class ModificaPasswordServlet extends HttpServlet {
                 }
             
 			} catch (Exception e) {
-				System.out.println("Studente non trovato");
+				session.setAttribute("status", "Studente non trovato! Riprova!");
+                response.sendRedirect(request.getContextPath() + "/application/CambioPassword.jsp");
 			}
         	
         	//verifica per il professore
@@ -85,7 +86,7 @@ public class ModificaPasswordServlet extends HttpServlet {
                     String domandaSicurezza = p.getDomanda();
                     String rispostaRegistrata = p.getRisposta();
 
-                    if (rispostaUtente.trim().equalsIgnoreCase(rispostaRegistrata.trim()) && 
+                    if (PasswordHasher.verifyPassword(rispostaUtente, rispostaRegistrata) && 
                         domandaUtente.trim().equalsIgnoreCase(domandaSicurezza.trim())) {
                         
                         String hashedPassword = PasswordHasher.hashPassword(newPassword);
@@ -111,7 +112,8 @@ public class ModificaPasswordServlet extends HttpServlet {
                 }
             
 			} catch (Exception e) {
-				System.out.println("Professore non trovato");
+				session.setAttribute("status", "Professore non trovato! Riprova!");
+                response.sendRedirect(request.getContextPath() + "/application/CambioPassword.jsp");
 			}
         	
         
