@@ -6,16 +6,17 @@
 
 <!doctype html>
 <html lang="it">
-
+<head>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/controlloPass.css">
+</head>
     <title>Registrazione Professore - UniMeet</title>
-
     <body>
         <div class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="registration-card">
                         <h2 class="text-center mb-4">Registrazione Professore</h2>
-                        <form action="<%= request.getContextPath() %>/RegistrazioneServlet" method="post" onsubmit="return validateForm()">
+                        <form action="<%= request.getContextPath() %>/RegistrazioneServlet" method="post" id="registrationForm" onsubmit="return validateForm()">
 
                             <div class="form-group">
                                 <label for="email">E-Mail</label>
@@ -25,6 +26,14 @@
                             <div class="form-group">
                                 <label for="inputPassword">Password</label>
                                 <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                <small id="passwordHelp" class="form-text text-muted">
+                                    La password deve essere lunga almeno 8 caratteri, includere almeno una lettera maiuscola e un carattere speciale.
+                                </small>
+                                <ul id="passwordCriteria" style="list-style: none; padding: 0; margin-top: 10px;">
+                                    <li id="length" class="invalid">Minimo 8 caratteri</li>
+                                    <li id="uppercase" class="invalid">Almeno una lettera maiuscola</li>
+                                    <li id="specialChar" class="invalid">Almeno un carattere speciale</li>
+                                </ul>
                             </div>
 
                             <div class="form-group">
@@ -89,7 +98,7 @@
                             </div>
 
                             <div class="custom-btn-container">
-                                <button type="submit" class="btn btn-primary">Registrati!</button>
+                                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Registrati!</button>
                                 <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alle opzioni</a>
                             </div>
 
@@ -99,10 +108,11 @@
             </div>
         </div>
 
-		<script src="<%= request.getContextPath() %>/scripts/AggiuntaInsegnamenti.js"></script>
-        <script src="<%= request.getContextPath() %>/scripts/ValidazionePass.js"></script>
-        <script src="<%= request.getContextPath() %>/scripts/RegistrazioneProfessore.js"></script>
+<script src="<%= request.getContextPath() %>/scripts/ControlloPass.js"></script>
+<script src="<%= request.getContextPath() %>/scripts/AggiuntaInsegnamenti.js"></script>
+<script src="<%= request.getContextPath() %>/scripts/ValidazionePass.js"></script>
+<script src="<%= request.getContextPath() %>/scripts/RegistrazioneProfessore.js"></script>
 
-    </body>
-    <jsp:include page="Footer.jsp" />
+</body>
+<jsp:include page="Footer.jsp" />
 </html>

@@ -6,6 +6,9 @@
 
 <!doctype html>
 <html lang="it">
+<head>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/controlloPass.css">
+</head>
 
 <title>Registrazione Studente - UniMeet</title>
 
@@ -20,11 +23,20 @@
                         <label for="email">E-Mail</label>
                         <input type="text" class="form-control" name="email" id="email" placeholder="Inserisci l'E-MAIL" required>
                     </div>
+                    
                     <div class="form-group">
-                            <label for="inputPassword">Password</label>
-                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                        </div>
-                        
+                                <label for="inputPassword">Password</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                <small id="passwordHelp" class="form-text text-muted">
+                                    La password deve essere lunga almeno 8 caratteri, includere almeno una lettera maiuscola e un carattere speciale.
+                                </small>
+                                <ul id="passwordCriteria" style="list-style: none; padding: 0; margin-top: 10px;">
+                                    <li id="length" class="invalid">Minimo 8 caratteri</li>
+                                    <li id="uppercase" class="invalid">Almeno una lettera maiuscola</li>
+                                    <li id="specialChar" class="invalid">Almeno un carattere speciale</li>
+                                </ul>
+                            </div>
+                            
                         <div class="form-group">
     						<label for="inputConfirmPassword">Conferma Password</label>
     						<input type="password" name="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Conferma Password" required>
@@ -63,15 +75,16 @@
                         <input type="text" class="form-control" name="risposta" id="risposta" placeholder="Risposta" required>
                     </div>
                     <div class="custom-btn-container">
-                        <button type="submit" class="btn btn-primary">Registrati!</button>
-                        <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alle opzioni</a>
-                    </div>
+                                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Registrati!</button>
+                                <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alle opzioni</a>
+                            </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<script src="<%= request.getContextPath() %>/scripts/ControlloPass.js"></script>
 <script src="<%= request.getContextPath() %>/scripts/ValidazionePass.js"></script>
 <script src="<%= request.getContextPath() %>/scripts/RegistrazioneStudente.js"></script>
 
