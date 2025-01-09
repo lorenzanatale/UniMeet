@@ -1,9 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Professore" %>
 <%@ page import="model.ProfessoreService" %>
+<%@ page import="model.Insegnamento" %>
+<%@ page import="model.InsegnamentoService" %>
 
 <!-- Collegamento all'Header -->
 <jsp:include page="/application/Header.jsp" />
@@ -41,31 +44,54 @@
             <div class="error-message"><%= errore %></div>
         <% } %>
 
-    <div class="row">
-        <%
-            if (lista != null && !lista.isEmpty()) {
-                for (Professore p : lista) { %>
-                    <div class="col-md-4">
-                        <div class="article-card card">
-                            <div class="card-body">
-                                <h2 class="card-title"><%= p.getNome() + " " + p.getCognome() %></h2>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "Ufficio: " + p.getUfficio() %></h6>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "Codice Professore: " + p.getCodiceProfessore() %></h6>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "E-mail: " + p.getEmail() %></h6>
-                                <a class="btn btn-success" href="PrenotaRicevimento.jsp?titolo=<%= p.getCodiceProfessore() %>">Prenota ricevimento</a>
-                            </div>
+    <%
+    InsegnamentoService insegnamentoService = new InsegnamentoService();
+%>
+<div class="row">
+    <%
+        if (lista != null && !lista.isEmpty()) {
+            for (Professore p : lista) { 
+                List<Insegnamento> insegnamenti = null;
+                try {
+                    insegnamenti = insegnamentoService.cercaInsegnamentiPerProfessore(p.getCodiceProfessore());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+    %>
+                <div class="col-md-4">
+                    <div class="article-card card">
+                        <div class="card-body">
+                            <h2 class="card-title"><%= p.getNome() + " " + p.getCognome() %></h2>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= "Ufficio: " + p.getUfficio() %></h6>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= "Codice Professore: " + p.getCodiceProfessore() %></h6>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= "E-mail: " + p.getEmail() %></h6>
+                            
+                            <div class="text-center">
+    							<h5 class="mt-3">Insegnamenti:</h5>
+    								<ul class="list-unstyled d-inline-block text-start">
+        								<% if (insegnamenti != null && !insegnamenti.isEmpty()) {
+            								for (Insegnamento i : insegnamenti) { %>
+                					<li>- <%= i.getNomeInsegnamento() %></li>
+           							 <% }
+        							} else { %>
+            						<li>Nessun insegnamento disponibile.</li>
+       								 <% } %>
+    								</ul>
+							</div>
+
+                            <a class="btn btn-success" href="PrenotaRicevimento.jsp?titolo=<%= p.getCodiceProfessore() %>">Prenota ricevimento</a>
                         </div>
                     </div>
-                <% }
-            } else { %>
-                <div class="col-12">
-                    <div class="alert alert-warning text-center" role="alert">
-                        Nessun professore trovato.
-                    </div>
                 </div>
-            <% } %>
-    </div>
-
+    <%      }
+        } else { %>
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    Nessun professore trovato.
+                </div>
+            </div>
+    <% } %>
+</div>
     <div class="custom-btn-container">
 		<a href="Home.jsp" class="btn btn-danger text-white" type="submit" style=" width: 300px;">Torna alla landing page!</a>
 	</div>

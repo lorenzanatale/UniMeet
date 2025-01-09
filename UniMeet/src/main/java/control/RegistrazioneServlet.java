@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Utils.PasswordHasher;
+import model.Insegnamento;
+import model.InsegnamentoService;
 import model.Professore;
 import model.ProfessoreService;
 
@@ -43,6 +45,10 @@ public class RegistrazioneServlet extends HttpServlet {
         String ufficio = request.getParameter("ufficio");
         String domanda = request.getParameter("domanda");
         String risposta = request.getParameter("risposta");
+        
+        //MODIFICA 09/01 PER AGGIUNGERE INSEGNAMENTO AL PROFESSORE
+        String insegnamento = request.getParameter("insegnamento");
+        //--------------------------------------------------------
 
         HttpSession session = request.getSession();
 
@@ -65,9 +71,16 @@ public class RegistrazioneServlet extends HttpServlet {
             professore.setUfficio(ufficio);
             professore.setDomanda(domanda);
             professore.setRisposta(risposta);
-
-            // Salvataggio del professore nel database
+            
             int row = ProfessoreService.aggiungiProfessore(professore);
+            
+            //MODIFICA 09/01 PER AGGIUNGERE INSEGNAMENTO AL PROFESSORE
+            Insegnamento i = new Insegnamento();
+            i.setCodiceProfessore(codiceProfessore);
+            i.setNomeInsegnamento(insegnamento);
+            
+            InsegnamentoService.aggiungiInsegnamento(i);
+            //--------------------------------------------------------
 
             if (row > 0) {
                 // Registrazione avvenuta con successo

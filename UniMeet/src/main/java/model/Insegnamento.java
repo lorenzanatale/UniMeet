@@ -5,8 +5,12 @@ public class Insegnamento {
 	private String nome;
 	private String codiceProfessore;
 	
+	public Insegnamento() {
+		
+	}
 	
 	public Insegnamento(String nome,String codiceProfessore) {
+		super();
 		this.nome=nome;
 		this.codiceProfessore=codiceProfessore;
 		

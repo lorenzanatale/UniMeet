@@ -48,6 +48,10 @@
                         <input type="text" class="form-control" name="codiceProfessore" id="codice" placeholder="Inserisci il codice professore" required>
                     </div>
                     <div class="form-group">
+                        <label for="insegnamento">Insegnamento</label>
+                        <input type="text" class="form-control" name="insegnamento" id="insegnamento" placeholder="Inserisci l'insegnamento" required>
+                    </div>
+                    <div class="form-group">
                         <label for="ufficio">Ufficio</label>
                         <input type="text" class="form-control" name="ufficio" id="ufficio" placeholder="Inserisci l'ufficio" required>
                     </div>
