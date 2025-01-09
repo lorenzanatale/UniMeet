@@ -32,8 +32,6 @@ public class RegistrazioneServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-    	//IMPORTANTE, SENZA QUESTE DUE RIGHE NON VENGONO STORATI CORRETTAMENTE I CARATTERI SPECIALI
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         
@@ -46,13 +44,11 @@ public class RegistrazioneServlet extends HttpServlet {
         String domanda = request.getParameter("domanda");
         String risposta = request.getParameter("risposta");
         
-        //MODIFICA 09/01 PER AGGIUNGERE INSEGNAMENTO AL PROFESSORE
-        String insegnamento = request.getParameter("insegnamento");
-        //--------------------------------------------------------
+        // QUI INVEEC DI PRENDERE GLI INSEGNAMENTI SINGOLARMENTE LI METTO IN UN ARRAY DI INSEGNAMENTI
+        String[] insegnamenti = request.getParameterValues("insegnamenti");
 
         HttpSession session = request.getSession();
 
-        // Controllo dei parametri di input da RegistrazioneProfessore.jsp
         if (codiceProfessore == null || nome == null || cognome == null || email == null || pass == null || ufficio == null || domanda == null || risposta == null ||
                 codiceProfessore.isEmpty() || nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || pass.isEmpty() || ufficio.isEmpty() || domanda.isEmpty() || risposta.isEmpty()) {
             session.setAttribute("status", "Tutti i campi devono essere compilati.");
@@ -61,7 +57,6 @@ public class RegistrazioneServlet extends HttpServlet {
         }
 
         try {
-            // Creazione dell'oggetto professore
             Professore professore = new Professore();
             professore.setPassword(PasswordHasher.hashPassword(pass));
             professore.setCognome(cognome);
@@ -73,29 +68,31 @@ public class RegistrazioneServlet extends HttpServlet {
             professore.setRisposta(risposta);
             
             int row = ProfessoreService.aggiungiProfessore(professore);
-            
-            //MODIFICA 09/01 PER AGGIUNGERE INSEGNAMENTO AL PROFESSORE
-            Insegnamento i = new Insegnamento();
-            i.setCodiceProfessore(codiceProfessore);
-            i.setNomeInsegnamento(insegnamento);
-            
-            InsegnamentoService.aggiungiInsegnamento(i);
-            //--------------------------------------------------------
+
+            // QUI MI SCORRO L'ARRAY E LI INSERISCO TUTTI
+            if (insegnamenti != null) {
+                for (String nomeInsegnamento : insegnamenti) {
+                    if (!nomeInsegnamento.isEmpty()) {
+                        Insegnamento i = new Insegnamento();
+                        i.setCodiceProfessore(codiceProfessore);
+                        i.setNomeInsegnamento(nomeInsegnamento);
+                        InsegnamentoService.aggiungiInsegnamento(i);
+                    }
+                }
+            }
 
             if (row > 0) {
-                // Registrazione avvenuta con successo
                 session.setAttribute("status", "Complimenti, ti sei registrato con successo! Effettua il login.");
                 response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
             } else {
-                // Fallimento nella registrazione
                 session.setAttribute("status", "Qualcosa è andato storto, riprova!");
                 response.sendRedirect(request.getContextPath() + "/application/RegistrazioneProfessore.jsp");
             }
         } catch (Exception e) {
-            // Errore durante la registrazione
             logger.log(Level.SEVERE, "Errore durante la registrazione: ", e);
             session.setAttribute("status", "Si è verificato un errore durante la registrazione.");
             response.sendRedirect(request.getContextPath() + "/application/RegistrazioneProfessore.jsp");
         }
     }
+
 }
