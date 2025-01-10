@@ -10,11 +10,7 @@
 <!doctype html>
 <html lang="it">
 <title>Home - UniMeet</title>
-<body style="background-image: url('../images/sfondo.jpg'); background-size: cover; background-position: center; position: relative;">
-
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.6); z-index: -1;"></div>
-
-
+<body>
 
 <%
     String status = (String) session.getAttribute("status");
@@ -23,7 +19,7 @@
 <div class="alert alert-info text-center mt-3" role="alert">
     <%= status %>
 </div>
-<%
+<% 
         session.removeAttribute("status");
     }
 %>

@@ -15,7 +15,11 @@
 
 </head>
 
-<body>
+<body style="background-image: url('../images/sfondo.jpg'); background-size: cover; background-position: center; position: relative;">
+
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.6); z-index: -1;"></div>
+
+
 <header class="py-4">
     <nav class="navbar navbar-custom">
         <a href="Home.jsp">
