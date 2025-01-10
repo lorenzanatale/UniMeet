@@ -19,7 +19,7 @@
 <header class="py-4">
     <nav class="navbar navbar-custom">
         <a href="Home.jsp">
-            <img src="../images/LOGO1.png" class="logo" alt="UniMeet Logo">
+            <img src="../images/logo.png" class="logo" alt="UniMeet Logo">
         </a>
 
         <% 
