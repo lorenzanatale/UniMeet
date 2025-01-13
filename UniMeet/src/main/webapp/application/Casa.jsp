@@ -1,15 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 
-<%
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0); 
-%>
-
 <!doctype html>
 <html lang="it">
-<title>Home - UniMeet</title>
+
 <body>
 
 <%
@@ -23,10 +17,9 @@
         session.removeAttribute("status");
     }
 %>
+<head><jsp:include page="/application/Header.jsp" /></head>
+<title>Home - UniMeet</title>
 
-<!-- Collegamento all'Header -->
-
-<jsp:include page="/application/Header.jsp" />
 
 <div class="d-flex justify-content-center align-items-center w-100">
     <div class="logo-container">

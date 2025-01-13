@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("role", "studente");
                 session.setAttribute("matricolaStudente", studente.getMatricola());
                 session.setAttribute("status", "Complimenti " + studente.getNome() + ", ti sei loggato con successo!");
-                response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
+                response.sendRedirect(request.getContextPath() + "/application/Casa.jsp");
                 return;
             }
             Professore professore = ProfessoreService.cercaProfessoreEmail(email);
@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("role", "professore");
                 session.setAttribute("codiceProfessore", professore.getCodiceProfessore());
                 session.setAttribute("status", "Complimenti " + professore.getNome()+", ti sei loggato con successo!");
-                response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
+                response.sendRedirect(request.getContextPath() + "/application/Casa.jsp");
                 return;
             }
 
