@@ -13,6 +13,7 @@
 </head>
 <body>
 <jsp:include page="/application/Header.jsp" />
+  <h1 class="text-center">Riepilogo ricevimenti</h1>
 <%	
 
 	String matricolaStudente = session.getAttribute("matricolaStudente").toString();
@@ -45,35 +46,33 @@
         return;
     }
 
-	if(listaPrenotazioni != null && !listaPrenotazioni.isEmpty()){
-		for(PrenotazioneRicevimento prenotazione: listaPrenotazioni){
-		
-%>
-
-   <div class="col-md-4">
-                        <div class="article-card card">
-                            <div class="card-body">
-                                <h2 class="card-title"><%= prenotazione.getCodice() %></h2>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "Giorno: " + prenotazione.getGiorno() %></h6>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "ora: " + prenotazione.getOra() %></h6>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "Nome Professore: " + prenotazione.getNomeProfessore() %></h6>
-                                <h6 class="card-subtitle mb-2 text-muted"><%= "Cognome Professore: " + prenotazione.getCognomeProfessore() %></h6>
-								<h6 class="card-subtitle mb-2 text-muted"><%= "note: " + prenotazione.getNota() %></h6>  
-								<h6 class="card-subtitle mb-2 text-muted"><%= "Stato: " + prenotazione.getStato() %></h6>                                
-                				<form action="${pageContext.request.contextPath}/EliminaRicevimentoRiepilogoServlet" method="POST">
-        		
-        							<input type="hidden" name="codicePrenotazione" value="<%= prenotazione.getCodice() %>">
-        							  <button class="btn btn-warning" type="submit" name ="deleteButton">elimina</button>
-        			
-        						</form>
-                              
-                            </div>
-                        </div>
-                    </div>
-<%}%>
-<%}else{ %>
-<p> nessun ricevimento trovato per questo studente</p>
-<%}%>
+	if(listaPrenotazioni != null && !listaPrenotazioni.isEmpty()) { %>
+	<div class="container">
+	    <div class="row">
+	        <% for(PrenotazioneRicevimento prenotazione: listaPrenotazioni) { %>
+	        <div class="col-md-4 d-flex align-items-stretch">
+	            <div class="article-card card mb-4">
+	                <div class="card-body">
+	                    <h2 class="card-title"><%= prenotazione.getCodice() %></h2>
+	                    <h6 class="card-subtitle mb-2 text-muted"><%= "Giorno: " + prenotazione.getGiorno() %></h6>
+	                    <h6 class="card-subtitle mb-2 text-muted"><%= "Ora: " + prenotazione.getOra() %></h6>
+	                    <h6 class="card-subtitle mb-2 text-muted"><%= "Nome Professore: " + prenotazione.getNomeProfessore() %></h6>
+	                    <h6 class="card-subtitle mb-2 text-muted"><%= "Cognome Professore: " + prenotazione.getCognomeProfessore() %></h6>
+	                    <h6 class="card-subtitle mb-2 text-muted"><%= "Note: " + prenotazione.getNota() %></h6>
+	                    <h6 class="card-subtitle mb-2 text-muted"><%= "Stato: " + prenotazione.getStato() %></h6>
+	                    <form action="${pageContext.request.contextPath}/EliminaRicevimentoRiepilogoServlet" method="POST">
+	                        <input type="hidden" name="codicePrenotazione" value="<%= prenotazione.getCodice() %>">
+	                        <button class="btn btn-warning" type="submit" name="deleteButton">Elimina</button>
+	                    </form>
+	                </div>
+	            </div>
+	        </div>
+	        <% } %>
+	    </div>
+	</div>
+	<% } else { %>
+	<p class="text-center"> Nessun ricevimento trovato per questo studente.</p>
+	<% } %>
 
 <%-- Mostra il messaggio di esito, se presente --%>
 <% String esito = (String) request.getAttribute("esito"); %>

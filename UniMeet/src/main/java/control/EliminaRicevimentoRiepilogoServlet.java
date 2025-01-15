@@ -44,8 +44,7 @@ public class EliminaRicevimentoRiepilogoServlet extends HttpServlet {
         // Controllo se il parametro è presente e non è vuoto
         if (codicePrenotazioneStr == null || codicePrenotazioneStr.isEmpty()) {
             request.setAttribute("esito", "Errore: codice prenotazione mancante.");
-            RequestDispatcher rd = request.getRequestDispatcher("/RiepilogoRicevimenti.jsp");
-            rd.forward(request, response);
+            response.sendRedirect(request.getContextPath()+"/application/RiepilogoRicevimenti.jsp");
             return;
         }
         
