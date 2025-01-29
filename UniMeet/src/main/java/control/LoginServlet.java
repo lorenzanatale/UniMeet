@@ -22,18 +22,10 @@ public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
 
-    public LoginServlet() {
-        super();
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
         HttpSession session = request.getSession();
 
         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
@@ -50,16 +42,27 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("role", "studente");
                 session.setAttribute("matricolaStudente", studente.getMatricola());
                 session.setAttribute("status", "Complimenti " + studente.getNome() + ", ti sei loggato con successo!");
+                
+                // ho aggiunto questo così quando va a prenotare viene salvata in sessione e dopo il login c'è ancora 
+                Object[] pendingBooking = (Object[]) session.getAttribute("pendingBooking");
+                String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
+                
+                if (pendingBooking != null && redirectAfterLogin != null) {
+                    // Instead of removing here, we'll let PrenotazioneServlet handle the cleanup
+                    response.sendRedirect(request.getContextPath() + "/PrenotazioneServlet?codiceProfessore=" + pendingBooking[0]);
+                    return;
+                }
+                
                 response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
                 return;
             }
-            Professore professore = ProfessoreService.cercaProfessoreEmail(email);
 
+            Professore professore = ProfessoreService.cercaProfessoreEmail(email);
             if (professore != null && PasswordHasher.verifyPassword(password, professore.getPassword())) {
                 session.setAttribute("utente", professore);
                 session.setAttribute("role", "professore");
                 session.setAttribute("codiceProfessore", professore.getCodiceProfessore());
-                session.setAttribute("status", "Complimenti " + professore.getNome()+", ti sei loggato con successo!");
+                session.setAttribute("status", "Complimenti " + professore.getNome() + ", ti sei loggato con successo!");
                 response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
                 return;
             }
