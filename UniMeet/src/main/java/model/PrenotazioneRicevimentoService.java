@@ -1,38 +1,65 @@
+
 package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PrenotazioneRicevimentoService {
 	
 	
 	public static boolean aggiungiPrenotazioneRicevimento(PrenotazioneRicevimento pr) {
+	    // Verifica che i dati siano validi prima di inserire
+	    if (pr.getGiorno() == null || pr.getGiorno().isEmpty() ||
+	        pr.getOra() == null || pr.getOra().isEmpty() ||
+	        pr.getNota() == null || pr.getNota().isEmpty() ||
+	        pr.getStato() == null || pr.getStato().isEmpty() ||
+	        pr.getCodiceProfessore() == null || pr.getCodiceProfessore().isEmpty() ||
+	        pr.getMatricolaStudente() == null || pr.getMatricolaStudente().isEmpty()) {
+	        System.out.println("Errore: alcuni parametri della prenotazione sono nulli o vuoti.");
+	        return false; // Ritorna falso se i parametri non sono validi
+	    }
+
 	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
-	        String query = "INSERT INTO insegnamento(giorno, ora, note, stato, codiceProfessore,matricolaStudente) VALUES (?, ?,?,?,?,?);";
-	        PreparedStatement ps = con.prepareStatement(query);
+	        // Inizio transazione
+	        con.setAutoCommit(false);
 
-	        ps.setString(1, pr.getGiorno());
-	        ps.setString(2, pr.getOra());
-	        ps.setString(3, pr.getNota());
-	        ps.setString(4,pr.getStato());
-	        ps.setString(5, pr.getCodiceProfessore());
-	        ps.setString(6, pr.getMatricolaStudente());
+	        String query = "INSERT INTO prenotazioneRicevimento(giorno, ora, note, stato, codiceProfessore, matricolaStudente) VALUES (?, ?, ?, ?, ?, ?);";
+	        try (PreparedStatement ps = con.prepareStatement(query)) {
+	            ps.setString(1, pr.getGiorno());
+	            ps.setString(2, pr.getOra());
+	            ps.setString(3, pr.getNota());
+	            ps.setString(4, pr.getStato());
+	            ps.setString(5, pr.getCodiceProfessore());
+	            ps.setString(6, pr.getMatricolaStudente());
 
-	        if(ps.execute())
-	        	return true;
-	        else
-	        	return false;
-	        
+	            int rowsAffected = ps.executeUpdate(); // Usa executeUpdate invece di execute
+
+	            if (rowsAffected > 0) {
+	                con.commit(); // Committa se l'inserimento è stato effettuato correttamente
+	                return true;
+	            } else {
+	                con.rollback(); // Rollback in caso di errore
+	                return false;
+	            }
+	        } catch (SQLException e) {
+	            con.rollback(); // Rollback in caso di errore nell'esecuzione della query
+	            e.printStackTrace();
+	            System.out.println("Errore nell'aggiunta della prenotazione: " + e.getMessage());
+	            return false;
+	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        System.out.println("Errore nell'aggiunta della prenotazione" + e.getMessage());
+	        System.out.println("Errore nella connessione al database: " + e.getMessage());
 	        return false;
 	    }
 	}
+
 	public static boolean rimuoviPrenotazione(PrenotazioneRicevimento pr) {
 		try(Connection con= DriverManagerConnectionPool.getConnessione()){
 			PreparedStatement ps = con.prepareStatement("DELETE FROM prenotazioneRicevimento WHERE matricolaStudente= ? AND codiceProfessore = ?;");
@@ -178,5 +205,8 @@ public class PrenotazioneRicevimentoService {
             return codiceProfessore;
   	   
      }
+	 
+
+
 	
 }
