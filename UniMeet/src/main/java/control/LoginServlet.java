@@ -45,12 +45,8 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("matricolaStudente", studente.getMatricola());
                 session.setAttribute("status", "Complimenti " + studente.getNome() + ", ti sei loggato con successo!");
 
-                response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
-
-
                 // Gestione del redirect dopo il login
                 handleRedirect(request, response, session, redirectParam);
-
                 return;
             }
 
@@ -59,14 +55,10 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("utente", professore);
                 session.setAttribute("role", "professore");
                 session.setAttribute("codiceProfessore", professore.getCodiceProfessore());
-
-                session.setAttribute("status", "Complimenti " + professore.getNome()+", ti sei loggato con successo!");
-                response.sendRedirect(request.getContextPath() + "/application/Home.jsp");
                 session.setAttribute("status", "Complimenti " + professore.getNome() + ", ti sei loggato con successo!");
 
                 // Gestione del redirect dopo il login
                 handleRedirect(request, response, session, redirectParam);
-
                 return;
             }
 
