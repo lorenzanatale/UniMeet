@@ -7,5 +7,7 @@
     <welcome-file-list>
         <welcome-file>Redirect.jsp</welcome-file> <!-- Pagina di reindirizzamento -->
     </welcome-file-list>
+    
+    
 
 </web-app>

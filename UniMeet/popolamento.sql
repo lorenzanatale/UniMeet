@@ -1,5 +1,6 @@
 use UniMeet;
 
+insert into ricevimento(giorno,ora,note,codiceProfessore)values("Venerdì","9:30","non rompete il cazzo","051215346");
 insert into studente values("0512157517","Mario","Rossi","mario.rossi@studenti.unisa.it","$2a$12$7CBrZ0Ic/xYSE4SuVpJxO.ZFZIK1LPqxWP4AJ2ohXphTp5AFxwZFa","Qual è il nome del tuo primo animale domestico","Lucky");
 insert into studente values("0512192206","Paolo","Bianchi","paolo.bianchi@studenti.unisa.it","$2a$12$IU0dxNR6HC69N7nSi7J2YeZa9RoISDL.groYebzVutN0i6Tygvmim","Qual è la tua provincia di residenza?","Napoli");
 insert into studente values("0512116145","Francesco","Neri","francesco.neri@studenti.unisa.it","$2a$12$bNR5/wb/h3IcyTseglEQqOGGi9T9a9ctTaEk9XKkRN2rTFTGs31r2","Qual è modello della tua prima automobile?","Fiat Panda");
@@ -60,7 +61,9 @@ insert into insegnamento(nome, codiceProfessore) values("Programmazione avanzata
 insert into insegnamento(nome, codiceProfessore) values("sicurezza","051219282");
 
 
-insert into ricevimento(giorno,ora,codiceProfessore)values("lunedì","9:30","051215346");
+insert into ricevimento(giorno,ora,codiceProfessore)values("Lunedì","9:30","051215346");
+insert into ricevimento(giorno,ora,codiceProfessore)values("Martedì","9:30","051215346");
+insert into ricevimento(giorno,ora,codiceProfessore)values("Mercoledì","9:30","051215346");
 insert into ricevimento(giorno,ora,codiceProfessore) values("lunedì","10:30","051213578");
 insert into ricevimento(giorno,ora,codiceProfessore) values("lunedì","14:30","051212390");
 insert into ricevimento(giorno,ora,codiceProfessore) values("martedì","9:00","051217589");
@@ -68,7 +71,7 @@ insert into ricevimento(giorno,ora,codiceProfessore) values("martedì","10:30","
 insert into ricevimento(giorno,ora,codiceProfessore) values("martedì","12:30","051213245");
 insert into ricevimento(giorno,ora,codiceProfessore) values("mercoledì","16:00","051217610");
 insert into ricevimento(giorno,ora,codiceProfessore) values("mercoledì","10:00","051218942");
-insert into ricevimento(giorno,ora,codiceProfessore) values("mercoledì","14:00","051215346");
+insert into ricevimento(giorno,ora,codiceProfessore) values("Mercoledì","14:00","051215346");
 insert into ricevimento(giorno,ora,codiceProfessore) values("giovedì","9:00","051214212");
 insert into ricevimento(giorno,ora,codiceProfessore) values("giovedì","11:00","051215214");
 insert into ricevimento(giorno,ora,codiceProfessore) values("giovedì","15:00","051216231");

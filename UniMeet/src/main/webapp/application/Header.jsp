@@ -18,9 +18,13 @@
 
     </head>
 
+
     <body style="margin: 0; padding: 0; position: relative;">
         <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background-image: url('../images/sfondo3.webp'); background-size: cover; background-position: center; background-attachment: fixed;"></div>
         <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-color: rgba(255, 255, 255, 0.7);"></div>
+
+<body style="background-image: url('${pageContext.request.contextPath}/images/sfondo.jpg'); background-size: cover; background-position: center; position: relative;">
+
 
         <div style="position: relative; z-index: 1;">
             <header class="py-4">
@@ -33,6 +37,7 @@
                         HttpSession sessione = request.getSession(false);
                         String role = (sessione != null) ? (String) sessione.getAttribute("role") : null;
                         String email = null;
+
 
                         if (sessione != null) {
                             if ("studente".equals(role)) {
@@ -48,6 +53,13 @@
                             }
                         }
                     %>
+
+<header class="py-4">
+    <nav class="navbar navbar-custom">
+        <a href="${pageContext.request.contextPath}/application/Home.jsp">
+            <img src="${pageContext.request.contextPath}/images/logo.png" class="logo" alt="UniMeet Logo">
+        </a>
+
 
                     <% if (role == null || email == null) { %>
                         <a class="btn btn-primary" href="Login.jsp">Accedi</a>
@@ -85,6 +97,7 @@
                         <a class="btn btn-success ml-2" href="#"><%= email %></a>
                     <% } %>
 
+
                     <form action="Risultati.jsp" method="post" class="form-inline ml-auto">
                         <input class="form-control mr-sm-2" type="search" name="ajax-search" placeholder="Cerca" aria-label="Search">
                         <button class="btn btn-outline-dark" type="submit">Cerca</button>
@@ -93,6 +106,52 @@
                 <div class="headerLine"></div>
             </header>
         </div>
+
+        <% if (role == null || email == null) { %>
+            <a class="btn btn-primary" href="${pageContext.request.contextPath}/application/Login.jsp">Accedi</a>
+            <a class="btn btn-primary ml-2" href="${pageContext.request.contextPath}/application/Registrazione.jsp">Registrati</a>
+        <% } else if ("studente".equals(role)) { %>
+            <!-- QUI MODIFICATE LE OZIONI DELLO STUDENTE, AGGIUNGETE LINK ECC -->
+            <div class="dropdown">
+                <a class="btn btn-primary dropdown-toggle" href="#" id="studentMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Menu studente
+                </a>
+                <div class="dropdown-menu" aria-labelledby="studentMenu">
+                    <a class="dropdown-item" href="">Prenota un ricevimento</a>
+                    <a class="dropdown-item" href="RiepilogoRicevimenti.jsp">Riepilogo ricevimenti</a>
+                    <form action="../LogoutServlet" method="POST" style="display:inline;">
+    					<button type="submit" class="dropdown-item">Logout</button>
+					</form>
+                </div>
+            </div>
+            <a class="btn btn-primary ml-2" href="#"><%= email %></a>
+        <% } else if ("professore".equals(role)) { %>
+            <!-- QUI MODIFICATE LE OZIONI DELLO PROFESSORE, AGGIUNGETE LINK ECC -->
+            <div class="dropdown">
+    <a class="btn btn-success dropdown-toggle" href="#" id="professorMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Menu professore
+    </a>
+    <div class="dropdown-menu" aria-labelledby="professorMenu">
+        <div class="dropdown dropright">
+            <a class="dropdown-item dropdown-toggle" href="#" id="gestioneRicevimenti" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Gestione ricevimenti
+            </a>
+            <div class="dropdown-menu" aria-labelledby="gestioneRicevimenti">
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/application/GestisciRicevimenti.jsp?mode=aggiungi">Aggiungi Ricevimento</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/application/GestisciRicevimenti.jsp?mode=modifica">Modifica Ricevimento</a>
+            </div>
+        </div>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/RiepilogoRicevimentiServlet">Riepilogo ricevimenti</a>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/RicevimentiInProgrammaServlet">Ricevimenti in programma</a>
+        <form action="${pageContext.request.contextPath}/LogoutServlet" method="POST" style="display:inline;">
+            <button type="submit" class="dropdown-item">Logout</button>
+        </form>
+    </div>
+    <a class="btn btn-success ml-2" href="#"><%= email %></a>
+</div>
+
+        <% } %>
+
 
         <!-- Script necessari per Bootstrap -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
