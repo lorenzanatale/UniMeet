@@ -15,15 +15,15 @@
 
 </head>
 
-<body style="background-image: url('../images/sfondo.jpg'); background-size: cover; background-position: center; position: relative;">
+<body style="background-image: url('${pageContext.request.contextPath}/images/sfondo.jpg'); background-size: cover; background-position: center; position: relative;">
 
     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.6); z-index: -1;"></div>
 
 
 <header class="py-4">
     <nav class="navbar navbar-custom">
-        <a href="Home.jsp">
-            <img src="../images/logo.png" class="logo" alt="UniMeet Logo">
+        <a href="${pageContext.request.contextPath}/application/Home.jsp">
+            <img src="${pageContext.request.contextPath}/images/logo.png" class="logo" alt="UniMeet Logo">
         </a>
 
         <% 
@@ -47,8 +47,8 @@
         %>
 
         <% if (role == null || email == null) { %>
-            <a class="btn btn-primary" href="Login.jsp">Accedi</a>
-            <a class="btn btn-primary ml-2" href="Registrazione.jsp">Registrati</a>
+            <a class="btn btn-primary" href="${pageContext.request.contextPath}/application/Login.jsp">Accedi</a>
+            <a class="btn btn-primary ml-2" href="${pageContext.request.contextPath}/application/Registrazione.jsp">Registrati</a>
         <% } else if ("studente".equals(role)) { %>
             <!-- QUI MODIFICATE LE OZIONI DELLO STUDENTE, AGGIUNGETE LINK ECC -->
             <div class="dropdown">
@@ -67,19 +67,28 @@
         <% } else if ("professore".equals(role)) { %>
             <!-- QUI MODIFICATE LE OZIONI DELLO PROFESSORE, AGGIUNGETE LINK ECC -->
             <div class="dropdown">
-                <a class="btn btn-success dropdown-toggle" href="#" id="professorMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menu professore
-                </a>
-                <div class="dropdown-menu" aria-labelledby="professorMenu">
-                    <a class="dropdown-item" href="">Gestisci ricevimenti</a>
-                    <a class="dropdown-item" href="">Riepilogo ricevimenti</a>
-                    <a class="dropdown-item" href="">Ricevimenti in programma</a>
-                    <form action="../LogoutServlet" method="POST" style="display:inline;">
-    					<button type="submit" class="dropdown-item">Logout</button>
-					</form>
-                </div>
+    <a class="btn btn-success dropdown-toggle" href="#" id="professorMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Menu professore
+    </a>
+    <div class="dropdown-menu" aria-labelledby="professorMenu">
+        <div class="dropdown dropright">
+            <a class="dropdown-item dropdown-toggle" href="#" id="gestioneRicevimenti" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Gestione ricevimenti
+            </a>
+            <div class="dropdown-menu" aria-labelledby="gestioneRicevimenti">
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/application/GestisciRicevimenti.jsp?mode=aggiungi">Aggiungi Ricevimento</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/application/GestisciRicevimenti.jsp?mode=modifica">Modifica Ricevimento</a>
             </div>
-            <a class="btn btn-success ml-2" href="#"><%= email %></a>
+        </div>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/RiepilogoRicevimentiServlet">Riepilogo ricevimenti</a>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/RicevimentiInProgrammaServlet">Ricevimenti in programma</a>
+        <form action="${pageContext.request.contextPath}/LogoutServlet" method="POST" style="display:inline;">
+            <button type="submit" class="dropdown-item">Logout</button>
+        </form>
+    </div>
+    <a class="btn btn-success ml-2" href="#"><%= email %></a>
+</div>
+
         <% } %>
 
         <form action="Risultati.jsp" method="post" class="form-inline ml-auto">

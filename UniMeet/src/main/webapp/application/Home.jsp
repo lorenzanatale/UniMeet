@@ -31,7 +31,7 @@
 
 <div class="d-flex justify-content-center align-items-center w-100">
     <div class="logo-container">
-        <img src="../images/logo.png" alt="UniMeet Logo Grande" width="300">
+        <img src="${pageContext.request.contextPath}/images/logo.png" alt="UniMeet Logo Grande" width="300">
     </div>
     <div class="text-container text-center mt-3">
         <p class="lead">

@@ -200,3 +200,38 @@ body {
 .dropdown-toggle {
     border-radius: 8px;
 }
+/******************************************/
+/* Correzione dropdown per il sotto-menu */
+.dropright .dropdown-menu {
+    position: absolute  ;
+    top: 0 ;
+    left: 100% ;
+    display: none ; /* Nascondi il sotto-menu di default */
+    margin-left: 0.1rem ;
+    margin-top: -0.5rem ;
+    border-radius: 8px ;
+    z-index: 1000 ; /* Assicura che sia sopra gli altri elementi */
+}
+
+/* Mostra il sotto-menu quando si passa sopra */
+.dropright:hover > .dropdown-menu {
+    display: block ;
+}
+
+/* Correzione per il layout */
+.dropdown-menu {
+    min-width: 200px ; /* Imposta una larghezza minima per evitare che si schiacci */
+}
+
+.dropdown-item {
+    border-bottom: 1px solid #ddd ;
+    white-space: nowrap ; /* Evita che il testo vada a capo */
+}
+
+/* Per evitare che il sotto-menu scompaia subito */
+.dropdown-menu .dropdown-item {
+    position: relative ;
+}
+#gestioneRicevimenti {
+	padding-left: 13px;
+}

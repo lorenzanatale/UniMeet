@@ -106,7 +106,7 @@ public class StudenteService {
       	    }
 	  }
 //non viene utilizzato perchè il professore non cerca lo studente per matricola
-	  public Studente trovaPerMatricola(String matricola) throws SQLException {
+	  public static Studente trovaPerMatricola(String matricola) throws SQLException {
 		    String str = "SELECT * FROM studente s WHERE s.matricola = ?";
 		    try (Connection con = DriverManagerConnectionPool.getConnessione();
 		         PreparedStatement st = con.prepareStatement(str)) {
@@ -120,7 +120,7 @@ public class StudenteService {
 		                studente.setMatricola(rs.getString("matricola"));
 		                studente.setNome(rs.getString("nome"));
 		                studente.setCognome(rs.getString("cognome"));
-		                studente.setDomanda(rs.getString("domdandaSicurezza"));
+		                studente.setDomanda(rs.getString("domandaSicurezza"));
 		                studente.setRisposta(rs.getString("risposta"));
 		                studente.setEmail(rs.getString("email"));
 		                studente.setPassword(rs.getString("passwordHash"));
