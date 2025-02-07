@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ProfessoreService {
@@ -155,7 +156,35 @@ public class ProfessoreService {
             return nomeDocente;
         }
         
+public List<Professore> stampaListaProfessori() throws SQLException{
+	List<Professore> listaProfessori=new ArrayList<>();
+	String query="SELECT * FROM professore";
+	try (Connection con = DriverManagerConnectionPool.getConnessione();
+            PreparedStatement ps = con.prepareStatement(query)) {
+           
+           
 
+            try(ResultSet rs = ps.executeQuery()) {
+               while (rs.next()) {   	   
+                   Professore p = new Professore(
+                		   rs.getString("nome"),
+                		   rs.getString("cognome"),
+                		   rs.getString("email"),
+                		   rs.getString("passwordHash"),
+                		   rs.getString("codice"),
+                		   rs.getString("ufficio"),
+                		   rs.getString("domandaSicurezza"),
+                		   rs.getString("risposta")
+                		   );
+                   listaProfessori.add(p);
+                   
+               }
+               return listaProfessori;
+           }
+       }
+	
+	
+}
         //--------------------------------CIRO---------------------------------------
         
         public static int aggiungiProfessore(Professore p) {

@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ page import="java.sql.SQLException" %>
@@ -79,7 +80,9 @@
     								</ul>
 							</div>
 
-                            <a class="btn btn-success" href="PrenotaRicevimento.jsp?titolo=<%= p.getCodiceProfessore() %>">Prenota ricevimento</a>
+						<a class="btn btn-success" href="${pageContext.request.contextPath}/PrenotazioneServlet?codiceProfessore=<%= p.getCodiceProfessore() %>">Prenota ricevimento</a>
+						
+							
                         </div>
                     </div>
                 </div>

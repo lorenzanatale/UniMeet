@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: cirodanzilli
-  Date: 03/01/25
-  Time: 10:57
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 
@@ -36,6 +30,7 @@
             <div class="registration-card">
                 <h1 class="h3 mb-3 font-weight-normal text-center">Accedi</h1>
                 <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
+                 <input type="hidden" name="redirect" value="${param.redirect}" />
                     <div class="form-group">
                         <label for="email">Indirizzo email</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="Indirizzo email" required autofocus>
