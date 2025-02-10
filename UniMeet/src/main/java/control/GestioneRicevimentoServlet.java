@@ -17,7 +17,7 @@ public class GestioneRicevimentoServlet extends HttpServlet {
 
     // GET per mostrare la pagina
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String mode = request.getParameter("mode");
         HttpSession session = request.getSession(false);
@@ -35,9 +35,9 @@ public class GestioneRicevimentoServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    // POST per aggiungere o modificare un ricevimento
+    // POST per aggiungere o modificare un ricevimento (cambiati entrambi da protected a public)
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         // Popola la mappa (come già fatto) e imposta il parametro giorniEOrePrenotati

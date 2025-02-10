@@ -32,7 +32,7 @@ public class LoginServletTest {
     @Before
     public void setUp() throws SQLException {
         // Pulizia del database prima di ogni test
-        StudenteService.rimuoviStudenteByMatricola("S123456");
+        StudenteService.rimuoviStudente("S123456");
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
 
         // Creazione di utenti di test
@@ -43,7 +43,7 @@ public class LoginServletTest {
     @After
     public void tearDown() throws SQLException {
         // Pulizia dopo ogni test per non sporcare il database
-        StudenteService.rimuoviStudenteByMatricola("S123456");
+        StudenteService.rimuoviStudente("S123456");
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
     }
 

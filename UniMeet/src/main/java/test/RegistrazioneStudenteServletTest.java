@@ -26,13 +26,13 @@ public class RegistrazioneStudenteServletTest {
     @Before
     public void setUp() throws SQLException {
         // Rimuoviamo eventuali studenti di test esistenti
-        StudenteService.rimuoviStudenteByMatricola("S123456");
+        StudenteService.rimuoviStudente("S123456");
     }
 
     @After
     public void tearDown() throws SQLException {
         // Puliamo il database dopo i test
-        StudenteService.rimuoviStudenteByMatricola("S123456");
+        StudenteService.rimuoviStudente("S123456");
     }
 
     private HttpURLConnection createConnection(String method, String postParams) throws Exception {
