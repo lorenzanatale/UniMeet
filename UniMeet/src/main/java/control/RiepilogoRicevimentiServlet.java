@@ -14,53 +14,78 @@ import java.util.List;
 @WebServlet("/RiepilogoRicevimentiServlet")
 public class RiepilogoRicevimentiServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException {
 
-        System.out.println("[RiepilogoRicevimentiServlet] doGet() chiamato.");
+	    System.out.println("[RiepilogoRicevimentiServlet] doGet() chiamato.");
 
-        // 1) Controllo sessione
-        HttpSession mySession = request.getSession(false);
-        if (mySession == null) {
-            System.out.println("Sessione nulla: redirect alla login.");
-            response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
-            return;
-        }
+	    System.out.println("[DEBUG] Controllo sessione in corso...");
+	    if (request.isRequestedSessionIdValid()) {
+	        System.out.println("[DEBUG] Il JSESSIONID è valido: " + request.getRequestedSessionId());
+	    } else {
+	        System.out.println("[DEBUG] Nessuna sessione valida trovata.");
+	    }
 
-        // 2) Controllo se c'è lo studente o il professore
-        //    (studente => "matricolaStudente", professore => "utente" di tipo Professore)
-        Object studSession = mySession.getAttribute("matricolaStudente");
-        Object profSession = mySession.getAttribute("utente");
+	    
+	    
+	    // 1) Controllo sessione
+	    HttpSession mySession = request.getSession(false);
+	    if (mySession == null || mySession.getAttribute("utente") == null) {
+	        System.out.println("[DEBUG] Nessuna sessione valida trovata.");
+	        System.out.println("[DEBUG] Sessione nulla o utente non autenticato: redirect alla login.");
 
-        // Se NON c'è né studente né professore -> redirect
-        if (studSession == null && profSession == null) {
-            System.out.println("Nessun utente loggato in sessione -> redirect login.");
-            response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
-            return;
-        }
+	        response.setStatus(HttpServletResponse.SC_FOUND); // 302 Redirect
+	        response.setHeader("Location", request.getContextPath() + "/application/Login.jsp");
+	        response.setHeader("Connection", "close"); // Chiude la connessione forzando il redirect
+	        response.flushBuffer(); // Forza l'invio immediato della risposta
 
-        // 3) Se c’è un professore
-        if (profSession instanceof Professore) {
-            Professore profLoggato = (Professore) profSession;
-            // Carichiamo le prenotazioni in sospeso
-            List<PrenotazioneRicevimento> tutte = PrenotazioneRicevimentoService
-                    .ricercaPrenotazioniPerProfessore(profLoggato);
-            List<PrenotazioneRicevimento> inSospeso = new ArrayList<>();
-            for (PrenotazioneRicevimento p : tutte) {
-                if ("In sospeso".equalsIgnoreCase(p.getStato())) {
-                    inSospeso.add(p);
-                }
-            }
-            System.out.println("[DEBUG] Prenotazioni in sospeso trovate per prof " 
-                               + profLoggato.getCodiceProfessore() + ": " + inSospeso.size());
-            request.setAttribute("prenotazioniInSospeso", inSospeso);
-        }
+	        return; // Evita che il codice successivo venga eseguito
+	    }
 
-        // 4) Forward alla JSP -> Che mostra sia la parte studente (se studSession != null)
-        //    che la parte professore (se profSession != null)
-        request.getRequestDispatcher("/application/RiepilogoRicevimenti.jsp").forward(request, response);
-    }
+
+
+
+
+	    // 2) Controllo se c'è lo studente o il professore
+	    Object studSession = mySession.getAttribute("matricolaStudente");
+	    Object profSession = mySession.getAttribute("utente");
+
+	    // Stampiamo i valori per debug
+	    System.out.println("[DEBUG] Studente in sessione: " + studSession);
+	    System.out.println("[DEBUG] Professore in sessione: " + profSession);
+
+	    // Se la sessione esiste ma non contiene un utente valido, forziamo il redirect
+	    if (profSession == null && studSession == null) {
+	        System.out.println("[DEBUG] Nessun utente loggato in sessione -> redirect login.");
+	        mySession.invalidate(); // Cancella eventuali sessioni errate
+	        response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
+	        return;
+	    }
+
+	    // 3) Se è un professore
+	    if (profSession instanceof Professore) {
+	        Professore profLoggato = (Professore) profSession;
+	        System.out.println("[DEBUG] Professore loggato: " + profLoggato.getCodiceProfessore());
+
+	        // Recuperiamo le prenotazioni
+	        List<PrenotazioneRicevimento> tutte = PrenotazioneRicevimentoService
+	                .ricercaPrenotazioniPerProfessore(profLoggato);
+	        List<PrenotazioneRicevimento> inSospeso = new ArrayList<>();
+	        for (PrenotazioneRicevimento p : tutte) {
+	            if ("In sospeso".equalsIgnoreCase(p.getStato())) {
+	                inSospeso.add(p);
+	            }
+	        }
+	        System.out.println("[DEBUG] Prenotazioni in sospeso trovate: " + inSospeso.size());
+	        request.setAttribute("prenotazioniInSospeso", inSospeso);
+	    }
+
+	    // Forward alla JSP
+	    request.getRequestDispatcher("/application/RiepilogoRicevimenti.jsp").forward(request, response);
+	}
+
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

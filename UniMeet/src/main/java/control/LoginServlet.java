@@ -27,6 +27,8 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        System.out.println("[DEBUG] Email ricevuta: " + email + ", Password ricevuta: " + password);
+
         String redirectParam = request.getParameter("redirect"); // Parametro "redirect" dal form
         HttpSession session = request.getSession();
 
@@ -39,29 +41,43 @@ public class LoginServlet extends HttpServlet {
         try {
             Studente studente = StudenteService.cercaStudenteEmail(email);
 
+            if (studente != null) {
+                System.out.println("[DEBUG] Studente trovato: " + studente.getNome());
+            } else {
+                System.out.println("[DEBUG] Nessuno studente trovato con questa email.");
+            }
+
             if (studente != null && PasswordHasher.verifyPassword(password, studente.getPassword())) {
+                System.out.println("[DEBUG] Login studente riuscito.");
                 session.setAttribute("utente", studente);
                 session.setAttribute("role", "studente");
                 session.setAttribute("matricolaStudente", studente.getMatricola());
                 session.setAttribute("status", "Complimenti " + studente.getNome() + ", ti sei loggato con successo!");
 
-                // Gestione del redirect dopo il login
                 handleRedirect(request, response, session, redirectParam);
                 return;
             }
 
             Professore professore = ProfessoreService.cercaProfessoreEmail(email);
+
+            if (professore != null) {
+                System.out.println("[DEBUG] Professore trovato: " + professore.getNome());
+            } else {
+                System.out.println("[DEBUG] Nessun professore trovato con questa email.");
+            }
+
             if (professore != null && PasswordHasher.verifyPassword(password, professore.getPassword())) {
+                System.out.println("[DEBUG] Login professore riuscito.");
                 session.setAttribute("utente", professore);
                 session.setAttribute("role", "professore");
                 session.setAttribute("codiceProfessore", professore.getCodiceProfessore());
                 session.setAttribute("status", "Complimenti " + professore.getNome() + ", ti sei loggato con successo!");
 
-                // Gestione del redirect dopo il login
                 handleRedirect(request, response, session, redirectParam);
                 return;
             }
 
+            System.out.println("[DEBUG] Credenziali non valide.");
             session.setAttribute("status", "Credenziali non valide.");
             response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
 
@@ -71,6 +87,7 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
         }
     }
+
 
     /**
      * Gestisce il reindirizzamento dopo il login, dando priorità:
