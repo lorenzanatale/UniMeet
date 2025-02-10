@@ -76,6 +76,9 @@ public class PrenotazioneRicevimento {
 	public String getCognomeProfessore() {
 		return cognomeProfessore;
 	}
+	public void setCodice(int codice) {
+		this.codice=codice;
+	}
 	
 	
 }

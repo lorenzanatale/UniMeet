@@ -10,23 +10,26 @@ import java.util.List;
 public class InsegnamentoService {
 		
 	public static boolean rimuoviInsegnamento(Insegnamento i) {
-		try(Connection con= DriverManagerConnectionPool.getConnessione()){
-			PreparedStatement ps = con.prepareStatement("DELETE FROM insegnamento WHERE nome = ? AND codiceProfessore = ?;");
-			ps.setString(1, i.getNomeInsegnamento());
-			ps.setString(2, i.getCodiceProfessore());
-			
-			if(ps.execute())
-				return true;
-			else
-				return false;
-			
-	}catch(SQLException e){
-		e.printStackTrace();
-		System.out.println("errore nella cancellazione dell'insegnamento"+e.getMessage());
-		return false;
+	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+	        // Prepara la query di eliminazione
+	        String query = "DELETE FROM insegnamento WHERE nome = ? AND codiceProfessore = ?";
+	        try (PreparedStatement ps = con.prepareStatement(query)) {
+	            // Imposta i parametri della query
+	            ps.setString(1, i.getNomeInsegnamento());
+	            ps.setString(2, i.getCodiceProfessore());
+
+	            // Esegui la query di eliminazione e verifica se è stata eseguita con successo
+	            int rowsAffected = ps.executeUpdate();
+	            con.commit();
+	            return rowsAffected > 0; // Se rowsAffected è maggiore di 0, significa che la cancellazione è riuscita
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella cancellazione dell'insegnamento: " + e.getMessage());
+	        return false;
+	    }
 	}
-	}
-	
+
 	public Insegnamento ricercaInsegnamento(String nome) {
 	    Insegnamento insegnamento = null;
 

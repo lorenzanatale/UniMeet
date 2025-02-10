@@ -164,25 +164,25 @@ public class PrenotazioneRicevimentoService {
 	    }
 	}
 
-
 	public static boolean rimuoviPrenotazione(PrenotazioneRicevimento pr) {
-		try(Connection con= DriverManagerConnectionPool.getConnessione()){
-			PreparedStatement ps = con.prepareStatement("DELETE FROM prenotazioneRicevimento WHERE matricolaStudente= ? AND codiceProfessore = ?;");
-			ps.setString(1, pr.getMatricolaStudente());
-			ps.setString(2, pr.getCodiceProfessore());
-			
-			if(ps.execute())
-				return true;
-			else
-				return false;
-			
-	}catch(SQLException e){
-		e.printStackTrace();
-		System.out.println("errore nella cancellazione della prenotazione del ricevimento"+e.getMessage());
-		return false;
+	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+	        String query = "DELETE FROM prenotazioneRicevimento WHERE matricolaStudente = ? AND codiceProfessore = ?";
+	        try (PreparedStatement ps = con.prepareStatement(query)) {
+	            ps.setString(1, pr.getMatricolaStudente());
+	            ps.setString(2, pr.getCodiceProfessore());
+
+	            int rowsAffected = ps.executeUpdate(); // Restituisce il numero di righe eliminate
+
+	            return rowsAffected > 0; // Se almeno una riga è stata eliminata, ritorna true
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella cancellazione della prenotazione del ricevimento: " + e.getMessage());
+	        return false;
+	    }
 	}
-	}
-	public boolean rimuoviPrenotazionePerCodice(int codice) {
+
+	public static boolean rimuoviPrenotazionePerCodice(int codice) {
 	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
 	        String query = "DELETE FROM prenotazioneRicevimento WHERE codice = ?";
 	        PreparedStatement ps = con.prepareStatement(query);
@@ -198,10 +198,30 @@ public class PrenotazioneRicevimentoService {
 	        return false;
 	    }
 	}
+	//usato solo per il testing  diventato static
+	public  int stampaCodiceRicevimento(String codiceProfessore,String matricolaStudente,String giorno) {
+		String query ="select codice from prenotazioneRicevimento where codiceProfessore = ? and matricolaStudente = ? and giorno =?";
+		int codice =0;
+		try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+			PreparedStatement ps =con.prepareStatement(query);
+			ps.setString(1, codiceProfessore);
+			ps.setString(2, matricolaStudente);
+			ps.setString(3, giorno);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next())
+				codice=rs.getInt("codice");
+			return codice;
+			
+		}catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore nella cancellazione della prenotazione del ricevimento: " + e.getMessage());
+	        return codice;
+	    }
+	}
 
 	
 	
-	public PrenotazioneRicevimento ricercaPrenotazione(int codicePrenotazione) {
+	public static PrenotazioneRicevimento ricercaPrenotazione(int codicePrenotazione) {
 	    PrenotazioneRicevimento prenotazione = null;
 
 	    String query = "SELECT * FROM prenotazioneRicevimento WHERE codice = ?;";
@@ -231,7 +251,7 @@ public class PrenotazioneRicevimentoService {
 	    return prenotazione; 
 	}
 	
-	public List<PrenotazioneRicevimento> stampaPrenotazioni(String matricolaStudente) {
+	public static List<PrenotazioneRicevimento> stampaPrenotazioni(String matricolaStudente) {
 	    List<PrenotazioneRicevimento> prenotazioni = new ArrayList<>();
 
 	    String query = "SELECT * FROM prenotazioneRicevimento WHERE matricolaStudente = ?;";
@@ -291,8 +311,8 @@ public class PrenotazioneRicevimentoService {
 	    }
 	    return prenotazioni;
 	}
-
-	 public String getCodiceProfessoreDiPrenotazione(int codicePrenotazione)throws SQLException {
+//cambiato in static 
+	 public static String getCodiceProfessoreDiPrenotazione(int codicePrenotazione)throws SQLException {
   	   String codiceProfessore = null;
   	   String query = "SELECT codiceProfessore FROM prenotazioneRicevimento  WHERE codice= ? ";
   	   try (Connection con = DriverManagerConnectionPool.getConnessione();
@@ -342,6 +362,27 @@ public class PrenotazioneRicevimentoService {
 		    }
 		    return accettate;
 		}
+	 //testing
+	 public static int getCodicePerGiornoEProfessore(String giorno, String codiceProfessore) {
+		 int codice=0;
+		 try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+		        String query = "SELECT codice FROM prenotazioneRicevimento " 
+		                     + "WHERE codiceProfessore = ? AND giorno=?";
+		        try (PreparedStatement ps = con.prepareStatement(query)) {
+		            ps.setString(1, codiceProfessore);
+		            ps.setString(2,giorno);
+		            try (ResultSet rs = ps.executeQuery()) {
+		                if (rs.next()) {
+		                   codice=rs.getInt("codice");
+		                }
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    return codice;
+		 
+	 }
 
 	
 }
