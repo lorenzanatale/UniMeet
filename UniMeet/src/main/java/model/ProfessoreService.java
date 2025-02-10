@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,6 +102,7 @@ public class ProfessoreService {
 
     	    return insegnamento;
     	}
+       
         
         public String getUfficioProfessore(String nome,String cognome) {
         	String ufficio = null;
@@ -119,7 +121,7 @@ public class ProfessoreService {
     	    }
         	return ufficio;
         }
-        public String getNomeProfessoreByCodice(String codiceDocente) throws SQLException {
+        public static String getNomeProfessoreByCodice(String codiceDocente) throws SQLException {
             String nomeDocente = null;
             String query = "SELECT nome FROM professore WHERE codice = ?";
 
@@ -137,7 +139,7 @@ public class ProfessoreService {
 
             return nomeDocente;
         }
-        public String getcognomeProfessoreByCodice(String codiceDocente) throws SQLException {
+        public static String getcognomeProfessoreByCodice(String codiceDocente) throws SQLException {
             String nomeDocente = null;
             String query = "SELECT cognome FROM professore WHERE codice = ?";
 
@@ -155,8 +157,8 @@ public class ProfessoreService {
 
             return nomeDocente;
         }
-        
-public List<Professore> stampaListaProfessori() throws SQLException{
+        //aggiunto static
+public static List<Professore> stampaListaProfessori() throws SQLException{
 	List<Professore> listaProfessori=new ArrayList<>();
 	String query="SELECT * FROM professore";
 	try (Connection con = DriverManagerConnectionPool.getConnessione();
@@ -185,8 +187,10 @@ public List<Professore> stampaListaProfessori() throws SQLException{
 	
 	
 }
+
+
         //--------------------------------CIRO---------------------------------------
-        
+       
         public static int aggiungiProfessore(Professore p) {
             int result = 0;
 
@@ -203,8 +207,9 @@ public List<Professore> stampaListaProfessori() throws SQLException{
                 ps.setString(8, p.getRisposta());
 
                 result = ps.executeUpdate();
+                
 
-                System.out.println("Inserimento riuscito, righe inserite: " + result);
+               
 
                 con.commit();
 
@@ -214,31 +219,9 @@ public List<Professore> stampaListaProfessori() throws SQLException{
             }
             return result;
         }
-        
-        public static Professore loginProfessore(String email, String password) throws Exception {
-        	Professore professore = null;
-            String sql = "SELECT * FROM professore WHERE email = ? AND password = ?";
-                
-            try (Connection conn = DriverManagerConnectionPool.getConnessione();
-            		PreparedStatement stmt = conn.prepareStatement(sql)) {
-                    stmt.setString(1, email);
-                    stmt.setString(2, password);
-                    ResultSet rs = stmt.executeQuery();
-                    
-                    if (rs.next()) {
-                        professore = new Professore();
-                        professore.setEmail(rs.getString("email"));
-                        professore.setPassword(rs.getString("passwordHash"));
-                        professore.setNome(rs.getString("nome"));
-                        professore.setCognome(rs.getString("cognome"));
-                        professore.setCodiceProfessore(rs.getString("codice"));
-                        professore.setUfficio(rs.getString("ufficio"));
-                    }
-                }
-                return professore;
-        }
-        
-        public ArrayList<Professore> cercaProfessori(String keyword) throws SQLException {
+       
+        //cambiato in static
+        public static ArrayList<Professore> cercaProfessori(String keyword) throws SQLException {
             ArrayList<Professore> list = new ArrayList<>();
             if (keyword == null || keyword.trim().isEmpty()) {
                 return list;
@@ -278,6 +261,60 @@ public List<Professore> stampaListaProfessori() throws SQLException{
                 }
             }
             return list;
+        }
+        //per il testing
+        public static Professore getProfessoreByCodice(String codiceProfessore) {
+            Professore professore = null;
+
+            // La query SQL per cercare il professore con il codice dato
+            String query = "SELECT * FROM professore WHERE codice = ?";
+
+            // Gestione della connessione al database
+            try (Connection con = DriverManagerConnectionPool.getConnessione();
+                 PreparedStatement ps = con.prepareStatement(query)) {
+                
+                // Imposta il parametro nella query (codiceProfessore)
+                ps.setString(1, codiceProfessore);
+
+                // Esegui la query
+                try (ResultSet rs = ps.executeQuery()) {
+                    // Se il professore esiste, crea l'oggetto Professore
+                    if (rs.next()) {
+                        professore = new Professore(
+                            rs.getString("nome"),          // Supponendo che la colonna si chiami "nome"
+                            rs.getString("cognome"),       // Supponendo che la colonna si chiami "cognome"
+                            rs.getString("email"),         // Supponendo che la colonna si chiami "email"
+                            rs.getString("passwordHash"),      // Supponendo che la colonna si chiami "password"
+                            rs.getString("codice"),        // Supponendo che la colonna si chiami "codice"
+                            rs.getString("ufficio"),       // Supponendo che la colonna si chiami "ufficio"
+                            rs.getString("domandaSicurezza"), // Supponendo che la colonna si chiami "domanda_sicurezza"
+                            rs.getString("risposta") // Supponendo che la colonna si chiami "risposta_sicurezza"
+                        );
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Puoi anche gestire il logging o l'ulteriore gestione degli errori qui.
+            }
+
+            // Restituisci l'oggetto professore (null se non trovato)
+            return professore;
+        }
+        public static boolean rimuoviProfessoreByCodice(String codice) {
+            // Supponiamo che tu stia usando JDBC per interagire con il database
+            String query = "DELETE FROM professore WHERE codice = ?";
+
+            try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+
+                stmt.setString(1, codice);
+                int rowsAffected = stmt.executeUpdate();
+                conn.commit();
+                return rowsAffected > 0; // Restituisce true se la rimozione è avvenuta con successo
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
 
 }

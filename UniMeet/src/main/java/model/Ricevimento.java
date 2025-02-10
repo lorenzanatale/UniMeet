@@ -53,5 +53,8 @@ public class Ricevimento {
 		 this.giorno=giorno;
 		
 	}
+	public void setCodice(int codice) {
+		this.codice=codice;
+	}
 
 }
