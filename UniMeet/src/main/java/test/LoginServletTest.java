@@ -21,7 +21,7 @@ import model.StudenteService;
 
 public class LoginServletTest {
 
-    private static final String BASE_URL = "http://localhost:14201/UniMeet/LoginServlet";
+    private static final String BASE_URL = "http://localhost:8080/UniMeet/LoginServlet";
     private static String sessionCookie = "";
 
     @BeforeClass

@@ -7,31 +7,55 @@ import java.sql.SQLException;
 
 public class StudenteService {
 	public static int aggiungiStudente(Studente s) {
-        int result = 0;
+	    int result = 0;
 
-        try (Connection con = DriverManagerConnectionPool.getConnessione();
-        	PreparedStatement ps = con.prepareStatement("INSERT INTO studente (matricola, nome, cognome, email, passwordHash, domandaSicurezza, risposta) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+	        // Controllo se l'email esiste già
+	        String checkQuery = "SELECT COUNT(*) FROM studente WHERE email = ?";
+	        try (PreparedStatement checkPs = con.prepareStatement(checkQuery)) {
+	            checkPs.setString(1, s.getEmail());
+	            ResultSet rs = checkPs.executeQuery();
+	            if (rs.next() && rs.getInt(1) > 0) {
+	                System.out.println("Errore: L'email è già registrata.");
+	                return -1; 
+	            }
+	        }
+	        
+	     // Controllo se la matricola esiste già
+	        String checkQuery1 = "SELECT COUNT(*) FROM studente WHERE matricola = ?";
+	        try (PreparedStatement checkPs = con.prepareStatement(checkQuery1)) {
+	            checkPs.setString(1, s.getMatricola());
+	            ResultSet rs = checkPs.executeQuery();
+	            if (rs.next() && rs.getInt(1) > 0) {
+	                System.out.println("Errore: La matricola è associata ad un altro utente.");
+	                return 2; 
+	            }
+	        }
 
-            ps.setString(1, s.getMatricola());
-            ps.setString(2, s.getNome());
-            ps.setString(3, s.getCognome());
-            ps.setString(4, s.getEmail());
-            ps.setString(5, s.getPassword());
-            ps.setString(6, s.getDomanda());
-            ps.setString(7, s.getRisposta());
+	        // Se l'email non esiste, procediamo con l'inserimento
+	        String insertQuery = "INSERT INTO studente (matricola, nome, cognome, email, passwordHash, domandaSicurezza, risposta) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	        try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
+	            ps.setString(1, s.getMatricola());
+	            ps.setString(2, s.getNome());
+	            ps.setString(3, s.getCognome());
+	            ps.setString(4, s.getEmail());
+	            ps.setString(5, s.getPassword());
+	            ps.setString(6, s.getDomanda());
+	            ps.setString(7, s.getRisposta());
 
-            result = ps.executeUpdate();
+	            result = ps.executeUpdate();
+	            System.out.println("Inserimento riuscito, righe inserite: " + result);
 
-            System.out.println("Inserimento riuscito, righe inserite: " + result);
+	            con.commit();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Errore SQL durante l'inserimento: " + e.getMessage());
+	    }
 
-            con.commit();
+	    return result;
+	}
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Errore SQL durante l'inserimento: " + e.getMessage());
-        }
-        return result;
-    }
 	
 
     //ricerca professore tramite mail

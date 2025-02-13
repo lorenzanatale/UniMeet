@@ -18,7 +18,7 @@ import model.ProfessoreService;
 
 public class AjaxSearchTest {
 
-    private static final String BASE_URL = "http://localhost:14201/UniMeet/AjaxSearch";
+    private static final String BASE_URL = "http://localhost:8080/UniMeet/AjaxSearch";
 
     @BeforeClass
     public static void setUpServer() {

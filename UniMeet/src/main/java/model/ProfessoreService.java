@@ -191,34 +191,56 @@ public static List<Professore> stampaListaProfessori() throws SQLException{
 
         //--------------------------------CIRO---------------------------------------
        
-        public static int aggiungiProfessore(Professore p) {
-            int result = 0;
+public static int aggiungiProfessore(Professore p) {
+    int result = 0;
 
-            try (Connection con = DriverManagerConnectionPool.getConnessione();
-            	PreparedStatement ps = con.prepareStatement("INSERT INTO professore (codice, nome, cognome, ufficio, email, passwordHash, domandaSicurezza, risposta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")){
-
-                ps.setString(1, p.getCodiceProfessore());
-                ps.setString(2, p.getNome());
-                ps.setString(3, p.getCognome());
-                ps.setString(4, p.getUfficio());
-                ps.setString(5, p.getEmail());
-                ps.setString(6, p.getPassword());
-                ps.setString(7, p.getDomanda());
-                ps.setString(8, p.getRisposta());
-
-                result = ps.executeUpdate();
-                
-
-               
-
-                con.commit();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("Errore SQL durante l'inserimento: " + e.getMessage());
+    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
+    	
+        // Controllo se l'email esiste già
+        String checkQuery = "SELECT COUNT(*) FROM professore WHERE email = ?";
+        try (PreparedStatement checkPs = con.prepareStatement(checkQuery)) {
+            checkPs.setString(1, p.getEmail());
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                System.out.println("Errore: L'email è già registrata.");
+                return -1; 
             }
-            return result;
         }
+        
+        // Controllo se il codice professore esiste già
+        String checkQuery1 = "SELECT COUNT(*) FROM professore WHERE codice = ?";
+        try (PreparedStatement checkPs = con.prepareStatement(checkQuery1)) {
+            checkPs.setString(1, p.getCodiceProfessore());
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                System.out.println("Errore: Il codice professore è associato ad un altro utente.");
+                return 2; 
+            }
+        }
+
+        // Se l'email non esiste, procediamo con l'inserimento
+        String insertQuery = "INSERT INTO professore (codice, nome, cognome, ufficio, email, passwordHash, domandaSicurezza, risposta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
+            ps.setString(1, p.getCodiceProfessore());
+            ps.setString(2, p.getNome());
+            ps.setString(3, p.getCognome());
+            ps.setString(4, p.getUfficio());
+            ps.setString(5, p.getEmail());
+            ps.setString(6, p.getPassword());
+            ps.setString(7, p.getDomanda());
+            ps.setString(8, p.getRisposta());
+
+            result = ps.executeUpdate();
+            con.commit();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println("Errore SQL durante l'inserimento: " + e.getMessage());
+    }
+    
+    return result;
+}
+
        
         //cambiato in static
         public static ArrayList<Professore> cercaProfessori(String keyword) throws SQLException {

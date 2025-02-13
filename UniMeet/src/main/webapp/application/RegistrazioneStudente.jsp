@@ -78,6 +78,18 @@
                                 <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Registrati!</button>
                                 <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alle opzioni</a>
                             </div>
+                            <!-- Aggiunto messaggio sessione  -->
+							<%
+    String status = (String) session.getAttribute("status");
+    if (status != null) {
+%>
+<div class="alert alert-info text-center mt-3" role="alert">
+    <%= status %>
+</div>
+<% 
+        session.removeAttribute("status");
+    }
+%>
                 </form>
             </div>
         </div>

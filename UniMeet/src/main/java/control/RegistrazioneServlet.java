@@ -48,6 +48,7 @@ public class RegistrazioneServlet extends HttpServlet {
         String[] insegnamenti = request.getParameterValues("insegnamenti");
 
         HttpSession session = request.getSession();
+        
 
         if (codiceProfessore == null || nome == null || cognome == null || email == null || pass == null || ufficio == null || domanda == null || risposta == null ||
                 codiceProfessore.isEmpty() || nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || pass.isEmpty() || ufficio.isEmpty() || domanda.isEmpty() || risposta.isEmpty()) {
@@ -66,8 +67,20 @@ public class RegistrazioneServlet extends HttpServlet {
             professore.setUfficio(ufficio);
             professore.setDomanda(domanda);
             professore.setRisposta(PasswordHasher.hashPassword(risposta));
-            
+            //aggiunto controllo per la mail duplicata
             int row = ProfessoreService.aggiungiProfessore(professore);
+            if (row == -1) {
+                session.setAttribute("status", "L'email è già registrata. Scegli un'altra email.");
+                response.sendRedirect(request.getContextPath() + "/application/RegistrazioneProfessore.jsp");
+                return;
+            }
+            
+            if (row == 2) {
+                session.setAttribute("status", "Il codice professore è già presente, controllare l'inserimento.");
+                response.sendRedirect(request.getContextPath() + "/application/RegistrazioneProfessore.jsp");
+                return;
+            }
+
 
             // QUI MI SCORRO L'ARRAY E LI INSERISCO TUTTI
             if (insegnamenti != null) {

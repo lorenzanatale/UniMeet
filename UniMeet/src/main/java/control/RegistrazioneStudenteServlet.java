@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Utils.PasswordHasher;
+import model.ProfessoreService;
 import model.Studente;
 import model.StudenteService;
 
@@ -30,11 +31,9 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-    	//IMPORTANTE, SENZA QUESTE DUE RIGHE NON VENGONO STORATI CORRETTAMENTE I CARATTERI SPECIALI
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        
+
         String matricola = request.getParameter("matricola");
         String nome = request.getParameter("nome");
         String cognome = request.getParameter("cognome");
@@ -45,7 +44,7 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        // Controllo dei parametri di input da RegistrazioneStudente.jsp
+        // Controllo dei parametri di input
         if (matricola == null || nome == null || cognome == null || email == null || pass == null || domanda == null || risposta == null ||
                 matricola.isEmpty() || nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || pass.isEmpty() || domanda.isEmpty() || risposta.isEmpty()) {
             session.setAttribute("status", "Tutti i campi devono essere compilati.");
@@ -64,8 +63,20 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
             studente.setDomanda(domanda);
             studente.setRisposta(PasswordHasher.hashPassword(risposta));
 
-            // Salvataggio del professore nel database
+            // Controllo per la mail gia presente
             int row = StudenteService.aggiungiStudente(studente);
+            if (row == -1) {
+                session.setAttribute("status", "L'email è già registrata. Scegli un'altra email.");
+                response.sendRedirect(request.getContextPath() + "/application/RegistrazioneStudente.jsp");
+                return;
+            }
+            
+         // Controllo per matricola già presente
+            if (row == 2) {
+                session.setAttribute("status", "La matricola è già presente, controllare l'inserimento.");
+                response.sendRedirect(request.getContextPath() + "/application/RegistrazioneStudente.jsp");
+                return;
+            }
 
             if (row > 0) {
                 // Registrazione avvenuta con successo
@@ -82,5 +93,6 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
             session.setAttribute("status", "Si è verificato un errore durante la registrazione.");
             response.sendRedirect(request.getContextPath() + "/application/RegistrazioneStudente.jsp");
         }
+    
     }
 }
