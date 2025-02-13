@@ -21,6 +21,8 @@ public class PrenotazioneServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String codiceProfessore = request.getParameter("codiceProfessore");
         logger.info("Recupero ricevimenti per il professore con codice: " + codiceProfessore);
 
@@ -58,6 +60,8 @@ public class PrenotazioneServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession();
         Studente studenteLogged = (Studente) session.getAttribute("utente");
 

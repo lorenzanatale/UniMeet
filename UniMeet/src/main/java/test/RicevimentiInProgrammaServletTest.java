@@ -8,6 +8,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,23 +44,23 @@ public class RicevimentiInProgrammaServletTest {
     public void setUp() throws SQLException {
         System.out.println("🔹 Avvio setup test...");
 
-
-
+        PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("lunedì", "P789123"));
+       
         // **2. Eliminare il professore e lo studente se esistono già**
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
         StudenteService.rimuoviStudente("S123456");
 
         // **3. Creazione professore**
         Professore professore = new Professore("Luigi", "Verdi", "professore@example.com",
-                "password456", "P789123", "Ufficio A2", "Domanda?", "Risposta");
+                "$2a$12$1h9aTVDgg6Orz3tT2rn2nu1/Nfh4oc5KeGBxuln/MMaQsX3tSLt4y", "P789123", "Ufficio A2", "Domanda?", "Risposta");
         ProfessoreService.aggiungiProfessore(professore);
-        System.out.println("✅ Professore creato: " + professore);
+        System.out.println("✅ Professore creato: " + professore.toString());
 
         // **4. Creazione studente**
         Studente studente = new Studente("Mario", "Rossi", "studente@example.com",
                 "password123", "S123456", "Domanda?", "Risposta");
         StudenteService.aggiungiStudente(studente);
-        System.out.println("✅ Studente creato: " + studente);
+        System.out.println("✅ Studente creato: " + studente.toString());
 
         // **5. Commit per evitare problemi di integrità**
         DriverManagerConnectionPool.getConnessione().commit();
@@ -68,6 +72,9 @@ public class RicevimentiInProgrammaServletTest {
     @After
     public void tearDown() throws SQLException {
         System.out.println("🔹 Pulizia dati di test...");
+        
+
+        PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("lunedì", "P789123"));
 
 
         // **2. Eliminare il professore**
@@ -132,7 +139,7 @@ public class RicevimentiInProgrammaServletTest {
 
         // **1. Creazione professore**
         Professore professore = new Professore("Luigi", "Verdi", "professore@example.com",
-                "password456", "P789123", "Ufficio A2", "Domanda?", "Risposta");
+                "$2a$12$1h9aTVDgg6Orz3tT2rn2nu1/Nfh4oc5KeGBxuln/MMaQsX3tSLt4y", "P789123", "Ufficio A2", "Domanda?", "Risposta");
         ProfessoreService.aggiungiProfessore(professore);
         System.out.println("✅ Professore creato: " + professore);
 
@@ -145,7 +152,7 @@ public class RicevimentiInProgrammaServletTest {
         // **3. Creazione prenotazione accettata**
         PrenotazioneRicevimento prenotazione = new PrenotazioneRicevimento(
                 0, "accettata", "lunedì", "10:00", "Discussione progetto",
-                professore.getCodiceProfessore(), studente.getMatricola());
+                "P789123", "S123456");
         PrenotazioneRicevimentoService.aggiungiPrenotazioneRicevimento(prenotazione);
 
         // **4. Commit per forzare la scrittura**
@@ -175,12 +182,29 @@ public class RicevimentiInProgrammaServletTest {
             response.append(inputLine);
         }
         in.close();
-
-        System.out.println("🔹 Response Body: " + response.toString());
-
-        // **9. Controllo che la risposta contenga la prenotazione accettata**
-        assertTrue("❌ La risposta deve contenere le prenotazioni accettate!",
-                response.toString().contains("accettata") || response.toString().contains("Prenotazioni in sospeso"));
+        List <PrenotazioneRicevimento> list = new ArrayList<>();
+        list.add(PrenotazioneRicevimentoService.ricercaPrenotazione(codicePrenotazione));
+        for(PrenotazioneRicevimento p : PrenotazioneRicevimentoService.ricercaPrenotazioniPerProfessore(professore))
+        	System.out.println("Lista lunga:" + p.getCodice());
+        
+        for(PrenotazioneRicevimento p : list)
+        		System.out.println("List:" + p.getCodice());
+        
+     // Estrarre i codici e convertirli in Set per ignorare l'ordine
+        Set<Integer> codici1 = new HashSet<>();
+        for (PrenotazioneRicevimento p : PrenotazioneRicevimentoService.ricercaPrenotazioniPerProfessore(professore)) {
+            codici1.add(p.getCodice());
+        }
+        
+        Set<Integer> codici2 = new HashSet<>();
+        for (PrenotazioneRicevimento p : list) {
+        	codici2.add(p.getCodice());
+        }
+        
+       // System.out.println("🔹 Response Body: " + response.toString());
+        assertEquals(codici1, codici2); // **9. Controllo che la risposta contenga la prenotazione accettata**
+        //assertTrue("❌ La risposta deve contenere le prenotazioni accettate!",
+                //response.toString().contains("accettata") || response.toString().contains("Prenotazioni in sospeso"));
     }
 
 

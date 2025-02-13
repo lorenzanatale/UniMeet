@@ -56,9 +56,9 @@
                     Menu studente
                 </a>
                 <div class="dropdown-menu" aria-labelledby="studentMenu">
-                    <a class="dropdown-item" href="PrenotaUnRicevimento.jsp">Prenota un ricevimento</a>
-                    <a class="dropdown-item" href="RiepilogoRicevimenti.jsp">Riepilogo ricevimenti</a>
-                    <form action="../LogoutServlet" method="POST" style="display:inline;">
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/application/PrenotaUnRicevimento.jsp">Prenota un ricevimento</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/application/RiepilogoRicevimenti.jsp">Riepilogo ricevimenti</a>
+                    <form action="${pageContext.request.contextPath}/LogoutServlet" method="POST" style="display:inline;">
     					<button type="submit" class="dropdown-item">Logout</button>
 					</form>
                 </div>
@@ -91,7 +91,7 @@
 
         <% } %>
 
-        <form action="Risultati.jsp" method="post" class="form-inline ml-auto">
+        <form action="${pageContext.request.contextPath}/application/Risultati.jsp" method="post" class="form-inline ml-auto">
     		<input class="form-control mr-sm-2" type="search" name="ajax-search" placeholder="Cerca" aria-label="Search">
     		<button class="btn btn-outline-dark" type="submit">Cerca</button>
 		</form>

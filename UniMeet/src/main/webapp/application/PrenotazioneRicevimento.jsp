@@ -1,9 +1,8 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.*" %>
 <%@ page import="model.Ricevimento" %>
 <%@ page import="model.Studente" %>
-<%@ page import= "model.PrenotazioneRicevimentoService" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
 
 <!DOCTYPE html>
 <html>
@@ -11,212 +10,159 @@
     <meta charset="UTF-8">
     <title>Prenotazione Ricevimento</title>
     <style>
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .prenotazione-box {
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            padding: 30px;
-            margin: 20px auto;
-            max-width: 800px;
-        }
-        .giorni-disponibili {
-            background-color: #f5f5f5;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .select-giorno, .select-ora {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #ffd966;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .verifica-btn {
-            width: auto;
-            padding: 10px 30px;
-            background-color: #70ad47;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            display: block;
-            margin: 20px 0;
-        }
-        .note-area {
-            width: 100%;
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            min-height: 100px;
-            box-sizing: border-box;
-        }
-        .prenota-btn {
-            width: 200px;
-            padding: 10px 0;
-            background-color: #ffd966;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto;
-            font-size: 16px;
-        }
-        .home-btn {
-            width: 300px;
-            padding: 10px 0;
-            background-color: #ff7c7c;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            text-decoration: none;
-            display: block;
-            margin: 20px auto;
-            text-align: center;
-        }
-        .email-notice {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .registration-notice {
-            text-align: center;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        .error-message {
-            color: red;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .success-message {
-            color: green;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .session-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 10px 0;
-            text-align: center;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .prenotazione-box { background-color: #f5f5f5; border-radius: 8px; padding: 30px; margin: 20px auto; max-width: 800px; }
+        .select-giorno, .select-ora { width: 100%; padding: 10px; margin: 10px 0; background-color: #ffd966; border: none; border-radius: 20px; cursor: pointer; font-size: 16px; }
+        .prenota-btn { width: 200px; padding: 10px 0; background-color: #ffd966; border: none; border-radius: 20px; cursor: pointer; display: block; margin: 20px auto; font-size: 16px; }
+        .home-btn { width: 300px; padding: 10px 0; background-color: #ff7c7c; color: white; border: none; border-radius: 20px; text-decoration: none; display: block; margin: 20px auto; text-align: center; }
+        .error-message { color: red; text-align: center; margin: 10px 0; }
+        .giorni-disponibili { background-color: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .note-area {width: 100%;padding: 10px;border: 1px solid #ddd;border-radius: 5px;resize: none;font-size: 14px;margin-top: 10px;}
     </style>
 </head>
 <body>
     <jsp:include page="/application/Header.jsp" />
-    
+
     <div class="container">
         <h1 style="text-align: center;"><%= request.getAttribute("professore") %></h1>
-        
-        <%-- Check for session and display warning if not logged in --%>
-        <% 
-            Studente studenteLogged = (Studente) session.getAttribute("utente");
-            if (studenteLogged == null) { 
+
+        <%
+            HttpSession sessione = request.getSession();
+            Studente studenteLogged = (Studente) sessione.getAttribute("utente");
+            Map<String, List<String>> giorniEOre = null;
+
+            // SALVA L'URL ATTUALE PER IL REINDIRIZZAMENTO DOPO IL LOGIN
+            if (studenteLogged == null) {
+                String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+                sessione.setAttribute("redirectAfterLogin", currentURL);
         %>
-            <div class="session-warning">
+            <div class="error-message">
                 Per effettuare una prenotazione è necessario essere registrati e aver effettuato l'accesso.
                 <a href="${pageContext.request.contextPath}/application/Login.jsp">Accedi</a>
             </div>
         <% } %>
-        
+
+        <%
+            List<Ricevimento> ricevimenti = (List<Ricevimento>) request.getAttribute("ricevimenti");
+
+            if (ricevimenti == null || ricevimenti.isEmpty()) { 
+        %>
+            <div class="error-message">Nessun ricevimento disponibile per questo professore.</div>
+        <% } else { 
+            // Mappa con l'ordine fisso dei giorni
+            Map<String, Integer> dayOrder = new LinkedHashMap<>();
+            dayOrder.put("lunedì", 1);
+            dayOrder.put("martedì", 2);
+            dayOrder.put("mercoledì", 3);
+            dayOrder.put("giovedì", 4);
+            dayOrder.put("venerdì", 5);
+
+            // Mappa per raccogliere giorni e orari
+            giorniEOre = new LinkedHashMap<>();
+
+            for (Ricevimento r : ricevimenti) {
+                String giorno = r.getGiorno().toLowerCase().trim();
+                String ora = r.getOra().trim();
+
+                if (dayOrder.containsKey(giorno)) {
+                    giorniEOre.putIfAbsent(giorno, new ArrayList<>());
+                    giorniEOre.get(giorno).add(ora);
+                }
+            }
+        %>
+
         <div class="prenotazione-box">
-            <div class="giorni-disponibili">
-                <h3>Giorni disponibili</h3>
-                <% if (request.getAttribute("ricevimenti") != null) {
-                    List<Ricevimento> ricevimenti = (List<Ricevimento>) request.getAttribute("ricevimenti");
-                    for (Ricevimento r : ricevimenti) { %>
-                        <div>
-                            <span><%= r.getGiorno() %>: </span>
-                            <span><%= r.getOra() %></span>
-                        </div>
-                    <% }
+            <h3>Giorni disponibili</h3>
+            <ul>
+                <% for (String giorno : dayOrder.keySet()) {
+                    if (giorniEOre.containsKey(giorno)) { %>
+                        <li><b><%= giorno.substring(0, 1).toUpperCase() + giorno.substring(1) %>:</b>
+                            <%= String.join(", ", giorniEOre.get(giorno)) %>
+                        </li>
+                <%  } 
                 } %>
-            </div>
+            </ul>
 
             <form action="${pageContext.request.contextPath}/PrenotazioneServlet" method="POST" id="prenotazioneForm">
                 <input type="hidden" name="codiceProfessore" value="<%= request.getAttribute("codiceProfessore") %>">
-                
-                <select name="giorno" class="select-giorno" required>
-                    <option value="">SELEZIONA GIORNO ↓</option>
-                    <% if (request.getAttribute("ricevimenti") != null) {
-                        List<Ricevimento> ricevimenti = (List<Ricevimento>) request.getAttribute("ricevimenti");
-                        for (Ricevimento r : ricevimenti) { %>
-                            <option value="<%= r.getGiorno() %>"><%= r.getGiorno() %></option>
-                        <% }
-                    } %>
-                </select>
 
-                <select name="ora" class="select-ora" required>
-                    <option value="">SELEZIONA ORA ↓</option>
-                    <% if (request.getAttribute("ricevimenti") != null) {
-                        List<Ricevimento> ricevimenti = (List<Ricevimento>) request.getAttribute("ricevimenti");
-                        for (Ricevimento r : ricevimenti) { %>
-                            <option value="<%= r.getOra() %>"><%= r.getOra() %></option>
-                        <% }
-                    } %>
-                </select>
+                <label for="giornoSelect">Seleziona Giorno:</label>
+<select name="giorno" class="select-giorno" id="giornoSelect" required>
+    <option value="">SELEZIONA GIORNO ↓</option>
+    <% for (String giorno : dayOrder.keySet()) {
+        if (giorniEOre.containsKey(giorno)) { %>
+            <option value="<%= giorno %>"><%= giorno.substring(0, 1).toUpperCase() + giorno.substring(1) %></option>
+    <%  }
+    } %>
+</select>
 
+<label for="oraSelect">Seleziona Ora:</label>
+<select name="ora" class="select-ora" id="oraSelect" required disabled>
+    <option value="">SELEZIONA ORA ↓</option>
+</select>
 
-                <textarea name="note" class="note-area" placeholder="NOTE (opzionale)"></textarea>
+<!-- Box per inserire note (opzionali) -->
+<label for="note">Note (opzionali):</label>
+<textarea name="note" id="note" rows="3" class="note-area" placeholder="Non ci sono note"></textarea>
 
-                <button type="submit" class="prenota-btn">PRENOTA</button>
+<button type="submit" class="prenota-btn">PRENOTA</button>
+
             </form>
-
-            <p class="registration-notice">
-                N.B. PER PRENOTARE E' NECESSARIO ESSERE REGISTRATI!
-            </p>
-
-            <%-- Display error messages --%>
-            <% if (request.getAttribute("errorMessage") != null) { %>
-                <div class="error-message"><%= request.getAttribute("errorMessage") %></div>
-            <% } %>
-            
-            <%-- Display success messages --%>
-            <% if (session.getAttribute("esito") != null) { %>
-                <div class="success-message"><%= session.getAttribute("esito") %></div>
-                <% session.removeAttribute("esito"); %>
-            <% } %>
         </div>
+
+        <% } // Chiusura IF per controllare se ci sono ricevimenti %>
 
         <a href="${pageContext.request.contextPath}/application/Home.jsp" class="home-btn">Torna alla Home</a>
     </div>
-    
-    <script>
-        function verificaDisponibilita() {
-            var giorno = document.querySelector('select[name="giorno"]').value;
-            var ora = document.querySelector('select[name="ora"]').value;
-            
-            if (!giorno || !ora) {
-                alert("Seleziona sia il giorno che l'ora per verificare la disponibilità");
-                return;
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var giornoSelect = document.querySelector('#giornoSelect');
+        var oraSelect = document.querySelector('#oraSelect');
+
+        oraSelect.disabled = true;
+
+        // Inizializza l'oggetto JavaScript che conterrà gli orari disponibili per ciascun giorno
+        var orariDisponibili = {};
+
+        <% if (giorniEOre != null) { %>
+            <% for (String giorno : giorniEOre.keySet()) { %>
+            orariDisponibili["<%= giorno %>"] = <%= new ArrayList<>(giorniEOre.get(giorno)).toString().replace("[", "[\"").replace("]", "\"]").replace(", ", "\", \"") %>;
+            <% } %>
+        <% } %>
+
+        console.log("Orari disponibili:", orariDisponibili);
+
+        // Evento per aggiornare la select delle ore
+        giornoSelect.addEventListener("change", function () {
+            var giornoSelezionato = this.value;
+            oraSelect.innerHTML = "";
+
+            if (giornoSelezionato && orariDisponibili[giornoSelezionato]) {
+                oraSelect.disabled = false;
+
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.textContent = "SELEZIONA ORA ↓";
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                oraSelect.appendChild(defaultOption);
+
+                // Itera sugli orari disponibili e aggiungili alla select
+orariDisponibili[giornoSelezionato].forEach(function (ora) { 
+                    var option = document.createElement("option");
+                    option.value = ora;
+                    option.textContent = ora;
+                    oraSelect.appendChild(option);
+                });
+            } else {
+                oraSelect.disabled = true;
             }
-            
-            // Here you could add an AJAX call to check availability
-            alert("Verifica disponibilità per " + giorno + " alle " + ora);
-        }
-        
-        // Form validation
-        document.getElementById('prenotazioneForm').onsubmit = function(e) {
-            var giorno = document.querySelector('select[name="giorno"]').value;
-            var ora = document.querySelector('select[name="ora"]').value;
-            
-            if (!giorno || !ora) {
-                e.preventDefault();
-                alert("Seleziona sia il giorno che l'ora per procedere con la prenotazione");
-                return false;
-            }
-            return true;
-        };
-    </script>
-    
+        });
+    });
+</script>
+
+
     <jsp:include page="/application/Footer.jsp" />
 </body>
 </html>
