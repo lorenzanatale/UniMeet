@@ -391,57 +391,66 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
 
         // Gestione invio del form
         document.getElementById("ricevimentoForm").addEventListener("submit", function(event) {
-            var errorMsg = document.getElementById("errorMsg");
-            errorMsg.innerHTML = "";
-            
-            var errors = [];
-            var modeValue = "<%= mode %>"; // "aggiungi" o "modifica"
-            
-            // Scopriamo che bottone è stato premuto
-            var clickedAction = event.submitter ? event.submitter.value : null;
-            
-            var dayElement, hourElement;
-            
-            // Se siamo in modifica, gestiamo oldRicevimento
-            if (modeValue === "modifica") {
-                var oldRicevimentoField = document.getElementById("oldRicevimento");
-                if (!oldRicevimentoField.value) {
-                    var currentSelect = document.getElementById("currentRicevimento");
-                    if (currentSelect && currentSelect.value) {
-                        oldRicevimentoField.value = currentSelect.value;
-                    }
-                }
-                
-                // Se l'utente non ha selezionato nulla e non sta eliminando, errore
-                if (clickedAction !== "elimina" && !document.getElementById("currentRicevimento").value) {
-                    errors.push("Devi selezionare il ricevimento da modificare.");
-                }
-                
-                dayElement = document.getElementById("newGiorno");
-                hourElement = document.getElementById("newOra");
-                
-            } else {
-                // Modalità "aggiungi"
-                dayElement = document.getElementById("giorno");
-                hourElement = document.getElementById("ora");
+    var errorMsg = document.getElementById("errorMsg");
+    errorMsg.innerHTML = "";
+    
+    var errors = [];
+    var modeValue = "<%= mode %>"; // "aggiungi" o "modifica"
+    
+    // Scopriamo che bottone è stato premuto
+    var clickedAction = event.submitter ? event.submitter.value : null;
+    
+    var dayElement, hourElement;
+    
+    // Se siamo in modifica, gestiamo oldRicevimento
+    if (modeValue === "modifica") {
+        var oldRicevimentoField = document.getElementById("oldRicevimento");
+        if (!oldRicevimentoField.value) {
+            var currentSelect = document.getElementById("currentRicevimento");
+            if (currentSelect && currentSelect.value) {
+                oldRicevimentoField.value = currentSelect.value;
             }
-            
-            // Se NON stiamo eliminando, controlliamo giorno e ora
-            if (clickedAction !== "elimina") {
-                if (!dayElement.value) {
-                    errors.push("Devi selezionare un giorno.");
-                }
-                if (!hourElement.value) {
-                    errors.push("Devi selezionare un'ora.");
-                }
+        }
+        
+        // **Validazione per ELIMINAZIONE:**
+        if (clickedAction === "elimina") {
+            var selectedRicevimento = document.getElementById("currentRicevimento").value;
+            if (!selectedRicevimento) {
+                errors.push("Devi selezionare un ricevimento da eliminare.");
             }
-            
-            // Se ci sono errori, blocchiamo l'invio
-            if (errors.length > 0) {
-                event.preventDefault();
-                errorMsg.innerHTML = errors.join("<br>");
-            }
-        });
+        }
+        
+        // Se l'utente non ha selezionato nulla e non sta eliminando, errore
+        if (clickedAction !== "elimina" && !document.getElementById("currentRicevimento").value) {
+            errors.push("Devi selezionare il ricevimento da modificare.");
+        }
+        
+        dayElement = document.getElementById("newGiorno");
+        hourElement = document.getElementById("newOra");
+        
+    } else {
+        // Modalità "aggiungi"
+        dayElement = document.getElementById("giorno");
+        hourElement = document.getElementById("ora");
+    }
+    
+    // **Validazione per AGGIUNTA/MODIFICA:**
+    if (clickedAction !== "elimina") {
+        if (!dayElement.value) {
+            errors.push("Devi selezionare un giorno.");
+        }
+        if (!hourElement.value) {
+            errors.push("Devi selezionare un'ora.");
+        }
+    }
+    
+    // Se ci sono errori, blocchiamo l'invio
+    if (errors.length > 0) {
+        event.preventDefault();
+        errorMsg.innerHTML = errors.join("<br>");
+    }
+});
+
         
         // Precompilazione in caso di selezione di un ricevimento esistente (solo in modalità "modifica")
         var currentRicevimentoSelect = document.getElementById("currentRicevimento");

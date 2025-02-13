@@ -18,6 +18,7 @@ import model.Professore;
 import model.ProfessoreService;
 import model.Studente;
 import model.StudenteService;
+import model.DriverManagerConnectionPool;
 import model.PrenotazioneRicevimento;
 import model.PrenotazioneRicevimentoService;
 
@@ -36,59 +37,60 @@ public class RicevimentiInProgrammaServletTest {
     }
 
     @Before
-    public void setUp() throws Exception {
-        // 🔹 Rimuove eventuali dati preesistenti per evitare errori di chiave duplicata
-        PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(
-                PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("2025-05-10", "P789123")
-        );
+    public void setUp() throws SQLException {
+        System.out.println("🔹 Avvio setup test...");
+
+
+
+        // **2. Eliminare il professore e lo studente se esistono già**
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
         StudenteService.rimuoviStudente("S123456");
 
-        // 🔹 Aggiunge il professore di test
+        // **3. Creazione professore**
         Professore professore = new Professore("Luigi", "Verdi", "professore@example.com",
                 "password456", "P789123", "Ufficio A2", "Domanda?", "Risposta");
         ProfessoreService.aggiungiProfessore(professore);
+        System.out.println("✅ Professore creato: " + professore);
 
-        // 🔹 Aggiunge lo studente di test
+        // **4. Creazione studente**
         Studente studente = new Studente("Mario", "Rossi", "studente@example.com",
                 "password123", "S123456", "Domanda?", "Risposta");
         StudenteService.aggiungiStudente(studente);
+        System.out.println("✅ Studente creato: " + studente);
 
-        // 🔹 Stampa il professore e lo studente per il debug
-        System.out.println("✅ Professore creato: " + ProfessoreService.cercaProfessoreEmail("professore@example.com"));
-        System.out.println("✅ Studente creato: " + StudenteService.cercaStudenteEmail("studente@example.com"));
-
-        // 🔹 Aggiunge una prenotazione accettata
-        boolean success = PrenotazioneRicevimentoService.aggiungiPrenotazioneRicevimento(
-                new PrenotazioneRicevimento(0, "accettata", "2025-05-10", "15:00", "Nota test", "P789123", "S123456")
-        );
-
-        // 🔹 Controlla se l'inserimento è andato a buon fine
-        assertTrue("❌ Errore: la prenotazione accettata non è stata aggiunta!", success);
-
-        // 🔹 Controlla se la prenotazione è effettivamente salvata nel database
-        PrenotazioneRicevimento prenotazione = PrenotazioneRicevimentoService.ricercaPrenotazione(
-                PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("2025-05-10", "P789123")
-        );
-        assertNotNull("❌ Errore: la prenotazione accettata non è stata trovata nel database!", prenotazione);
-        System.out.println("✅ Prenotazione accettata trovata: " + prenotazione.getCodice());
+        // **5. Commit per evitare problemi di integrità**
+        DriverManagerConnectionPool.getConnessione().commit();
     }
+
 
 
 
     @After
     public void tearDown() throws SQLException {
-        // Rimuovere la prenotazione di test
-        PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(
-                PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("2025-05-10", "P789123")
-        );
+        System.out.println("🔹 Pulizia dati di test...");
 
-        // Rimuovere il professore di test
-        ProfessoreService.rimuoviProfessoreByCodice("P789123");
 
-        // Rimuovere lo studente di test
-        StudenteService.rimuoviStudente("S123456");
+        // **2. Eliminare il professore**
+        boolean professoreRimosso = ProfessoreService.rimuoviProfessoreByCodice("P789123");
+        if (professoreRimosso) {
+            System.out.println("✅ Professore rimosso con successo.");
+        } else {
+            System.out.println("⚠️ Nessun professore da rimuovere.");
+        }
+
+        // **3. Eliminare lo studente**
+        boolean studenteRimosso = StudenteService.rimuoviStudente("S123456");
+        if (studenteRimosso) {
+            System.out.println("✅ Studente rimosso con successo.");
+        } else {
+            System.out.println("⚠️ Nessuno studente da rimuovere.");
+        }
+
+        // **4. Commit per salvare le modifiche**
+        DriverManagerConnectionPool.getConnessione().commit();
     }
+
+
 
 
     private static String getSessionCookie() throws Exception {
@@ -146,23 +148,26 @@ public class RicevimentiInProgrammaServletTest {
                 professore.getCodiceProfessore(), studente.getMatricola());
         PrenotazioneRicevimentoService.aggiungiPrenotazioneRicevimento(prenotazione);
 
-        // **4. Recupero codice della prenotazione accettata**
+        // **4. Commit per forzare la scrittura**
+        DriverManagerConnectionPool.getConnessione().commit();
+        
+        // **5. Recupero codice della prenotazione accettata**
         int codicePrenotazione = PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("lunedì", "P789123");
         System.out.println("✅ Prenotazione accettata trovata: " + codicePrenotazione);
         assertTrue("❌ Codice prenotazione non valido!", codicePrenotazione > 0);
 
-        // **5. Login per ottenere la sessione**
+        // **6. Login per ottenere la sessione**
         sessionCookie = getSessionCookie();
         assertNotNull("❌ Session Cookie non ricevuto!", sessionCookie);
         assertTrue("❌ Il cookie di sessione non contiene JSESSIONID!", sessionCookie.contains("JSESSIONID"));
 
-        // **6. Effettua la richiesta GET**
+        // **7. Effettua la richiesta GET**
         HttpURLConnection conn = createConnection();
         int responseCode = conn.getResponseCode();
         System.out.println("🔹 Response Code: " + responseCode);
-        assertEquals("❌ La risposta deve essere un redirect o successo!", 200, responseCode);
+        assertEquals("❌ La risposta deve essere un successo (200)!", 200, responseCode);
 
-        // **7. Leggi la risposta**
+        // **8. Leggi la risposta**
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String inputLine;
         StringBuilder response = new StringBuilder();
@@ -173,10 +178,11 @@ public class RicevimentiInProgrammaServletTest {
 
         System.out.println("🔹 Response Body: " + response.toString());
 
-        // **8. Controllo che la risposta contenga la prenotazione accettata**
+        // **9. Controllo che la risposta contenga la prenotazione accettata**
         assertTrue("❌ La risposta deve contenere le prenotazioni accettate!",
                 response.toString().contains("accettata") || response.toString().contains("Prenotazioni in sospeso"));
     }
+
 
 
 
