@@ -51,7 +51,8 @@
         return;
     }
 %>
-
+<div class="container">
+    <div class="row">
 <!-- SEZIONE STUDENTE (originale) -->
 <%
     if (studSession != null) {
@@ -84,6 +85,7 @@
                                "Errore interno server (studente).");
             return;
         }
+        
 
         if (listaPrenotazioni != null && !listaPrenotazioni.isEmpty()) {
             for (PrenotazioneRicevimento prenotazione : listaPrenotazioni) {
@@ -210,7 +212,8 @@
     }
 %>
 
-
+    </div>
+</div>
 <jsp:include page="Footer.jsp" />
 
 </body>
