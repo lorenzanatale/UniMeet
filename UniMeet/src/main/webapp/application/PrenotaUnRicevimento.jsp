@@ -19,7 +19,7 @@
         
         <% 
             ProfessoreService professoreService = new ProfessoreService();
-            List<Professore> professori = professoreService.stampaListaProfessori(); // Recupera tutti i professori
+            List<Professore> professori = ProfessoreService.stampaListaProfessori(); // Recupera tutti i professori
         %>
 
         <!-- Contenitore per la griglia dei professori -->

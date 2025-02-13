@@ -38,7 +38,7 @@ public class PrenotazioneRicevimentoServiceTesting {
         );
 
         // Verifica se lo studente esiste già
-        if (StudenteService.getStudenteByMatricola("S001") == null) {
+        if (StudenteService.trovaPerMatricola("S001") == null) {
             int studenteAggiunto = StudenteService.aggiungiStudente(studenteTest);
             assertTrue("Impossibile aggiungere lo studente di test.", studenteAggiunto > 0);
         }

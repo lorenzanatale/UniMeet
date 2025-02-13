@@ -16,7 +16,7 @@ import model.StudenteService;
 
 public class RegistrazioneStudenteServletTest {
 
-    private static final String BASE_URL = "http://localhost:14201/UniMeet/RegistrazioneStudenteServlet";
+    private static final String BASE_URL = "http://localhost:8080/UniMeet/RegistrazioneStudenteServlet";
 
     @BeforeClass
     public static void setUpServer() {
