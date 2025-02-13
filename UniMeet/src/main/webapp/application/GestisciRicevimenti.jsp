@@ -8,6 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <title>Gestisci Ricevimenti</title>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/gestisciRicevimenti.css">
     <style>
@@ -33,6 +34,17 @@
     <jsp:include page="/application/Header.jsp" />
     <div class="container">
     
+    <%! 
+    // Metodo JSP per rimuovere gli accenti direttamente nella pagina
+    public String normalizeText(String text) {
+        if (text == null) return null;
+        return java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
+                                    .replaceAll("\\p{M}", ""); // Rimuove accenti e caratteri speciali
+    }
+%>
+    
+    
+    
     <%
         // Controllo della sessione e recupero del professore
         String mode = request.getParameter("mode");
@@ -55,13 +67,8 @@
         }
         
         // Calcola i giorni disponibili (oggi + 6)
-        List<String> availableDays = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        for (int i = 0; i < 7; i++) {
-            availableDays.add(sdf.format(cal.getTime()));
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-        }
+        List<String> availableDays = Arrays.asList("lunedì", "martedì", "mercoledì", "giovedì", "venerdì");
+
         
         // Recupera i ricevimenti esistenti (completi)
         List<Ricevimento> ricevimentiEsistenti = RicevimentoService.getRicevimentiByProfessore(codiceProfessore);
@@ -111,53 +118,42 @@
             <ul class="days-list">
 <%
 if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
-    // Mappa base per definire l'ordine dei giorni
-    Map<String, Integer> dayOrder = new HashMap<>();
+    // Mappa con ordine fisso dei giorni della settimana
+    Map<String, Integer> dayOrder = new LinkedHashMap<>();
     dayOrder.put("lunedì", 0);
     dayOrder.put("martedì", 1);
     dayOrder.put("mercoledì", 2);
     dayOrder.put("giovedì", 3);
     dayOrder.put("venerdì", 4);
-    dayOrder.put("sabato", 5);
-    dayOrder.put("domenica", 6);
-    
-    // Calcola il giorno corrente in italiano (minuscolo)
-    Calendar calToday = Calendar.getInstance();
-    String currentDayName = new SimpleDateFormat("EEEE", Locale.ITALIAN).format(calToday.getTime()).toLowerCase();
-    int currentDayIndex = dayOrder.getOrDefault(currentDayName, 0);
-    
-    // Ordina le chiavi in base al giorno corrente
-    List<String> sortedDays = new ArrayList<>(giorniEOrePrenotati.keySet());
-    Collections.sort(sortedDays, new Comparator<String>() {
-        public int compare(String d1, String d2) {
-            int o1 = dayOrder.getOrDefault(d1.trim().toLowerCase(), 100);
-            int o2 = dayOrder.getOrDefault(d2.trim().toLowerCase(), 100);
-            int norm1 = (o1 < currentDayIndex) ? o1 + 7 : o1;
-            int norm2 = (o2 < currentDayIndex) ? o2 + 7 : o2;
-            return norm1 - norm2;
-        }
-    });
-    
+
+    // Normalizzazione dei giorni per evitare caratteri speciali e spazi errati
+    List<String> sortedDays = new ArrayList<>();
+    for (String day : giorniEOrePrenotati.keySet()) {
+        sortedDays.add(day.trim().toLowerCase());
+    }
+
+    // Ordinamento dei giorni secondo la settimana
+    sortedDays.sort(Comparator.comparingInt(day -> dayOrder.getOrDefault(day, 100)));
+
     // Stampa i giorni e gli orari già prenotati
     for (String day : sortedDays) {
         List<String> times = giorniEOrePrenotati.get(day);
         if (times != null && !times.isEmpty()) {
-            Collections.sort(times, new Comparator<String>() {
-                public int compare(String t1, String t2) {
-                    String[] p1 = t1.split(":");
-                    String[] p2 = t2.split(":");
-                    int h1 = Integer.parseInt(p1[0].trim());
-                    int h2 = Integer.parseInt(p2[0].trim());
-                    if (h1 != h2) {
-                        return h1 - h2;
-                    }
-                    int m1 = Integer.parseInt(p1[1].trim());
-                    int m2 = Integer.parseInt(p2[1].trim());
-                    return m1 - m2;
-                }
+            // Ordina gli orari in ordine crescente
+            times.sort((t1, t2) -> {
+                String[] p1 = t1.split(":");
+                String[] p2 = t2.split(":");
+                int h1 = Integer.parseInt(p1[0].trim());
+                int h2 = Integer.parseInt(p2[0].trim());
+                if (h1 != h2) return h1 - h2;
+                int m1 = Integer.parseInt(p1[1].trim());
+                int m2 = Integer.parseInt(p2[1].trim());
+                return m1 - m2;
             });
+
+            // Stampa i giorni con la prima lettera maiuscola
             for (String t : times) {
-                out.println("<li>&emsp;" + day + " - " + t + "</li>");
+                out.println("<li>" + day.substring(0, 1).toUpperCase() + day.substring(1) + " - " + t + "</li>");
             }
         }
     }
@@ -165,10 +161,12 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
     out.println("<li>Non ci sono ricevimenti prenotati</li>");
 }
 %>
+
+
+
             </ul>
 
             <p>Per fissare un appuntamento in un giorno diverso, invia un E-Mail a: <%= professore.getEmail() %></p>
-            <p><strong>N.B. PER PRENOTARE E' NECESSARIO ESSERE REGISTRATI!</strong></p>
         </div>
         
         <!-- Form per aggiungere, modificare o eliminare un ricevimento -->
@@ -260,9 +258,13 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                         <select name="<%= "modifica".equals(mode) ? "newGiorno" : "giorno" %>" 
                                 id="<%= "modifica".equals(mode) ? "newGiorno" : "giorno" %>">
                             <option value="" disabled selected>Seleziona Giorno</option>
-                            <% for (String d : availableDays) { %>
-                                <option value="<%= d %>"><%= d %></option>
-                            <% } %>
+                            <% for (String d : availableDays) {
+                                String normalizedDay = normalizeText(d);
+                                %>
+                                    <option value="<%= normalizedDay %>"><%= normalizedDay %></option>
+                                <%
+                                }
+ %>
                         </select>
                     </div>
                     <div class="dropdown">
@@ -278,9 +280,8 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                 
                 <div class="input-field">
                     <label for="note">Note (opzionali):</label>
-                    <textarea name="note" id="note" rows="5">
-                        per altri giorni o orari, contattare il docente
-                    </textarea>
+                    <textarea name="note" id="note" rows="5" placeholder="per altri giorni o orari, contattare il docente"></textarea>
+
                 </div>
                 
                 <% if ("modifica".equals(mode)) { %>
@@ -308,8 +309,7 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
             "11:00", "11:30", "12:00", "12:30",
             "13:00", "13:30", "14:00", "14:30",
             "15:00", "15:30", "16:00", "16:30",
-            "17:00", "17:30", "18:00", "18:30",
-            "19:00"
+            "17:00"
         ];
         
         function populateHours(selectElement, selectedDay) {
@@ -320,47 +320,31 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
             defaultOption.disabled = true;
             defaultOption.selected = true;
             selectElement.appendChild(defaultOption);
-            
-            var hoursToShow = availableHours.slice();
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
-            var todayStr = yyyy + "-" + mm + "-" + dd;
-            
-            // Se il giorno selezionato è "oggi", filtriamo gli orari precedenti
-            if (selectedDay === todayStr) {
-                var currentHour = today.getHours();
-                var filteredHours = [];
-                for (var i = 0; i < hoursToShow.length; i++) {
-                    var hourInt = parseInt(hoursToShow[i].split(":")[0], 10);
-                    if (hourInt > currentHour) {
-                        filteredHours.push(hoursToShow[i]);
-                    }
-                }
-                hoursToShow = filteredHours;
+
+            var hoursToShow = availableHours.slice(); // Copia degli orari disponibili
+
+            // Normalizzazione del nome del giorno
+            selectedDay = selectedDay.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+            // Rimuove gli orari già occupati per quel giorno
+            if (existingSchedule[selectedDay]) {
+                var taken = existingSchedule[selectedDay];
+                hoursToShow = hoursToShow.filter(hour => !taken.includes(hour));
             }
-            
-            var dateObj = new Date(selectedDay);
-            var dayName = dateObj.toLocaleDateString('it-IT', { weekday: 'long' }).toLowerCase();
-            
-            // Rimuoviamo gli orari già occupati per quel giorno
-            if (typeof existingSchedule !== "undefined" && existingSchedule.hasOwnProperty(dayName)) {
-                var taken = existingSchedule[dayName];
-                hoursToShow = hoursToShow.filter(function(hour) {
-                    return taken.indexOf(hour) === -1;
-                });
-            }
-            
+
             // Popola la select con le ore disponibili
-            for (var i = 0; i < hoursToShow.length; i++) {
+            hoursToShow.forEach(hour => {
                 var opt = document.createElement("option");
-                opt.value = hoursToShow[i];
-                opt.text = hoursToShow[i];
+                opt.value = hour;
+                opt.text = hour;
                 selectElement.appendChild(opt);
-            }
+            });
+
             selectElement.disabled = false;
         }
+
+
+
         
         // Mappa dei giorni con gli orari già occupati
         var existingSchedule = {};

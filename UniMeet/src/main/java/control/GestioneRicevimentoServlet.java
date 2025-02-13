@@ -19,6 +19,8 @@ public class GestioneRicevimentoServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String mode = request.getParameter("mode");
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("utente") == null) {
@@ -39,6 +41,8 @@ public class GestioneRicevimentoServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
 
         // Popola la mappa (come già fatto) e imposta il parametro giorniEOrePrenotati
         Map<String, List<String>> giorniEOrePrenotati = new HashMap<>();
@@ -65,6 +69,10 @@ public class GestioneRicevimentoServlet extends HttpServlet {
                     oldOra = parts[1];
                     System.out.println("Eliminazione: oldGiorno: "+oldGiorno + "   oldOra: "+oldOra);
                 }
+            }else {
+            	request.setAttribute("errorMessage", "Errore durante l'eliminazione del ricevimento.");
+            	response.sendRedirect("http://localhost:14201/UniMeet/application/GestisciRicevimenti.jsp?mode=modifica");
+                return;
             }
             int id = RicevimentoService.getRicevimentoByProfessoreGiornoOra(codiceProfessore, oldGiorno, oldOra).getCodice();
             Ricevimento r = new Ricevimento(id, oldGiorno, oldOra, "", codiceProfessore);
@@ -149,6 +157,10 @@ public class GestioneRicevimentoServlet extends HttpServlet {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int giornoSettimana = cal.get(Calendar.DAY_OF_WEEK) - 1; // Domenica = 0
-        return giorni[giornoSettimana];
+
+        // Normalizza il testo per evitare problemi di encoding
+        return java.text.Normalizer.normalize(giorni[giornoSettimana], java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "").trim().toLowerCase();
     }
+
 }
