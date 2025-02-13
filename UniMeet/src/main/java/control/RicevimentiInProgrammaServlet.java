@@ -13,40 +13,36 @@ import java.util.List;
 @WebServlet("/RicevimentiInProgrammaServlet")
 public class RicevimentiInProgrammaServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
-            return;
-        }
+	    // ✅ Recupera la sessione, senza crearne una nuova
+	    HttpSession session = request.getSession(false);
 
-        Object profObject = session.getAttribute("utente");
-        if (!(profObject instanceof Professore)) {
-            response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
-            return;
-        }
-        Professore prof = (Professore) profObject;
+	    // ✅ Se la sessione è nulla o l'utente non è un professore, esegui il redirect
+	    if (session == null || session.getAttribute("utente") == null || !(session.getAttribute("utente") instanceof Professore)) {
+	        response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
+	        return;
+	    }
 
-        // Carica tutte le prenotazioni di questo prof
-        List<PrenotazioneRicevimento> tutte = PrenotazioneRicevimentoService
-                .ricercaPrenotazioniPerProfessore(prof);
+	    Professore prof = (Professore) session.getAttribute("utente");
 
-        // Filtra solo "accettata"
-        List<PrenotazioneRicevimento> accettate = new ArrayList<>();
-        for (PrenotazioneRicevimento p : tutte) {
-            if ("accettata".equalsIgnoreCase(p.getStato())) {
-                accettate.add(p);
-            }
-        }
+	    // Carica tutte le prenotazioni di questo professore
+	    List<PrenotazioneRicevimento> tutte = PrenotazioneRicevimentoService.ricercaPrenotazioniPerProfessore(prof);
 
-        // Metti in request
-        request.setAttribute("prenotazioniAccettate", accettate);
+	    // Filtra solo le prenotazioni "accettate"
+	    List<PrenotazioneRicevimento> accettate = new ArrayList<>();
+	    for (PrenotazioneRicevimento p : tutte) {
+	        if ("accettata".equalsIgnoreCase(p.getStato())) {
+	            accettate.add(p);
+	        }
+	    }
 
-        // Forward alla JSP
-        request.getRequestDispatcher("/application/RicevimentiInProgramma.jsp")
-               .forward(request, response);
-    }
+	    // Metti in request
+	    request.setAttribute("prenotazioniAccettate", accettate);
+
+	    // Forward alla JSP
+	    request.getRequestDispatcher("/application/RicevimentiInProgramma.jsp").forward(request, response);
+	}
 }

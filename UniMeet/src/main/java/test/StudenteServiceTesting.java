@@ -43,17 +43,7 @@ public class StudenteServiceTesting {
         }
     }
 
-    @Test
-    public void testLoginStudente() throws Exception {
-        Studente studente = StudenteService.loginStudente("giovanni.bianchi@example.com", "password123");
 
-        assertNotNull("Il login dello studente non ha restituito alcun risultato.", studente);
-
-        System.out.println("Matricola attesa: " + studenteTest.getMatricola());
-        System.out.println("Matricola trovata nel login: " + studente.getMatricola());
-
-        assertEquals("La matricola non corrisponde.", studenteTest.getMatricola(), studente.getMatricola());
-    }
     @Test
     public void testAggiungiStudente() throws SQLException {
         // Creazione di uno studente di prova con matricola unica

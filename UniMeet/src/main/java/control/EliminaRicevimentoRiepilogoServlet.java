@@ -52,7 +52,7 @@ public class EliminaRicevimentoRiepilogoServlet extends HttpServlet {
 
         // Esegui la logica di rimozione
         PrenotazioneRicevimentoService prenotazioneRicevimento = new PrenotazioneRicevimentoService();
-        boolean esitoRimozione = prenotazioneRicevimento.rimuoviPrenotazionePerCodice(codicePrenotazione);
+        boolean esitoRimozione = PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(codicePrenotazione);
        
         // Imposta il messaggio di esito della rimozione
         if (esitoRimozione) {

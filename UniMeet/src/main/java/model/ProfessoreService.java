@@ -316,6 +316,34 @@ public static List<Professore> stampaListaProfessori() throws SQLException{
                 return false;
             }
         }
+        
+public static Professore cercaProfessoreByCodice (String codice) throws Exception {
+        	
+        	Professore professore = null;
+        	String sql = "SELECT * FROM professore WHERE codice = ?";
+        	
+        	 try (Connection conn = DriverManagerConnectionPool.getConnessione();
+                  PreparedStatement stmt = conn.prepareStatement(sql)){
+        		 
+        		 stmt.setString(1, codice);
+        		 ResultSet rs =stmt.executeQuery();
+        		 
+        		 if(rs.next()) {
+        			 professore = new Professore();
+                     professore.setEmail(rs.getString("email"));
+                     professore.setPassword(rs.getString("passwordHash"));
+                     professore.setNome(rs.getString("nome"));
+                     professore.setCognome(rs.getString("cognome"));
+                     professore.setCodiceProfessore(rs.getString("codice"));
+                     professore.setUfficio(rs.getString("ufficio"));
+                     professore.setDomanda(rs.getString("domandaSicurezza"));
+                     professore.setRisposta(rs.getString("risposta"));
+        			 
+        		 }
+        		 
+        	 }
+        	return professore;
+        }
 
 }
 

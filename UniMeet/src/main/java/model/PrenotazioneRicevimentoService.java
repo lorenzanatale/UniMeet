@@ -172,7 +172,8 @@ public class PrenotazioneRicevimentoService {
 	            ps.setString(2, pr.getCodiceProfessore());
 
 	            int rowsAffected = ps.executeUpdate(); // Restituisce il numero di righe eliminate
-
+	            con.commit();
+	            System.out.println("Rimuovi prenotazione, righe affette: " + rowsAffected);
 	            return rowsAffected > 0; // Se almeno una riga è stata eliminata, ritorna true
 	        }
 	    } catch (SQLException e) {
@@ -199,14 +200,15 @@ public class PrenotazioneRicevimentoService {
 	    }
 	}
 	//usato solo per il testing  diventato static
-	public  int stampaCodiceRicevimento(String codiceProfessore,String matricolaStudente,String giorno) {
-		String query ="select codice from prenotazioneRicevimento where codiceProfessore = ? and matricolaStudente = ? and giorno =?";
+	public static int stampaCodiceRicevimento(String codiceProfessore,String matricolaStudente,String giorno, String ora) {
+		String query ="SELECT codice FROM prenotazioneRicevimento WHERE codiceProfessore = ? AND matricolaStudente = ? AND giorno =? AND ora = ?";
 		int codice =0;
 		try (Connection con = DriverManagerConnectionPool.getConnessione()) {
 			PreparedStatement ps =con.prepareStatement(query);
 			ps.setString(1, codiceProfessore);
 			ps.setString(2, matricolaStudente);
 			ps.setString(3, giorno);
+			ps.setString(4, ora);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next())
 				codice=rs.getInt("codice");

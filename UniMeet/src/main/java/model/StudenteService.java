@@ -33,27 +33,7 @@ public class StudenteService {
         return result;
     }
 	
-	public static Studente loginStudente(String email, String password) throws Exception {
-		Studente studente = null;
-		String sql = "SELECT * FROM studente WHERE email = ? AND passwordHash = ?";
-		
-		try (Connection conn = DriverManagerConnectionPool.getConnessione();
-				PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, email);
-			stmt.setString(2, password);
-			ResultSet rs = stmt.executeQuery();
-			
-			if (rs.next()) {
-				studente = new Studente();
-				studente.setEmail(rs.getString("email"));
-				studente.setPassword(rs.getString("passwordHash"));
-				studente.setNome(rs.getString("nome"));
-				studente.setCognome(rs.getString("cognome"));
-				studente.setMatricola(rs.getString("matricola"));
-			}
-		}
-		return studente;
-	}
+
     //ricerca professore tramite mail
 	  public static Studente cercaStudenteEmail(String email) throws Exception {
 		  
@@ -182,6 +162,7 @@ public class StudenteService {
 
 		        stmt.setString(1, matricola);
 		        int rowsAffected = stmt.executeUpdate();
+		        conn.commit();
 		        return rowsAffected > 0; // Restituisce true se almeno una riga è stata eliminata
 		    } catch (SQLException e) {
 		        e.printStackTrace();
