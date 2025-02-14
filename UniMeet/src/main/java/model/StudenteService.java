@@ -21,7 +21,7 @@ public class StudenteService {
 	            }
 	        }
 	        
-	     // Controllo se la matricola esiste già
+	        // Controllo se la matricola esiste già
 	        String checkQuery1 = "SELECT COUNT(*) FROM studente WHERE matricola = ?";
 	        try (PreparedStatement checkPs = con.prepareStatement(checkQuery1)) {
 	            checkPs.setString(1, s.getMatricola());
@@ -110,7 +110,7 @@ public class StudenteService {
       	        return false;
       	    }
 	  }
-//non viene utilizzato perchè il professore non cerca lo studente per matricola
+
 	  public static Studente trovaPerMatricola(String matricola) throws SQLException {
 		    String str = "SELECT * FROM studente s WHERE s.matricola = ?";
 		    try (Connection con = DriverManagerConnectionPool.getConnessione();
@@ -141,7 +141,6 @@ public class StudenteService {
 
 	  
 	  public static boolean rimuoviStudente(String matricola) {
-		    // Query SQL per eliminare lo studente con una data matricola
 		    String query = "DELETE FROM studente WHERE matricola = ?";
 
 		    try (Connection conn = DriverManagerConnectionPool.getConnessione();

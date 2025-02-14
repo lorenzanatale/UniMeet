@@ -25,13 +25,11 @@ public class RegistrazioneStudenteServletTest {
 
     @Before
     public void setUp() throws SQLException {
-        // Rimuoviamo eventuali studenti di test esistenti
         StudenteService.rimuoviStudente("S123456");
     }
 
     @After
     public void tearDown() throws SQLException {
-        // Puliamo il database dopo i test
         StudenteService.rimuoviStudente("S123456");
     }
 
@@ -39,10 +37,9 @@ public class RegistrazioneStudenteServletTest {
         URL url = new URL(BASE_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod(method);
-        conn.setInstanceFollowRedirects(false); // Non seguire i redirect
+        conn.setInstanceFollowRedirects(false);
         conn.setDoOutput(true);
 
-        // Se è una richiesta POST, inviamo i parametri
         if ("POST".equalsIgnoreCase(method) && postParams != null) {
             try (OutputStream os = conn.getOutputStream()) {
                 os.write(postParams.getBytes());
@@ -61,9 +58,8 @@ public class RegistrazioneStudenteServletTest {
         HttpURLConnection conn = createConnection("POST", postParams);
         int responseCode = conn.getResponseCode();
 
-        assertEquals(302, responseCode); // Verifichiamo il redirect al login
+        assertEquals(302, responseCode);
 
-        // Controlliamo che la registrazione sia avvenuta
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));
@@ -76,7 +72,7 @@ public class RegistrazioneStudenteServletTest {
         HttpURLConnection conn = createConnection("POST", postParams);
         int responseCode = conn.getResponseCode();
 
-        assertEquals(302, responseCode); // La registrazione fallisce con redirect a RegistrazioneStudente.jsp
+        assertEquals(302, responseCode);
 
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);

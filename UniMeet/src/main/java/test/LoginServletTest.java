@@ -2,8 +2,6 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -31,18 +29,15 @@ public class LoginServletTest {
     
     @Before
     public void setUp() throws SQLException {
-        // Pulizia del database prima di ogni test
         StudenteService.rimuoviStudente("S123456");
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
 
-        // Creazione di utenti di test
         StudenteService.aggiungiStudente(new Studente("Mario", "Rossi", "studente@example.com", "password123", "S123456", "Domanda?", "Risposta"));
         ProfessoreService.aggiungiProfessore(new Professore("Luigi", "Verdi", "professore@example.com", "password456", "P789123", "Ufficio A2", "Domanda?", "Risposta"));
     }
 
     @After
     public void tearDown() throws SQLException {
-        // Pulizia dopo ogni test per non sporcare il database
         StudenteService.rimuoviStudente("S123456");
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
     }
@@ -51,10 +46,9 @@ public class LoginServletTest {
         URL url = new URL(BASE_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod(method);
-        conn.setInstanceFollowRedirects(false); // NON seguire automaticamente i redirect
+        conn.setInstanceFollowRedirects(false);
         conn.setDoOutput(true);
 
-        // Se è una richiesta POST, inviamo i parametri di login
         if ("POST".equalsIgnoreCase(method)) {
             String postParams = "email=" + email + "&password=" + password;
             try (OutputStream os = conn.getOutputStream()) {
@@ -73,13 +67,10 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifica che la risposta sia 302 (Redirect a home page)
         assertEquals(302, responseCode);
 
-        // Recuperiamo il cookie di sessione
         sessionCookie = conn.getHeaderField("Set-Cookie");
 
-        // Controlliamo che il cookie sia stato ricevuto
         assertNotNull("Session Cookie non ricevuto!", sessionCookie);
         assertTrue("Il cookie di sessione non contiene JSESSIONID!", sessionCookie.contains("JSESSIONID"));
     }
@@ -91,13 +82,10 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifica che la risposta sia 302 (Redirect a home page)
         assertEquals(302, responseCode);
 
-        // Recuperiamo il cookie di sessione
         sessionCookie = conn.getHeaderField("Set-Cookie");
 
-        // Controlliamo che il cookie sia stato ricevuto
         assertNotNull("Session Cookie non ricevuto!", sessionCookie);
         assertTrue("Il cookie di sessione non contiene JSESSIONID!", sessionCookie.contains("JSESSIONID"));
     }
@@ -109,10 +97,8 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifichiamo che il server risponda con un redirect alla pagina di login
         assertEquals(302, responseCode);
 
-        // Controlliamo che il Location header punti alla pagina di login
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));
@@ -125,10 +111,8 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifica che il server abbia risposto con 302 Redirect alla pagina di login
         assertEquals(302, responseCode);
 
-        // Controlliamo che il Location header punti alla pagina di login
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));
@@ -141,10 +125,8 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifica che il server abbia risposto con un redirect alla pagina di login
         assertEquals(302, responseCode);
 
-        // Controlliamo che il Location header punti alla pagina di login
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));
@@ -157,10 +139,8 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifica che il server abbia risposto con un redirect alla pagina di login
         assertEquals(302, responseCode);
 
-        // Controlliamo che il Location header punti alla pagina di login
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));
@@ -173,10 +153,8 @@ public class LoginServletTest {
         int responseCode = conn.getResponseCode();
         System.out.println("Login Response Code: " + responseCode);
 
-        // Verifica che il server abbia risposto con un redirect alla pagina di login
         assertEquals(302, responseCode);
 
-        // Controlliamo che il Location header punti alla pagina di login
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));

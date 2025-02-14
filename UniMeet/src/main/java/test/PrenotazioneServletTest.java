@@ -16,9 +16,7 @@ public class PrenotazioneServletTest {
         servlet = new PrenotazioneServlet();
     }
 
-    /**
-     * Test: Creazione di una prenotazione valida
-     */
+    
     @Test
     public void testCreaPrenotazione_Valida() {
         Studente studente = new Studente();
@@ -37,9 +35,7 @@ public class PrenotazioneServletTest {
         assertEquals("Appuntamento urgente", prenotazione.getNota());
     }
 
-    /**
-     * Test: Prenotazione con dati nulli
-     */
+   
     @Test
     public void testCreaPrenotazione_ValoriNull() {
         PrenotazioneRicevimento prenotazione = new PrenotazioneRicevimento(
@@ -54,9 +50,7 @@ public class PrenotazioneServletTest {
         assertNull(prenotazione.getMatricolaStudente());
     }
 
-    /**
-     * Test: Studente non loggato (nessuna matricola)
-     */
+    
     @Test
     public void testStudenteNonLoggato() {
         Studente studente = new Studente();
@@ -64,9 +58,7 @@ public class PrenotazioneServletTest {
         assertNull(studente.getMatricola());
     }
 
-    /**
-     * Test: Nome e cognome del professore non presenti
-     */
+   
     @Test
     public void testProfessoreNonTrovato() {
         String nomeProfessore = null;

@@ -52,7 +52,7 @@ public class AjaxSearchTest {
         HttpURLConnection conn = createConnection("Luigi");
 
         int responseCode = conn.getResponseCode();
-        assertEquals(200, responseCode); // Verifica che la risposta sia OK (200)
+        assertEquals(200, responseCode); 
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         StringBuilder response = new StringBuilder();
@@ -71,7 +71,7 @@ public class AjaxSearchTest {
         HttpURLConnection conn = createConnection("NomeInesistente");
 
         int responseCode = conn.getResponseCode();
-        assertEquals(204, responseCode); // 204 = No Content, nessun risultato
+        assertEquals(204, responseCode); 
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String response = reader.readLine();
@@ -85,6 +85,6 @@ public class AjaxSearchTest {
         HttpURLConnection conn = createConnection("");
 
         int responseCode = conn.getResponseCode();
-        assertEquals(400, responseCode); // 400 = Bad Request, ricerca non valida
+        assertEquals(400, responseCode);
     }
 }

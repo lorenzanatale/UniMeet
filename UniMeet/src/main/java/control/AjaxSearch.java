@@ -8,10 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import model.Professore;
 import model.ProfessoreService;
+
+
+//Classe che permette la ricerca dinamica tramite Gson di google.
 
 @WebServlet("/AjaxSearch")
 public class AjaxSearch extends HttpServlet {

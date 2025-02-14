@@ -84,7 +84,7 @@ public class GestioneRicevimentoServlet extends HttpServlet {
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("/application/GestisciRicevimenti.jsp");
             dispatcher.forward(request, response);
-            return; // termina qui
+            return;
         }
         
         // Altrimenti, se l'azione non è "elimina", esegui la logica di aggiunta/modifica

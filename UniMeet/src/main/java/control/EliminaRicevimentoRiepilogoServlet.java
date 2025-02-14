@@ -1,41 +1,21 @@
 package control;
 
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import model.PrenotazioneRicevimento;
 import model.PrenotazioneRicevimentoService;
 
-/**
- * Servlet implementation class EliminaRicevimentoRiepilogoServlet
- */
 @WebServlet("/EliminaRicevimentoRiepilogoServlet")
 public class EliminaRicevimentoRiepilogoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public EliminaRicevimentoRiepilogoServlet() {
         super();
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Puoi lasciare il metodo vuoto se non lo usi
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         // Recupero del parametro codicePrenotazione dalla richiesta
@@ -50,8 +30,7 @@ public class EliminaRicevimentoRiepilogoServlet extends HttpServlet {
         
         int codicePrenotazione = Integer.parseInt(codicePrenotazioneStr);
 
-        // Esegui la logica di rimozione
-        PrenotazioneRicevimentoService prenotazioneRicevimento = new PrenotazioneRicevimentoService();
+        // Eseguo la logica di rimozione
         boolean esitoRimozione = PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(codicePrenotazione);
        
         // Imposta il messaggio di esito della rimozione
@@ -64,10 +43,6 @@ public class EliminaRicevimentoRiepilogoServlet extends HttpServlet {
         }
         
         
-        response.sendRedirect(request.getContextPath()+"/application/RiepilogoRicevimenti.jsp");
-       
-       
-       
-        
+        response.sendRedirect(request.getContextPath()+"/application/RiepilogoRicevimenti.jsp");     
     }
 }

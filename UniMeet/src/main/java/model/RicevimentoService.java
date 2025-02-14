@@ -39,7 +39,7 @@ public class RicevimentoService {
         }
     }
 
-    // Modifica un Ricevimento esistente (identificato dal campo "codice")
+    // Modifica un Ricevimento esistente identificato dal campo codice
     public static boolean modificaRicevimento(Ricevimento r) {
         try (Connection con = DriverManagerConnectionPool.getConnessione()) {
             PreparedStatement ps = con.prepareStatement(
@@ -77,7 +77,7 @@ public class RicevimentoService {
         }
     }
     
-    // Rimuove un Ricevimento (se necessario)
+    // Rimuove un Ricevimento
     public static boolean rimuoviRicevimento(Ricevimento r) {
         try (Connection con = DriverManagerConnectionPool.getConnessione()) {
             PreparedStatement ps = con.prepareStatement(
@@ -94,7 +94,6 @@ public class RicevimentoService {
         }
     }
 
-    // Recupera i ricevimento "disponibili" (usati per popolare i dropdown dei nuovi dati)
     public static List<Ricevimento> getGiorniEOreRicevimentoByProfessore(String codiceProfessore) {
         List<Ricevimento> ricevimenti = new ArrayList<>();
         String query = "SELECT giorno, ora FROM ricevimento WHERE codiceProfessore = ?;";
@@ -105,7 +104,6 @@ public class RicevimentoService {
                 while (rs.next()) {
                     String giorno = rs.getString("giorno");
                     String ora = rs.getString("ora");
-                    // Creiamo un Ricevimento con codice=0 e note vuote (dato che non ci servono per popolare i dropdown)
                     Ricevimento r = new Ricevimento(0, giorno, ora, "", codiceProfessore);
                     ricevimenti.add(r);
                 }
@@ -117,7 +115,7 @@ public class RicevimentoService {
         return ricevimenti;
     }
     
-    // Recupera tutti i Ricevimento completi per il professore (per la modifica)
+    // Recupera tutti i Ricevimento completi per il professore 
     public static List<Ricevimento> getRicevimentiByProfessore(String codiceProfessore) {
         List<Ricevimento> ricevimenti = new ArrayList<>();
         String query = "SELECT * FROM ricevimento WHERE codiceProfessore = ?;";

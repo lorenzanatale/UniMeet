@@ -16,8 +16,6 @@ import model.InsegnamentoService;
 import model.Professore;
 import model.ProfessoreService;
 
-//ATTENZIONE FORSE E' IL CASO DI UTILIZZARE DUE SERVLET DIVERSE PER STUDENTE E PROFESSORE!
-
 @WebServlet("/RegistrazioneServlet")
 public class RegistrazioneServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -44,7 +42,7 @@ public class RegistrazioneServlet extends HttpServlet {
         String domanda = request.getParameter("domanda");
         String risposta = request.getParameter("risposta");
         
-        // QUI INVEEC DI PRENDERE GLI INSEGNAMENTI SINGOLARMENTE LI METTO IN UN ARRAY DI INSEGNAMENTI
+        // QUI INVECE DI PRENDERE GLI INSEGNAMENTI SINGOLARMENTE LI METTO IN UN ARRAY DI INSEGNAMENTI
         String[] insegnamenti = request.getParameterValues("insegnamenti");
 
         HttpSession session = request.getSession();

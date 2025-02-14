@@ -84,7 +84,6 @@ public class ModificaPasswordServletTest {
 			studenteNull = StudenteService.cercaStudenteEmail("nonEsiste@example.com");
 			assertNull("L'utente non dovrebbe esistere", studenteNull);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         

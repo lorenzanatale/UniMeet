@@ -4,16 +4,13 @@ package control;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import Utils.PasswordHasher;
-import model.ProfessoreService;
 import model.Studente;
 import model.StudenteService;
 
@@ -71,7 +68,7 @@ public class RegistrazioneStudenteServlet extends HttpServlet {
                 return;
             }
             
-         // Controllo per matricola già presente
+            // Controllo per matricola già presente
             if (row == 2) {
                 session.setAttribute("status", "La matricola è già presente, controllare l'inserimento.");
                 response.sendRedirect(request.getContextPath() + "/application/RegistrazioneStudente.jsp");

@@ -27,48 +27,37 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
 	        System.out.println("[DEBUG] Nessuna sessione valida trovata.");
 	    }
 
-	    
-	    
-	    // 1) Controllo sessione
 	    HttpSession mySession = request.getSession(false);
 	    if (mySession == null || mySession.getAttribute("utente") == null) {
 	        System.out.println("[DEBUG] Nessuna sessione valida trovata.");
 	        System.out.println("[DEBUG] Sessione nulla o utente non autenticato: redirect alla login.");
 
-	        response.setStatus(HttpServletResponse.SC_FOUND); // 302 Redirect
+	        response.setStatus(HttpServletResponse.SC_FOUND); 
 	        response.setHeader("Location", request.getContextPath() + "/application/Login.jsp");
-	        response.setHeader("Connection", "close"); // Chiude la connessione forzando il redirect
-	        response.flushBuffer(); // Forza l'invio immediato della risposta
+	        response.setHeader("Connection", "close"); 
+	        response.flushBuffer(); 
 
-	        return; // Evita che il codice successivo venga eseguito
+	        return; 
 	    }
 
-
-
-
-
-	    // 2) Controllo se c'è lo studente o il professore
 	    Object studSession = mySession.getAttribute("matricolaStudente");
 	    Object profSession = mySession.getAttribute("utente");
 
-	    // Stampiamo i valori per debug
 	    System.out.println("[DEBUG] Studente in sessione: " + studSession);
 	    System.out.println("[DEBUG] Professore in sessione: " + profSession);
 
-	    // Se la sessione esiste ma non contiene un utente valido, forziamo il redirect
+	
 	    if (profSession == null && studSession == null) {
 	        System.out.println("[DEBUG] Nessun utente loggato in sessione -> redirect login.");
-	        mySession.invalidate(); // Cancella eventuali sessioni errate
+	        mySession.invalidate();
 	        response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
 	        return;
 	    }
 
-	    // 3) Se è un professore
 	    if (profSession instanceof Professore) {
 	        Professore profLoggato = (Professore) profSession;
 	        System.out.println("[DEBUG] Professore loggato: " + profLoggato.getCodiceProfessore());
 
-	        // Recuperiamo le prenotazioni
 	        List<PrenotazioneRicevimento> tutte = PrenotazioneRicevimentoService
 	                .ricercaPrenotazioniPerProfessore(profLoggato);
 	        List<PrenotazioneRicevimento> inSospeso = new ArrayList<>();
@@ -81,7 +70,6 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
 	        request.setAttribute("prenotazioniInSospeso", inSospeso);
 	    }
 
-	    // Forward alla JSP
 	    request.getRequestDispatcher("/application/RiepilogoRicevimenti.jsp").forward(request, response);
 	}
 
@@ -93,7 +81,6 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
 
         System.out.println("[RiepilogoRicevimentiServlet] doPost() chiamato.");
 
-        // 1) Controllo sessione
         HttpSession mySession = request.getSession(false);
         if (mySession == null) {
             System.out.println("Sessione nulla: redirect alla login.");
@@ -101,17 +88,14 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
             return;
         }
 
-        // 2) Controllo se c'è un professore
         Object profSession = mySession.getAttribute("utente");
         if (!(profSession instanceof Professore)) {
-            // Se non è professore -> redirect
             System.out.println("Utente non è professore -> redirect login.");
             response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
             return;
         }
 
-        // 3) Recupera parametri action e codice
-        String action = request.getParameter("action"); // "accetta" o "rifiuta"
+        String action = request.getParameter("action");
         String codiceStr = request.getParameter("codicePrenotazione");
         System.out.println("[DEBUG] action=" + action + " codicePrenotazione=" + codiceStr);
 
@@ -125,9 +109,7 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
             return;
         }
 
-        // 4) Esegui l'azione
         if ("accetta".equalsIgnoreCase(action)) {
-            // Cambia stato in "accettata"
             p.setStato("accettata");
             boolean ok = PrenotazioneRicevimentoService.modificaPrenotazioneRicevimento(p);
             if (ok) {
@@ -136,7 +118,6 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
                 request.setAttribute("message", "Impossibile accettare la prenotazione (errore DB).");
             }
         } else if ("rifiuta".equalsIgnoreCase(action)) {
-            // Elimina la prenotazione
             boolean ok = service.rimuoviPrenotazionePerCodice(codicePrenotazione);
             if (ok) {
                 request.setAttribute("message", "Prenotazione rifiutata (eliminata) con successo!");
@@ -144,8 +125,6 @@ public class RiepilogoRicevimentiServlet extends HttpServlet {
                 request.setAttribute("message", "Impossibile rifiutare la prenotazione (errore DB).");
             }
         }
-
-        // 5) Torna alla doGet per ricaricare la pagina con la lista aggiornata
         doGet(request, response);
     }
 }

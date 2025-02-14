@@ -11,17 +11,13 @@ public class InsegnamentoService {
 		
 	public static boolean rimuoviInsegnamento(Insegnamento i) {
 	    try (Connection con = DriverManagerConnectionPool.getConnessione()) {
-	        // Prepara la query di eliminazione
 	        String query = "DELETE FROM insegnamento WHERE nome = ? AND codiceProfessore = ?";
 	        try (PreparedStatement ps = con.prepareStatement(query)) {
-	            // Imposta i parametri della query
 	            ps.setString(1, i.getNomeInsegnamento());
 	            ps.setString(2, i.getCodiceProfessore());
-
-	            // Esegui la query di eliminazione e verifica se è stata eseguita con successo
 	            int rowsAffected = ps.executeUpdate();
 	            con.commit();
-	            return rowsAffected > 0; // Se rowsAffected è maggiore di 0, significa che la cancellazione è riuscita
+	            return rowsAffected > 0; 
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -54,9 +50,6 @@ public class InsegnamentoService {
 
 	    return insegnamento; 
 	}
-
-	
-	//------------------------CIRO--------------------------------
 	
 	public List<Insegnamento> cercaInsegnamentiPerProfessore(String codiceProfessore) throws SQLException {
 	    List<Insegnamento> insegnamenti = new ArrayList<>();
@@ -102,5 +95,4 @@ public class InsegnamentoService {
 	        return false;
 	    }
 	}
-	//manca rimuovi insegnamento
 }

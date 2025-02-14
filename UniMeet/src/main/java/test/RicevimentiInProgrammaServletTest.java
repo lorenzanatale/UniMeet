@@ -42,64 +42,47 @@ public class RicevimentiInProgrammaServletTest {
 
     @Before
     public void setUp() throws SQLException {
-        System.out.println("🔹 Avvio setup test...");
+        System.out.println("Avvio setup test...");
 
         PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("lunedì", "P789123"));
-       
-        // **2. Eliminare il professore e lo studente se esistono già**
+
         ProfessoreService.rimuoviProfessoreByCodice("P789123");
         StudenteService.rimuoviStudente("S123456");
 
-        // **3. Creazione professore**
         Professore professore = new Professore("Luigi", "Verdi", "professore@example.com",
                 "$2a$12$1h9aTVDgg6Orz3tT2rn2nu1/Nfh4oc5KeGBxuln/MMaQsX3tSLt4y", "P789123", "Ufficio A2", "Domanda?", "Risposta");
         ProfessoreService.aggiungiProfessore(professore);
-        System.out.println("✅ Professore creato: " + professore.toString());
+        System.out.println("Professore creato: " + professore.toString());
 
-        // **4. Creazione studente**
         Studente studente = new Studente("Mario", "Rossi", "studente@example.com",
                 "password123", "S123456", "Domanda?", "Risposta");
         StudenteService.aggiungiStudente(studente);
-        System.out.println("✅ Studente creato: " + studente.toString());
+        System.out.println("Studente creato: " + studente.toString());
 
-        // **5. Commit per evitare problemi di integrità**
         DriverManagerConnectionPool.getConnessione().commit();
     }
-
-
-
 
     @After
     public void tearDown() throws SQLException {
-        System.out.println("🔹 Pulizia dati di test...");
-        
-
+        System.out.println("Pulizia dati di test...");
         PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("lunedì", "P789123"));
 
-
-        // **2. Eliminare il professore**
         boolean professoreRimosso = ProfessoreService.rimuoviProfessoreByCodice("P789123");
         if (professoreRimosso) {
-            System.out.println("✅ Professore rimosso con successo.");
+            System.out.println("Professore rimosso con successo.");
         } else {
-            System.out.println("⚠️ Nessun professore da rimuovere.");
+            System.out.println("Nessun professore da rimuovere.");
         }
 
-        // **3. Eliminare lo studente**
         boolean studenteRimosso = StudenteService.rimuoviStudente("S123456");
         if (studenteRimosso) {
-            System.out.println("✅ Studente rimosso con successo.");
+            System.out.println("Studente rimosso con successo.");
         } else {
-            System.out.println("⚠️ Nessuno studente da rimuovere.");
+            System.out.println("Nessuno studente da rimuovere.");
         }
-
-        // **4. Commit per salvare le modifiche**
         DriverManagerConnectionPool.getConnessione().commit();
     }
-
-
-
-
+    
     private static String getSessionCookie() throws Exception {
         URL url = new URL("http://localhost:14201/UniMeet/LoginServlet");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -114,7 +97,7 @@ public class RicevimentiInProgrammaServletTest {
         }
 
         int responseCode = conn.getResponseCode();
-        if (responseCode == 302) { // Login avvenuto con successo
+        if (responseCode == 302) { 
             String cookieHeader = conn.getHeaderField("Set-Cookie");
             return cookieHeader != null && cookieHeader.contains("JSESSIONID") ? cookieHeader.split(";")[0] : "";
         }
@@ -125,8 +108,6 @@ public class RicevimentiInProgrammaServletTest {
         URL url = new URL(BASE_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
-
-        // Invia il cookie di sessione per simulare un utente loggato
         if (!sessionCookie.isEmpty()) {
             conn.setRequestProperty("Cookie", sessionCookie);
         }
@@ -135,46 +116,38 @@ public class RicevimentiInProgrammaServletTest {
 
     @Test
     public void testRicevimentiInProgrammaSuccesso() throws Exception {
-        System.out.println("🔹 Avvio test: testRicevimentiInProgrammaSuccesso");
+        System.out.println("Avvio test: testRicevimentiInProgrammaSuccesso");
 
-        // **1. Creazione professore**
         Professore professore = new Professore("Luigi", "Verdi", "professore@example.com",
                 "$2a$12$1h9aTVDgg6Orz3tT2rn2nu1/Nfh4oc5KeGBxuln/MMaQsX3tSLt4y", "P789123", "Ufficio A2", "Domanda?", "Risposta");
         ProfessoreService.aggiungiProfessore(professore);
-        System.out.println("✅ Professore creato: " + professore);
+        System.out.println("Professore creato: " + professore);
 
-        // **2. Creazione studente**
         Studente studente = new Studente("Mario", "Rossi", "studente@example.com",
                 "password123", "S123456", "Domanda?", "Risposta");
         StudenteService.aggiungiStudente(studente);
-        System.out.println("✅ Studente creato: " + studente);
+        System.out.println("Studente creato: " + studente);
 
-        // **3. Creazione prenotazione accettata**
         PrenotazioneRicevimento prenotazione = new PrenotazioneRicevimento(
                 0, "accettata", "lunedì", "10:00", "Discussione progetto",
                 "P789123", "S123456");
         PrenotazioneRicevimentoService.aggiungiPrenotazioneRicevimento(prenotazione);
-
-        // **4. Commit per forzare la scrittura**
+        
         DriverManagerConnectionPool.getConnessione().commit();
         
-        // **5. Recupero codice della prenotazione accettata**
         int codicePrenotazione = PrenotazioneRicevimentoService.getCodicePerGiornoEProfessore("lunedì", "P789123");
-        System.out.println("✅ Prenotazione accettata trovata: " + codicePrenotazione);
-        assertTrue("❌ Codice prenotazione non valido!", codicePrenotazione > 0);
+        System.out.println("Prenotazione accettata trovata: " + codicePrenotazione);
+        assertTrue("Codice prenotazione non valido!", codicePrenotazione > 0);
 
-        // **6. Login per ottenere la sessione**
         sessionCookie = getSessionCookie();
-        assertNotNull("❌ Session Cookie non ricevuto!", sessionCookie);
-        assertTrue("❌ Il cookie di sessione non contiene JSESSIONID!", sessionCookie.contains("JSESSIONID"));
+        assertNotNull("Session Cookie non ricevuto!", sessionCookie);
+        assertTrue("Il cookie di sessione non contiene JSESSIONID!", sessionCookie.contains("JSESSIONID"));
 
-        // **7. Effettua la richiesta GET**
         HttpURLConnection conn = createConnection();
         int responseCode = conn.getResponseCode();
-        System.out.println("🔹 Response Code: " + responseCode);
-        assertEquals("❌ La risposta deve essere un successo (200)!", 200, responseCode);
+        System.out.println("Response Code: " + responseCode);
+        assertEquals("La risposta deve essere un successo (200)!", 200, responseCode);
 
-        // **8. Leggi la risposta**
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String inputLine;
         StringBuilder response = new StringBuilder();
@@ -189,8 +162,7 @@ public class RicevimentiInProgrammaServletTest {
         
         for(PrenotazioneRicevimento p : list)
         		System.out.println("List:" + p.getCodice());
-        
-     // Estrarre i codici e convertirli in Set per ignorare l'ordine
+
         Set<Integer> codici1 = new HashSet<>();
         for (PrenotazioneRicevimento p : PrenotazioneRicevimentoService.ricercaPrenotazioniPerProfessore(professore)) {
             codici1.add(p.getCodice());
@@ -201,30 +173,20 @@ public class RicevimentiInProgrammaServletTest {
         	codici2.add(p.getCodice());
         }
         
-       // System.out.println("🔹 Response Body: " + response.toString());
-        assertEquals(codici1, codici2); // **9. Controllo che la risposta contenga la prenotazione accettata**
-        //assertTrue("❌ La risposta deve contenere le prenotazioni accettate!",
-                //response.toString().contains("accettata") || response.toString().contains("Prenotazioni in sospeso"));
+        assertEquals(codici1, codici2);
     }
-
-
-
-
 
     @Test
     public void testRicevimentiInProgrammaSenzaLogin() throws Exception {
-        // 🔹 Creiamo una connessione HTTP senza inviare un cookie di sessione
         HttpURLConnection conn = (HttpURLConnection) new URL(BASE_URL).openConnection();
         conn.setRequestMethod("GET");
-        conn.setInstanceFollowRedirects(false); // Non seguire i redirect automaticamente
+        conn.setInstanceFollowRedirects(false); 
 
         int responseCode = conn.getResponseCode();
         System.out.println("Response Code: " + responseCode);
 
-        // ✅ Verifica che il server reindirizzi alla pagina di login
         assertEquals(302, responseCode);
 
-        // ✅ Controlla che l'header "Location" contenga il percorso corretto per la pagina di login
         String locationHeader = conn.getHeaderField("Location");
         assertNotNull("Header Location è nullo!", locationHeader);
         assertTrue("Il redirect non porta alla pagina di login!", locationHeader.contains("/application/Login.jsp"));

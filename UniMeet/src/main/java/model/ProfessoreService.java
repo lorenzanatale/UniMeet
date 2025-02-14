@@ -80,7 +80,7 @@ public class ProfessoreService {
         	        return false;
         	    }
     }
-        //dovrebbe funzionare con il nome del professore
+        
         public Insegnamento cercaInsegnamentoProfessore(String codiceProfessore) {
     	    Insegnamento insegnamento = null;
 
@@ -188,8 +188,6 @@ public static List<Professore> stampaListaProfessori() throws SQLException{
 	
 }
 
-
-        //--------------------------------CIRO---------------------------------------
        
 public static int aggiungiProfessore(Professore p) {
     int result = 0;
@@ -288,42 +286,33 @@ public static int aggiungiProfessore(Professore p) {
         public static Professore getProfessoreByCodice(String codiceProfessore) {
             Professore professore = null;
 
-            // La query SQL per cercare il professore con il codice dato
             String query = "SELECT * FROM professore WHERE codice = ?";
 
-            // Gestione della connessione al database
             try (Connection con = DriverManagerConnectionPool.getConnessione();
                  PreparedStatement ps = con.prepareStatement(query)) {
-                
-                // Imposta il parametro nella query (codiceProfessore)
+
                 ps.setString(1, codiceProfessore);
 
-                // Esegui la query
                 try (ResultSet rs = ps.executeQuery()) {
-                    // Se il professore esiste, crea l'oggetto Professore
                     if (rs.next()) {
                         professore = new Professore(
-                            rs.getString("nome"),          // Supponendo che la colonna si chiami "nome"
-                            rs.getString("cognome"),       // Supponendo che la colonna si chiami "cognome"
-                            rs.getString("email"),         // Supponendo che la colonna si chiami "email"
-                            rs.getString("passwordHash"),      // Supponendo che la colonna si chiami "password"
-                            rs.getString("codice"),        // Supponendo che la colonna si chiami "codice"
-                            rs.getString("ufficio"),       // Supponendo che la colonna si chiami "ufficio"
-                            rs.getString("domandaSicurezza"), // Supponendo che la colonna si chiami "domanda_sicurezza"
-                            rs.getString("risposta") // Supponendo che la colonna si chiami "risposta_sicurezza"
+                            rs.getString("nome"),          
+                            rs.getString("cognome"),       
+                            rs.getString("email"),         
+                            rs.getString("passwordHash"),      
+                            rs.getString("codice"),        
+                            rs.getString("ufficio"),      
+                            rs.getString("domandaSicurezza"), 
+                            rs.getString("risposta") 
                         );
                     }
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                // Puoi anche gestire il logging o l'ulteriore gestione degli errori qui.
             }
-
-            // Restituisci l'oggetto professore (null se non trovato)
             return professore;
         }
         public static boolean rimuoviProfessoreByCodice(String codice) {
-            // Supponiamo che tu stia usando JDBC per interagire con il database
             String query = "DELETE FROM professore WHERE codice = ?";
 
             try (Connection conn = DriverManagerConnectionPool.getConnessione();

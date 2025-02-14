@@ -17,10 +17,7 @@ public class RicevimentiInProgrammaServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException {
 
-	    // ✅ Recupera la sessione, senza crearne una nuova
 	    HttpSession session = request.getSession(false);
-
-	    // ✅ Se la sessione è nulla o l'utente non è un professore, esegui il redirect
 	    if (session == null || session.getAttribute("utente") == null || !(session.getAttribute("utente") instanceof Professore)) {
 	        response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
 	        return;
@@ -38,11 +35,7 @@ public class RicevimentiInProgrammaServlet extends HttpServlet {
 	            accettate.add(p);
 	        }
 	    }
-
-	    // Metti in request
 	    request.setAttribute("prenotazioniAccettate", accettate);
-
-	    // Forward alla JSP
 	    request.getRequestDispatcher("/application/RicevimentiInProgramma.jsp").forward(request, response);
 	}
 }
