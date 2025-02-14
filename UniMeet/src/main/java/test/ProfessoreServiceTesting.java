@@ -70,11 +70,11 @@ public class ProfessoreServiceTesting {
     @Test
     public void testCercaProfessoreEmail() throws Exception {
         
-        Professore trovato = ProfessoreService.cercaProfessoreEmail("mario.rossi@example.com");
+        Professore trovato = ProfessoreService.cercaProfessoreEmail("alessandro.rossi@professori.unisa.it");
 
         
         assertNotNull("Il professore non è stato trovato tramite email.", trovato);
-        assertEquals("Il nome non corrisponde.", "Mario", trovato.getNome());
+        assertEquals("Il nome non corrisponde.", "Alessandro", trovato.getNome());
         assertEquals("Il cognome non corrisponde.", "Rossi", trovato.getCognome());
     }
 
@@ -119,16 +119,16 @@ public class ProfessoreServiceTesting {
     
     @Test
     public void testGetNomeProfessoreByCodice() throws SQLException {
-        String nome = ProfessoreService.getNomeProfessoreByCodice("P001");
+        String nome = ProfessoreService.getNomeProfessoreByCodice("051215346");
 
         assertNotNull("Il nome del professore non è stato restituito.", nome);
-        assertEquals("Il nome del professore non corrisponde.", "Mario", nome);
+        assertEquals("Il nome del professore non corrisponde.", "Alessandro", nome);
     }
 
   
     @Test
     public void testGetCognomeProfessoreByCodice() throws SQLException {
-        String cognome = ProfessoreService.getcognomeProfessoreByCodice("P001");
+        String cognome = ProfessoreService.getcognomeProfessoreByCodice("051215346");
 
         assertNotNull("Il cognome del professore non è stato restituito.", cognome);
         assertEquals("Il cognome del professore non corrisponde.", "Rossi", cognome);
@@ -144,7 +144,7 @@ public class ProfessoreServiceTesting {
 
         boolean found = false;
         for (Professore p : listaProfessori) {
-            if ("P001".equals(p.getCodiceProfessore())) {
+            if ("051215346".equals(p.getCodiceProfessore())) {
                 found = true;
                 break;
             }
@@ -155,14 +155,14 @@ public class ProfessoreServiceTesting {
    
     @Test
     public void testCercaProfessori() throws SQLException {
-        List<Professore> professoriTrovati = ProfessoreService.cercaProfessori("Mario");
+        List<Professore> professoriTrovati = ProfessoreService.cercaProfessori("Alessandro");
 
         assertNotNull("La lista dei professori è nulla.", professoriTrovati);
         assertFalse("La lista dei professori è vuota.", professoriTrovati.isEmpty());
 
         boolean found = false;
         for (Professore p : professoriTrovati) {
-            if ("P001".equals(p.getCodiceProfessore())) {
+            if ("051215346".equals(p.getCodiceProfessore())) {
                 found = true;
                 break;
             }
