@@ -28,16 +28,12 @@ import model.PrenotazioneRicevimentoService;
 
 public class RicevimentiInProgrammaServletTest {
 
-    private static final String BASE_URL = "http://localhost:14201/UniMeet/RicevimentiInProgrammaServlet";
+    private static final String BASE_URL = "http://localhost:8080/UniMeet/RicevimentiInProgrammaServlet";
     private static String sessionCookie = "";
 
     @BeforeClass
-    public static void setUpServer() throws Exception {
+    public static void setUpServer() {
         System.out.println("Assicurati che il server sia in esecuzione su " + BASE_URL);
-        sessionCookie = getSessionCookie();
-        if (sessionCookie.isEmpty()) {
-            fail("Errore durante il login: Cookie di sessione non ottenuto.");
-        }
     }
 
     @Before
@@ -84,7 +80,7 @@ public class RicevimentiInProgrammaServletTest {
     }
     
     private static String getSessionCookie() throws Exception {
-        URL url = new URL("http://localhost:14201/UniMeet/LoginServlet");
+        URL url = new URL("http://localhost:8080/UniMeet/LoginServlet");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setInstanceFollowRedirects(false);

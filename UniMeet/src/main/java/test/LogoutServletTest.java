@@ -12,7 +12,7 @@ public class LogoutServletTest {
 
     @Test
     public void testLogout() throws IOException {
-        String logoutUrl = "http://localhost:14201/UniMeet/LogoutServlet";
+        String logoutUrl = "http://localhost:8080/UniMeet/LogoutServlet";
         
         // Apri connessione HTTP
         HttpURLConnection connection = (HttpURLConnection) new URL(logoutUrl).openConnection();

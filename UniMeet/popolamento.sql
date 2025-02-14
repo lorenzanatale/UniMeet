@@ -1,6 +1,5 @@
 use UniMeet;
 
-insert into ricevimento(giorno,ora,note,codiceProfessore)values("Venerdì","9:30","non rompete il cazzo","051215346");
 insert into studente values("0512157517","Mario","Rossi","mario.rossi@studenti.unisa.it","$2a$12$7CBrZ0Ic/xYSE4SuVpJxO.ZFZIK1LPqxWP4AJ2ohXphTp5AFxwZFa","Qual è il nome del tuo primo animale domestico","Lucky");
 insert into studente values("0512192206","Paolo","Bianchi","paolo.bianchi@studenti.unisa.it","$2a$12$IU0dxNR6HC69N7nSi7J2YeZa9RoISDL.groYebzVutN0i6Tygvmim","Qual è la tua provincia di residenza?","Napoli");
 insert into studente values("0512116145","Francesco","Neri","francesco.neri@studenti.unisa.it","$2a$12$bNR5/wb/h3IcyTseglEQqOGGi9T9a9ctTaEk9XKkRN2rTFTGs31r2","Qual è modello della tua prima automobile?","Fiat Panda");

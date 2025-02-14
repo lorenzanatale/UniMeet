@@ -33,7 +33,7 @@ public class RiepilogoRicevimentiServletTest {
         conn.setInstanceFollowRedirects(false);
         conn.setDoOutput(true);
 
-        String postParams = "email=alfonso@gmail.com&password=Carito1.!";
+        String postParams = "email=alessandro.rossi@professori.unisa.it&password=AlessandroP01!";
 
         try (OutputStream os = conn.getOutputStream()) {
             os.write(postParams.getBytes());

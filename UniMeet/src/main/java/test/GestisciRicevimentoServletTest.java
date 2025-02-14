@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class GestisciRicevimentoServletTest {
 
-    private static final String codiceProfessoreFittizio = "80037";
+    private static final String codiceProfessoreFittizio = "051215346";
     private static final String giornoFittizio = "lunedì";
     private static final String oraFittizia = "10:00";
     private static final String noteFittizie = "Test di aggiunta/modifica";

@@ -154,7 +154,7 @@ public class PrenotazioneRicevimentoServiceTesting {
 
         
         assertNotNull("Il codice del professore non è stato restituito.", codiceProfessore);
-        assertEquals("Il codice del professore non corrisponde.", "P001", codiceProfessore);
+        assertEquals("Il codice del professore non corrisponde.", "051215346", codiceProfessore);
     }
 
     @Test

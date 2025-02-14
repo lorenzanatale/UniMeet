@@ -15,7 +15,7 @@ public class EliminaRicevimentoRiepilogoServletTest {
     public void setUp() {
         PrenotazioneRicevimento prenotazione = new PrenotazioneRicevimento(
                 0, "In sospeso", "lunedì", "10:00", 
-                "Test note", "80037", "1234567901"
+                "Test note", "051215346", "0512157517"
         );
 
         boolean aggiunta = PrenotazioneRicevimentoService.aggiungiPrenotazioneRicevimento(prenotazione);
@@ -25,13 +25,13 @@ public class EliminaRicevimentoRiepilogoServletTest {
     @Test
     public void testEliminaPrenotazione_ValidCode() {
         assertNotNull("La prenotazione fittizia non è presente nel database!", 
-                      PrenotazioneRicevimentoService.ricercaPrenotazione(PrenotazioneRicevimentoService.stampaCodiceRicevimento("80037", "1234567901", "lunedì", "10:00")));
+                      PrenotazioneRicevimentoService.ricercaPrenotazione(PrenotazioneRicevimentoService.stampaCodiceRicevimento("051215346", "0512157517", "lunedì", "10:00")));
 
-        boolean risultato = PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.stampaCodiceRicevimento("80037", "1234567901", "lunedì", "10:00"));
+        boolean risultato = PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.stampaCodiceRicevimento("051215346", "0512157517", "lunedì", "10:00"));
         assertTrue("La rimozione della prenotazione è fallita!", risultato);
 
         assertNull("La prenotazione dovrebbe essere stata eliminata ma è ancora presente!",
-                   PrenotazioneRicevimentoService.ricercaPrenotazione(PrenotazioneRicevimentoService.stampaCodiceRicevimento("80037", "1234567901", "lunedì", "10:00")));
+                   PrenotazioneRicevimentoService.ricercaPrenotazione(PrenotazioneRicevimentoService.stampaCodiceRicevimento("051215346", "0512157517", "lunedì", "10:00")));
     }
 
     @Test
@@ -55,6 +55,6 @@ public class EliminaRicevimentoRiepilogoServletTest {
 
     @After
     public void tearDown() {
-        PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.stampaCodiceRicevimento("80037", "1234567901", "lunedì", "10:00"));
+        PrenotazioneRicevimentoService.rimuoviPrenotazionePerCodice(PrenotazioneRicevimentoService.stampaCodiceRicevimento("051215346", "0512157517", "lunedì", "10:00"));
     }
 }

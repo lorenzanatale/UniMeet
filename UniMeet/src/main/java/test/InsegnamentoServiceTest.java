@@ -24,35 +24,20 @@ public class InsegnamentoServiceTest {
     @Before
     public void setupDatabase() throws SQLException {
         connection = DriverManagerConnectionPool.getConnessione();
-        
-        // Crea la tabella "insegnamento" nel database
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("CREATE TABLE insegnamento (nome VARCHAR(255), codiceProfessore VARCHAR(50))");
-        }
 
         insegnamentoService = new InsegnamentoService();
     }
 
 
-    
-
-    @After
-    public void tearDown() throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("DROP TABLE IF EXISTS insegnamento");
-        }
-        DriverManagerConnectionPool.rilasciaConnessione(connection);
-    }
-
     @Test
     public void testAggiungiInsegnamento() throws SQLException {
-        Insegnamento insegnamento = new Insegnamento("programmazione1", "12345");
+        Insegnamento insegnamento = new Insegnamento("programmazione1", "051211242");
 
         boolean result = InsegnamentoService.aggiungiInsegnamento(insegnamento);
 
         assertTrue(result);
 
-        String query = "SELECT COUNT(*) FROM insegnamento WHERE nome = 'programmazione1' AND codiceProfessore = '12345'";
+        String query = "SELECT COUNT(*) FROM insegnamento WHERE nome = 'programmazione1' AND codiceProfessore = '051211242'";
         try (Statement stmt = connection.createStatement()) {
             var rs = stmt.executeQuery(query);
             if (rs.next()) {
@@ -64,20 +49,20 @@ public class InsegnamentoServiceTest {
 
     @Test
     public void testRicercaInsegnamento() throws SQLException {
-        Insegnamento insegnamento = new Insegnamento("metodimatematici", "67890");
+        Insegnamento insegnamento = new Insegnamento("metodimatematici", "051211242");
         InsegnamentoService.aggiungiInsegnamento(insegnamento);
         Insegnamento result = insegnamentoService.ricercaInsegnamento("metodimatematici");
 
         // Verifica che il risultato corrisponda all'insegnamento aggiunto
         assertNotNull(result);
         assertEquals("metodimatematici", result.getNomeInsegnamento());
-        assertEquals("67890", result.getCodiceProfessore());
+        assertEquals("051211242", result.getCodiceProfessore());
     }
     
     @Test
     public void testRimuoviInsegnamento() throws SQLException {
         // Aggiungi un insegnamento da rimuovere
-        Insegnamento insegnamento = new Insegnamento("matematica discreta", "13579");
+        Insegnamento insegnamento = new Insegnamento("matematica discreta", "051211242");
         InsegnamentoService.aggiungiInsegnamento(insegnamento);
 
         // Rimuovi l'insegnamento
@@ -92,7 +77,7 @@ public class InsegnamentoServiceTest {
         try (Connection conn = DriverManagerConnectionPool.getConnessione();
              Statement stmt = conn.createStatement()) {
             
-            String query = "SELECT COUNT(*) FROM insegnamento WHERE nome = 'matematica discreta' AND codiceProfessore = '13579'";
+            String query = "SELECT COUNT(*) FROM insegnamento WHERE nome = 'matematica discreta' AND codiceProfessore = '051211242'";
             var rs = stmt.executeQuery(query);
             
             if (rs.next()) {

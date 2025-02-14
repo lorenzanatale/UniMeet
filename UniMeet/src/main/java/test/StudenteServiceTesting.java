@@ -17,13 +17,13 @@ public class StudenteServiceTesting {
     public void setUp() throws Exception {
         String matricolaUnica = "S" + System.currentTimeMillis();
         studenteTest = new Studente(
-            "Giovanni", "Bianchi", "giovanni.bianchi@example.com", "password123",
+            "Giovanni", "Bianchi", "giovanni.paolo@example.com", "password123",
             matricolaUnica, "Domanda sicurezza", "Risposta"
         );
 
         int aggiunto = StudenteService.aggiungiStudente(studenteTest);
         assertTrue("Impossibile aggiungere lo studente di test.", aggiunto > 0);
-        Studente studenteDB = StudenteService.cercaStudenteEmail("giovanni.bianchi@example.com");
+        Studente studenteDB = StudenteService.cercaStudenteEmail("giovanni.paolo@example.com");
         assertNotNull("Lo studente non è stato salvato correttamente.", studenteDB);
 
         System.out.println("Matricola originale: " + matricolaUnica);
