@@ -15,10 +15,15 @@
 
 </head>
 
-<body style="background-image: url('${pageContext.request.contextPath}/images/sfondo.jpg'); background-size: cover; background-position: center; position: relative;">
-
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.6); z-index: -1;"></div>
-
+<body style="margin: 0; padding: 0; position: relative;">
+<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                z-index: -2; background-image: url('../images/sfondo.jpg');
+                background-size: cover; background-position: center;
+                background-attachment: fixed;">
+</div>
+<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                z-index: -1; background-color: rgba(255, 255, 255, 0.8);">
+</div>
 
 <header class="py-4">
     <nav class="navbar navbar-custom">
@@ -90,12 +95,12 @@
 </div>
 
         <% } %>
-
+		<% if("studente".equals(role) || role==null) {%>
         <form action="${pageContext.request.contextPath}/application/Risultati.jsp" method="post" class="form-inline ml-auto">
     		<input class="form-control mr-sm-2" type="search" name="ajax-search" placeholder="Cerca" aria-label="Search">
     		<button class="btn btn-outline-dark" type="submit">Cerca</button>
 		</form>
-
+		<% } %>
     </nav>
     <div class="headerLine"></div>
 </header>
