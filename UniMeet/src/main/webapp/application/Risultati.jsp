@@ -9,7 +9,7 @@
 <%@ page import="model.Insegnamento" %>
 <%@ page import="model.InsegnamentoService" %>
 
-<!-- Collegamento all'Header -->
+
 <jsp:include page="/application/Header.jsp" />
 
 <!doctype html>

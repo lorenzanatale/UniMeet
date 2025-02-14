@@ -18,7 +18,7 @@
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" 
           href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
-    <!-- CSS custom -->
+
     <link rel="stylesheet" type="text/css" 
           href="${pageContext.request.contextPath}/css/riepilogo.css">
     <title>Riepilogo ricevimenti</title>
@@ -27,24 +27,17 @@
     <jsp:include page="/application/Header.jsp" />
 
 <%
-    // --- DEBUG JSP ---
     out.println("<!-- Siamo in RiepilogoRicevimenti.jsp -->");
-
-    // 1) Recupero sessione. Evitiamo conflitto con var implicita 'session'
     javax.servlet.http.HttpSession mySession = request.getSession(false);
 
     if (mySession == null) {
-        // Non c'è sessione => redirect a Login
         out.println("<!-- Sessione nulla, redirect a login. -->");
         response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
         return;
     }
-
-    // 2) Recupero attributi per studente / professore
     Object studSession = mySession.getAttribute("matricolaStudente");
     Object profSession = mySession.getAttribute("utente");
 
-    // Se non c'è alcun utente -> redirect
     if (studSession == null && profSession == null) {
         out.println("<!-- Nessun utente loggato, redirect login. -->");
         response.sendRedirect(request.getContextPath() + "/application/Login.jsp");
@@ -53,7 +46,6 @@
 %>
 <div class="container">
     <div class="row">
-<!-- SEZIONE STUDENTE (originale) -->
 <%
     if (studSession != null) {
         String matricolaStudente = studSession.toString();
@@ -137,7 +129,7 @@
         <div class="alert alert-info"><%= esito %></div>
 <%
         }
-    } // fine if (studSession != null)
+    }
 %>
 
 <!-- SEZIONE PROFESSORE -->
@@ -193,16 +185,15 @@
                 </div>
             </div>
 <%
-            } // fine for
+            }
 %>
-        </div> <!-- fine row -->
+        </div> 
 <%
         } else {
 %>
         <h4>Nessuna prenotazione in sospeso per il tuo account.</h4>
 <%
         }
-        // Eventuale messaggio
         String msg = (String) request.getAttribute("message");
         if (msg != null) {
 %>

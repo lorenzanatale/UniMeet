@@ -13,8 +13,6 @@
     <jsp:include page="/application/Header.jsp" />
 
 <%
-    // Se per qualche ragione arriva qui senza passare dalla servlet,
-    // potremmo controllare la session. Ma se l'hai messo in /application/ e/o protetto, di solito okay.
     
     List<PrenotazioneRicevimento> accettate =
         (List<PrenotazioneRicevimento>) request.getAttribute("prenotazioniAccettate");

@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 
-<!-- Collegamento all'Header -->
 <jsp:include page="/application/Header.jsp" />
 
 <!doctype html>
@@ -78,7 +77,6 @@
                                 <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Registrati!</button>
                                 <a href="Registrazione.jsp" class="btn btn-danger" role="button">Torna alle opzioni</a>
                             </div>
-                            <!-- Aggiunto messaggio sessione  -->
 							<%
     String status = (String) session.getAttribute("status");
     if (status != null) {

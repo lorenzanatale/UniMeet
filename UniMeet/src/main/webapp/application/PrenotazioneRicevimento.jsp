@@ -31,7 +31,6 @@
             Studente studenteLogged = (Studente) sessione.getAttribute("utente");
             Map<String, List<String>> giorniEOre = null;
 
-            // SALVA L'URL ATTUALE PER IL REINDIRIZZAMENTO DOPO IL LOGIN
             if (studenteLogged == null) {
                 String currentURL = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
                 sessione.setAttribute("redirectAfterLogin", currentURL);
@@ -49,7 +48,6 @@
         %>
             <div class="error-message">Nessun ricevimento disponibile per questo professore.</div>
         <% } else { 
-            // Mappa con l'ordine fisso dei giorni
             Map<String, Integer> dayOrder = new LinkedHashMap<>();
             dayOrder.put("lunedì", 1);
             dayOrder.put("martedì", 2);
@@ -57,7 +55,6 @@
             dayOrder.put("giovedì", 4);
             dayOrder.put("venerdì", 5);
 
-            // Mappa per raccogliere giorni e orari
             giorniEOre = new LinkedHashMap<>();
 
             for (Ricevimento r : ricevimenti) {
@@ -101,7 +98,6 @@
     <option value="">SELEZIONA ORA ↓</option>
 </select>
 
-<!-- Box per inserire note (opzionali) -->
 <label for="note">Note (opzionali):</label>
 <textarea name="note" id="note" rows="3" class="note-area" placeholder="Non ci sono note"></textarea>
 
@@ -110,7 +106,7 @@
             </form>
         </div>
 
-        <% } // Chiusura IF per controllare se ci sono ricevimenti %>
+        <% } %>
 
         <a href="${pageContext.request.contextPath}/application/Home.jsp" class="home-btn">Torna alla Home</a>
     </div>
@@ -122,7 +118,6 @@
 
         oraSelect.disabled = true;
 
-        // Inizializza l'oggetto JavaScript che conterrà gli orari disponibili per ciascun giorno
         var orariDisponibili = {};
 
         <% if (giorniEOre != null) { %>
@@ -132,8 +127,6 @@
         <% } %>
 
         console.log("Orari disponibili:", orariDisponibili);
-
-        // Evento per aggiornare la select delle ore
         giornoSelect.addEventListener("change", function () {
             var giornoSelezionato = this.value;
             oraSelect.innerHTML = "";
@@ -148,7 +141,6 @@
                 defaultOption.selected = true;
                 oraSelect.appendChild(defaultOption);
 
-                // Itera sugli orari disponibili e aggiungili alla select
 orariDisponibili[giornoSelezionato].forEach(function (ora) { 
                     var option = document.createElement("option");
                     option.value = ora;

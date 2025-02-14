@@ -3,7 +3,7 @@
 <%@ page import="model.Professore" %>
 <%@ page import="model.RicevimentoService" %>
 <%@ page import="model.PrenotazioneRicevimento" %>
-<%@ page import="model.PrenotazioneRicevimentoService" %>  <!-- Import del DAO delle prenotazioni -->
+<%@ page import="model.PrenotazioneRicevimentoService" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,6 @@
     <title>Gestisci Ricevimenti</title>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/gestisciRicevimenti.css">
     <style>
-        /* Stili per evidenziare il pulsante di eliminazione (rosso) */
         .btn-danger {
             background-color: #d9534f;
             border-color: #d43f3a;
@@ -35,7 +34,6 @@
     <div class="container">
     
     <%! 
-    // Metodo JSP per rimuovere gli accenti direttamente nella pagina
     public String normalizeText(String text) {
         if (text == null) return null;
         return java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
@@ -46,7 +44,6 @@
     
     
     <%
-        // Controllo della sessione e recupero del professore
         String mode = request.getParameter("mode");
         HttpSession sessione = request.getSession(false);
         if (sessione == null || sessione.getAttribute("utente") == null) {
@@ -76,7 +73,6 @@
         // Recupera i ricevimenti "prenotati" (giorno e ora)
         List<Ricevimento> ricevimentiDB = RicevimentoService.getGiorniEOreRicevimentoByProfessore(codiceProfessore);
         
-        // Costruisci la mappa: key = giorno (in minuscolo), value = lista di orari già prenotati
         Map<String, List<String>> giorniEOrePrenotati = new LinkedHashMap<>();
         if (ricevimentiDB != null) {
             for (Ricevimento r : ricevimentiDB) {
@@ -104,21 +100,18 @@
         }
         System.out.println("Stampa mappa:" + giorniEOrePrenotati.toString());
         
-        // Metti la mappa filtrata in request
+        // Metto la mappa filtrata in request
         request.setAttribute("giorniEOrePrenotati", giorniEOrePrenotati);
     %>
     
     <h1 id="title"><%= pageTitle %></h1>
     
-    <!-- Layout a due colonne -->
     <div class="section-container">
-        <!-- Sezione informativa: mostra i ricevimenti già prenotati -->
         <div class="section">
             <h2>Giorni disponibili</h2>
             <ul class="days-list">
 <%
 if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
-    // Mappa con ordine fisso dei giorni della settimana
     Map<String, Integer> dayOrder = new LinkedHashMap<>();
     dayOrder.put("lunedì", 0);
     dayOrder.put("martedì", 1);
@@ -236,7 +229,6 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                                 %>
                             </select>
                         </div>
-                        <!-- Pulsante per eliminare il ricevimento selezionato -->
                         <div class="dropdown">
                             <label>&nbsp;</label>
                             <button type="submit" name="action" value="elimina" class="btn btn-danger">
@@ -301,8 +293,7 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
         <a href="<%= request.getContextPath() %>/Home.jsp" class="btn btn-danger">Torna alla Home</a>
     </div>
     </div>
-    
-    <!-- Script JavaScript -->
+
     <script type="text/javascript">
         var availableHours = [
             "9:00", "9:30", "10:00", "10:30",
@@ -321,18 +312,15 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
             defaultOption.selected = true;
             selectElement.appendChild(defaultOption);
 
-            var hoursToShow = availableHours.slice(); // Copia degli orari disponibili
+            var hoursToShow = availableHours.slice(); 
 
-            // Normalizzazione del nome del giorno
             selectedDay = selectedDay.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-            // Rimuove gli orari già occupati per quel giorno
             if (existingSchedule[selectedDay]) {
                 var taken = existingSchedule[selectedDay];
                 hoursToShow = hoursToShow.filter(hour => !taken.includes(hour));
             }
 
-            // Popola la select con le ore disponibili
             hoursToShow.forEach(hour => {
                 var opt = document.createElement("option");
                 opt.value = hour;
@@ -343,10 +331,6 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
             selectElement.disabled = false;
         }
 
-
-
-        
-        // Mappa dei giorni con gli orari già occupati
         var existingSchedule = {};
         <% 
             Object attr = request.getAttribute("giorniEOrePrenotati");
@@ -371,8 +355,7 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
         %>
 
         console.log(existingSchedule);
-        
-        // Al cambio del giorno, ricalcoliamo le ore disponibili
+
         var daySelect = document.getElementById("<%= "modifica".equals(mode) ? "newGiorno" : "giorno" %>");
         if (daySelect) {
             daySelect.addEventListener("change", function() {
@@ -381,28 +364,24 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                 populateHours(hourSelect, selectedDay);
             });
         }
-        
-        // Div per mostrare errori
+
         var errorMsgDiv = document.createElement("div");
         errorMsgDiv.id = "errorMsg";
         errorMsgDiv.style.color = "red";
         document.getElementById("ricevimentoForm").insertBefore(errorMsgDiv, 
             document.getElementById("ricevimentoForm").firstChild);
 
-        // Gestione invio del form
         document.getElementById("ricevimentoForm").addEventListener("submit", function(event) {
     var errorMsg = document.getElementById("errorMsg");
     errorMsg.innerHTML = "";
     
     var errors = [];
     var modeValue = "<%= mode %>"; // "aggiungi" o "modifica"
-    
-    // Scopriamo che bottone è stato premuto
+
     var clickedAction = event.submitter ? event.submitter.value : null;
     
     var dayElement, hourElement;
-    
-    // Se siamo in modifica, gestiamo oldRicevimento
+
     if (modeValue === "modifica") {
         var oldRicevimentoField = document.getElementById("oldRicevimento");
         if (!oldRicevimentoField.value) {
@@ -411,16 +390,14 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                 oldRicevimentoField.value = currentSelect.value;
             }
         }
-        
-        // **Validazione per ELIMINAZIONE:**
+
         if (clickedAction === "elimina") {
             var selectedRicevimento = document.getElementById("currentRicevimento").value;
             if (!selectedRicevimento) {
                 errors.push("Devi selezionare un ricevimento da eliminare.");
             }
         }
-        
-        // Se l'utente non ha selezionato nulla e non sta eliminando, errore
+
         if (clickedAction !== "elimina" && !document.getElementById("currentRicevimento").value) {
             errors.push("Devi selezionare il ricevimento da modificare.");
         }
@@ -429,12 +406,9 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
         hourElement = document.getElementById("newOra");
         
     } else {
-        // Modalità "aggiungi"
         dayElement = document.getElementById("giorno");
         hourElement = document.getElementById("ora");
     }
-    
-    // **Validazione per AGGIUNTA/MODIFICA:**
     if (clickedAction !== "elimina") {
         if (!dayElement.value) {
             errors.push("Devi selezionare un giorno.");
@@ -443,16 +417,12 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
             errors.push("Devi selezionare un'ora.");
         }
     }
-    
-    // Se ci sono errori, blocchiamo l'invio
     if (errors.length > 0) {
         event.preventDefault();
         errorMsg.innerHTML = errors.join("<br>");
     }
 });
 
-        
-        // Precompilazione in caso di selezione di un ricevimento esistente (solo in modalità "modifica")
         var currentRicevimentoSelect = document.getElementById("currentRicevimento");
         if (currentRicevimentoSelect) {
             currentRicevimentoSelect.addEventListener("change", function(){
@@ -464,7 +434,6 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                     var oldOra = parts[1].trim();
                     
                     var newGiorno = document.getElementById("newGiorno");
-                    // Trova l’opzione corrispondente a quel giorno
                     for (var i = 0; i < newGiorno.options.length; i++) {
                         var optionValue = newGiorno.options[i].value;
                         var dateObj = new Date(optionValue);
@@ -474,11 +443,8 @@ if (giorniEOrePrenotati != null && !giorniEOrePrenotati.isEmpty()) {
                             break;
                         }
                     }
-                    // Generiamo l’evento change per popolare le ore
                     var event = new Event('change');
                     newGiorno.dispatchEvent(event);
-                    
-                    // Seleziona automaticamente l’ora vecchia
                     var newOra = document.getElementById("newOra");
                     for (var j = 0; j < newOra.options.length; j++) {
                         if (newOra.options[j].value === oldOra) {
