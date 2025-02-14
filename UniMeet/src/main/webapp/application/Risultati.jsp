@@ -32,7 +32,7 @@
 
             if (chiaveRicerca != null && !chiaveRicerca.trim().isEmpty()) {
                 ProfessoreService prof = new ProfessoreService();
-                lista = prof.cercaProfessori(chiaveRicerca.trim());
+                lista = ProfessoreService.cercaProfessori(chiaveRicerca.trim());
             } else {
                 errore = "Chiave di ricerca non valida.";
             }

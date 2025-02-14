@@ -140,43 +140,6 @@ public class StudenteService {
 		}
 
 	  
-	  //testing
-	  public static Studente getStudenteByMatricola(String matricola) {
-		    Studente studente = null;
-
-		    // La query SQL per cercare lo studente con la matricola data
-		    String query = "SELECT * FROM studente WHERE matricola = ?";
-
-		    // Gestione della connessione al database
-		    try (Connection con = DriverManagerConnectionPool.getConnessione();
-		         PreparedStatement ps = con.prepareStatement(query)) {
-		        
-		        // Imposta il parametro nella query (matricola)
-		        ps.setString(1, matricola);
-
-		        // Esegui la query
-		        try (ResultSet rs = ps.executeQuery()) {
-		            // Se lo studente esiste, crea l'oggetto Studente
-		            if (rs.next()) {
-		                studente = new Studente(
-		                    rs.getString("matricola"),       // Matricola dello studente
-		                    rs.getString("nome"),           // Nome dello studente
-		                    rs.getString("cognome"),        // Cognome dello studente
-		                    rs.getString("email"),          // Email dello studente
-		                    rs.getString("passwordHash"),   // Password (hashata) dello studente
-		                    rs.getString("domandaSicurezza"), // Domanda di sicurezza
-		                    rs.getString("risposta")        // Risposta alla domanda di sicurezza
-		                );
-		            }
-		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        // Puoi anche gestire il logging o un'ulteriore gestione degli errori qui.
-		    }
-
-		    // Restituisci l'oggetto Studente (null se non trovato)
-		    return studente;
-		}
 	  public static boolean rimuoviStudente(String matricola) {
 		    // Query SQL per eliminare lo studente con una data matricola
 		    String query = "DELETE FROM studente WHERE matricola = ?";
